@@ -117,3 +117,13 @@ def test_published_paths_are_ordered_by_severity_and_the_link_recovers_the_gener
     recovered = float(manifest.raw("f08.link_unemployment"))  # type: ignore[arg-type]
     stated = float(manifest.raw("f08.link_stated"))  # type: ignore[arg-type]
     assert abs(recovered - stated) <= float(manifest.raw("f08.link_tolerance"))  # type: ignore[arg-type]
+
+
+def test_projection_quarters_follow_the_jump_off() -> None:
+    from decimal import Decimal
+
+    from ledger_functions.f08_treasury import _floats, quarters_after
+
+    assert quarters_after("2025Q4", 3) == ["2026Q1", "2026Q2", "2026Q3"]
+    assert quarters_after("2026Q3", 2) == ["2026Q4", "2027Q1"]
+    assert _floats({"a": Decimal("1.50"), "b": "x"}) == {"a": 1.5, "b": "x"}

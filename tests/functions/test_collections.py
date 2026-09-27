@@ -67,3 +67,10 @@ def test_seasonality_needs_a_year_of_history() -> None:
     assert seasonal_factor(rates, "2024-04", 2) == pytest.approx(0.04 / 0.03)
     assert shift("2024-11", 3) == "2025-02"
     assert shift("2024-01", -1) == "2023-12"
+
+
+def test_months_between_counts_calendar_months() -> None:
+    from ledger_functions.f09_collections import months_between
+
+    assert months_between("2024-11", "2025-02") == 3
+    assert months_between("2025-02", "2024-11") == -3
