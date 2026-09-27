@@ -1,0 +1,20 @@
+[project]
+name = "ledger-insights"
+version = "0.1.0"
+description = "Rules engine that ranks movers and anomalies and renders insights from templates"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "polars>=1.30",
+  "ledger-core",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ledger_insights"]
+
+[tool.uv.sources]
+ledger-core = { workspace = true }

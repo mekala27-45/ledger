@@ -1,0 +1,21 @@
+[project]
+name = "ledger-core"
+version = "0.1.0"
+description = "Shared models, paths, statements, calendar and manifest for ledger"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "pydantic>=2.10",
+  "structlog>=25.1",
+  "pyyaml>=6.0",
+  "polars>=1.30",
+  "numpy>=1.26",
+  "pyarrow>=19",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ledger_core"]

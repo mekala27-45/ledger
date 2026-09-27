@@ -1,0 +1,46 @@
+[project]
+name = "ledger-functions"
+version = "0.1.0"
+description = "The twelve function modules, the manifest builder and exports"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "duckdb>=1.3",
+  "openpyxl>=3.1",
+  "polars>=1.30",
+  "ledger-core",
+  "ledger-render",
+  "ledger-bankgen",
+  "ledger-scan",
+  "ledger-contracts",
+  "ledger-scorecard",
+  "ledger-models",
+  "ledger-desk",
+  "ledger-crime",
+  "ledger-fairness",
+  "ledger-nlp",
+  "ledger-stress",
+  "ledger-insights",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ledger_functions"]
+
+[tool.uv.sources]
+ledger-core = { workspace = true }
+ledger-render = { workspace = true }
+ledger-bankgen = { workspace = true }
+ledger-scan = { workspace = true }
+ledger-contracts = { workspace = true }
+ledger-scorecard = { workspace = true }
+ledger-models = { workspace = true }
+ledger-desk = { workspace = true }
+ledger-crime = { workspace = true }
+ledger-fairness = { workspace = true }
+ledger-nlp = { workspace = true }
+ledger-stress = { workspace = true }
+ledger-insights = { workspace = true }

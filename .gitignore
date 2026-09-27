@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Data: raw and staged inputs are rebuilt by `make fetch` and `make generate`
+data/raw/*
+!data/raw/.gitkeep
+data/external/*
+!data/external/.gitkeep
+data/staged/*
+!data/staged/.gitkeep
+data/quarantine/*
+!data/quarantine/.gitkeep
+.cache/
+
+# Warehouse build output
+warehouse/target/
+warehouse/dbt_packages/
+warehouse/logs/
+warehouse/*.duckdb
+warehouse/*.duckdb.wal
+logs/
+
+# Model binaries are rebuilt; the registry metadata is committed
+results/models/*.pkl
+results/models/*.joblib
+results/models/*.txt
+
+# Web
+web/node_modules/
+web/.next/
+web/out/
+web/test-results/
+web/playwright-report/
+web/tsconfig.tsbuildinfo
+
+# Local environment
+.env
+*.log
+.DS_Store

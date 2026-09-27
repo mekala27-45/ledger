@@ -1,0 +1,30 @@
+[project]
+name = "ledger-models"
+version = "0.1.0"
+description = "Model contract, registry, promotion gates and the eight ledger models"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "lightgbm>=4.6",
+  "scikit-learn>=1.6",
+  "scipy>=1.14",
+  "statsmodels>=0.14",
+  "lifelines>=0.30",
+  "joblib>=1.4",
+  "polars>=1.30",
+  "ledger-core",
+  "ledger-scorecard",
+  "ledger-fairness",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ledger_models"]
+
+[tool.uv.sources]
+ledger-core = { workspace = true }
+ledger-scorecard = { workspace = true }
+ledger-fairness = { workspace = true }

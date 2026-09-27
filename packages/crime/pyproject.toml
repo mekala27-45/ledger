@@ -1,0 +1,24 @@
+[project]
+name = "ledger-crime"
+version = "0.1.0"
+description = "Financial crime: typology rules, alert triage and the transfer network"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "networkx>=3.3",
+  "polars>=1.30",
+  "pyyaml>=6.0",
+  "ledger-core",
+  "ledger-models",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ledger_crime"]
+
+[tool.uv.sources]
+ledger-core = { workspace = true }
+ledger-models = { workspace = true }

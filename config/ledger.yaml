@@ -1,0 +1,94 @@
+# Stated parameters for Harborline Bank. Every number the pipeline uses as an
+# assumption lives here, so a reviewer can change one and re-derive everything.
+
+bank:
+  name: Harborline Bank
+  short_name: Harborline
+  home_state: NJ
+  footprint: [NJ, NY, PA]
+
+calendar:
+  start: 2023-09-01
+  as_of: 2026-08-31
+  months: 36
+
+seed: 20260831
+
+generator:
+  customers: 50000
+  branches: 18
+  recession_months: ["2025-03", "2025-04", "2025-05"]
+  ledger_break:
+    gl_account: "2010"
+    month: "2026-03"
+    amount: 4217.36
+
+censoring:
+  default_window_months: 12
+  default_dpd: 90
+  cure_window_days: 90
+  chargeback_window_days: 60
+
+fraud_desk:
+  # A false decline costs the interchange the bank does not earn plus the cost of
+  # a customer calling in; the build states 12 dollars and defends it in docs/fraud-desk.md.
+  cost_false_decline: 12.0
+  # A missed fraud costs the transaction amount plus investigation and card reissue.
+  cost_missed_fraud_handling: 35.0
+  queue_precision_floor: 0.5
+  replay_speed_seconds_per_hour: 1.0
+
+scorecard:
+  base_score: 600
+  base_odds: 30
+  points_to_double_odds: 20
+  iv_floor: 0.02
+  correlation_ceiling: 0.7
+  min_bin_share: 0.05
+  max_fine_bins: 20
+  approval_cutoff_score: 580
+  reason_codes_returned: 4
+
+lending:
+  lgd_installment_source: generated_recoveries
+  cecl_horizon_months: 36
+
+capital:
+  # Simplified risk weights, stated as simplified wherever they are used.
+  risk_weights:
+    cash: 0.0
+    securities: 0.2
+    mortgage: 0.5
+    installment: 1.0
+    card: 1.0
+    other_assets: 1.0
+
+liquidity:
+  # Simplified LCR style figure: 30 day outflow rates by deposit type under stress.
+  outflow_rates:
+    checking: 0.10
+    savings: 0.10
+    time: 0.05
+  hqla_haircut: 0.0
+
+treasury:
+  shocks_bps: [-200, -100, 100, 200]
+  horizon_months: 12
+
+aml:
+  reporting_threshold: 10000.0
+  structuring_floor: 8000.0
+  structuring_window_days: 10
+  rapid_movement_hours: 24
+  mule_fan_in_min_counterparties: 8
+  mule_window_days: 14
+  cycle_max_length: 5
+  cycle_window_days: 14
+
+model_risk:
+  tiers:
+    1: "Material to a credit, fraud or regulatory decision, or complex"
+    2: "Informs a decision a person makes, moderate materiality"
+    3: "Analytical or monitoring use, low materiality"
+  psi_warning: 0.10
+  psi_breach: 0.25

@@ -1,0 +1,21 @@
+[project]
+name = "ledger-nlp"
+version = "0.1.0"
+description = "Complaint text: TF-IDF topics and the relief classifier"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "scikit-learn>=1.6",
+  "polars>=1.30",
+  "ledger-core",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ledger_nlp"]
+
+[tool.uv.sources]
+ledger-core = { workspace = true }
