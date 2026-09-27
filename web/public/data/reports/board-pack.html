@@ -449,8 +449,8 @@ first.</p>
 on our list, every model's features are tested against that list, and every decline carries its
 principal reasons.</p>
 <h2>Model risk</h2>
-<p>We use 5 models in this pack. Each has an SR 11-7 style validation report,
-a tier, an owner and a monitoring plan; 11 challenges were raised and
+<p>We use 6 models in this pack. Each has an SR 11-7 style validation report,
+a tier, an owner and a monitoring plan; 13 challenges were raised and
 answered during development and each is on record.</p>
 <table>
 <thead>
@@ -521,6 +521,17 @@ answered during development and each is on record.</p>
 <td>2026-08-31</td>
 <td>approved</td>
 <td style="text-align:right">1.000</td>
+</tr>
+<tr>
+<td>attrition</td>
+<td>Deposit customer attrition, twelve month horizon</td>
+<td>f06</td>
+<td>2</td>
+<td>sole</td>
+<td>in use</td>
+<td>2026-08-31</td>
+<td>approved</td>
+<td style="text-align:right">0.583</td>
 </tr>
 </tbody>
 </table>
@@ -702,6 +713,26 @@ with where its data lives:</p>
 <td>Alerts by month and rule</td>
 <td><code>results/f05/alerts_monthly.parquet</code></td>
 <td>generated, packages/crime</td>
+</tr>
+<tr>
+<td>Deposits by product</td>
+<td><code>results/f06/deposits_monthly.parquet</code></td>
+<td>generated, marts.mart_deposits_monthly</td>
+</tr>
+<tr>
+<td>Checking accounts opened and closed each month</td>
+<td><code>results/f06/deposits_monthly.parquet</code></td>
+<td>generated, marts.mart_deposits_monthly</td>
+</tr>
+<tr>
+<td>The policy rate, and what each product pays</td>
+<td><code>results/f06/rates.parquet</code></td>
+<td>generated, marts.mart_deposits_monthly</td>
+</tr>
+<tr>
+<td>The retention list: expected balance at risk</td>
+<td><code>results/f06/retention_list.parquet</code></td>
+<td>generated, marts.mart_deposits_monthly</td>
 </tr>
 <tr>
 <td>The fraud model's monitoring, week by week</td>

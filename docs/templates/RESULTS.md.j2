@@ -182,6 +182,26 @@ The triage model, `aml_triage`, on the test months:
 
 {{ label('models.aml_triage.benchmark') }}
 
+## Deposits and customers
+
+{{ figure('f06.fig_balances').callout }}
+
+{{ figure('f06.fig_rates').callout }}
+
+{{ table('f06.betas') }}
+
+{{ label('f06.betas') }}
+
+The largest depositors' share of deposits:
+
+{{ table('f06.concentration') }}
+
+{{ figure('f06.fig_retention').callout }} The attrition model reaches an AUROC of {{ v('models.attrition.test.auroc') }} on month ends it never saw, against a ceiling of {{ v('models.attrition.ceiling') }} that the generator's own hazards reach with perfect knowledge of the year ahead.
+
+{{ table('f06.retention_top') }}
+
+{{ label('f06.retention_top') }}
+
 ## Controls
 
 {{ figure('f11.fig_recon').callout }}

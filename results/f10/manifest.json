@@ -114,6 +114,18 @@
      "fraud_account",
      "Recall at a five percent false positive rate sets the threshold on the same months it reports. A bank has to fix its threshold before the applications arrive, and the false positive rate it then gets is whatever the new months give it.",
      "The report and the page publish both: the suite's measure, and the recall, false positive rate and predictive equality on months 6 and 7 at the threshold fixed on month 5. The recall gate uses the fixed threshold, and a gate watches how far the realised false positive rate drifts from its target."
+    ],
+    [
+     "2026-09-27",
+     "attrition",
+     "The first split trained on every month end up to December 2024 and tested on the summer of 2025. A December 2024 label says whether the customer left by December 2025, which the bank could not have known when it scored the summer of 2025.",
+     "Training uses month ends September 2023 to February 2024, validation March to May 2024, and test June to August 2025, so every training and validation outcome was known before the first test month end. The gap is stated in the report beside the split."
+    ],
+    [
+     "2026-09-27",
+     "attrition",
+     "Sorted by probability alone, the top of the retention list fills with new customers holding a few hundred dollars. A retention call costs the same whoever answers.",
+     "The list is ranked by expected balance at risk. The report publishes, for the top tenth of the test months, the share of closers and the share of their balances found by each ordering, so the trade between the two is visible."
     ]
    ]
   },
@@ -202,6 +214,17 @@
      "2026-08-31",
      "approved",
      1.0
+    ],
+    [
+     "attrition",
+     "Deposit customer attrition, twelve month horizon",
+     "f06",
+     "2",
+     "sole",
+     "in use",
+     "2026-08-31",
+     "approved",
+     0.583038203
     ]
    ]
   },
@@ -267,7 +290,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 2
+   "value": 3
   },
   "f10.challenge_count": {
    "fmt": "int",
@@ -278,7 +301,7 @@
     "seed": null,
     "source": "effective challenge log"
    },
-   "value": 11
+   "value": 13
   },
   "f10.fraud_first_labelled_week": {
    "fmt": "text",
@@ -322,7 +345,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 5
+   "value": 6
   },
   "f10.not_approved": {
    "fmt": "int",

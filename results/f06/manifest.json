@@ -1,0 +1,725 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f06.fig_balances": {
+   "callout": "Deposits stood at $930.6M in 2026-08, +13.2% since the first month. Checking is 49.0% of the total: the cheapest money the bank has, and the first to leave when a customer does.",
+   "data": "f06/deposits_monthly.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "title": "Deposits by product"
+  },
+  "f06.fig_flows": {
+   "callout": "14,293 checking accounts opened and 8,401 closed over the three years. Closures are the attrition model's outcome; the retention list below is its use.",
+   "data": "f06/deposits_monthly.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "title": "Checking accounts opened and closed each month"
+  },
+  "f06.fig_rates": {
+   "callout": "The policy rate fell 2.58 points from 2024-08 to 2026-08. Savings passed on 0.38 of it (its offered beta is 0.38); time deposits passed on only 0.32 in the first year, because a certificate reprices only when it matures, and 0.66 by the end. Treasury's rate shocks use these betas.",
+   "data": "f06/rates.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "title": "The policy rate, and what each product pays"
+  },
+  "f06.fig_retention": {
+   "callout": "The 500 customers at the top of the list hold $114,622,517 and carry $9,442,588 of expected balance at risk, out of $61,088,783 across all 39,200 checking customers. The list is ordered by probability times balance, so a call goes to the relationship worth keeping.",
+   "data": "f06/retention_list.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "title": "The retention list: expected balance at risk"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f06.betas": {
+   "columns": [
+    "Product",
+    "Generator's beta",
+    "Recovered from the rate sheet",
+    "Within 0.02",
+    "Paid rate beta, first year of cuts",
+    "Paid rate beta, whole cycle"
+   ],
+   "formats": [
+    "text",
+    "float2",
+    "float2",
+    "text",
+    "float2",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "rows": [
+    [
+     "Checking",
+     0.02,
+     0.01998035703,
+     "yes",
+     0.006807399717,
+     0.006644190219
+    ],
+    [
+     "Savings",
+     0.38,
+     0.3799485788,
+     "yes",
+     0.382391335,
+     0.3824235125
+    ],
+    [
+     "Time deposits",
+     0.72,
+     0.7200514212,
+     "yes",
+     0.3213387447,
+     0.6559069865
+    ]
+   ]
+  },
+  "f06.concentration": {
+   "columns": [
+    "Largest depositors",
+    "Customers",
+    "Share of deposits"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "rows": [
+    [
+     "Top 1%",
+     392,
+     0.1256791086
+    ],
+    [
+     "Top 5%",
+     1960,
+     0.3247768558
+    ],
+    [
+     "Top 10%",
+     3920,
+     0.4666648275
+    ]
+   ]
+  },
+  "f06.holding": {
+   "columns": [
+    "Holding",
+    "Share of customers"
+   ],
+   "formats": [
+    "text",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "rows": [
+    [
+     "Checking",
+     0.95202
+    ],
+    [
+     "Savings",
+     0.52168
+    ],
+    [
+     "A time deposit",
+     0.11968
+    ],
+    [
+     "Any credit product",
+     0.5615
+    ],
+    [
+     "Checking and savings",
+     0.48034
+    ],
+    [
+     "Checking and any credit product",
+     0.53374
+    ]
+   ]
+  },
+  "f06.retention_top": {
+   "columns": [
+    "Customer",
+    "Probability of leaving within a year",
+    "Balances",
+    "Expected balance at risk",
+    "Why"
+   ],
+   "formats": [
+    "text",
+    "pct1",
+    "usd0",
+    "usd0",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "rows": [
+    [
+     "C037083",
+     0.06701340292,
+     1463425.23,
+     98069.10458,
+     "checking balance; savings and time balances"
+    ],
+    [
+     "C029680",
+     0.1948028775,
+     362450.58,
+     70606.41592,
+     "has complained; uses digital banking"
+    ],
+    [
+     "C041637",
+     0.05521224121,
+     1271418.24,
+     70197.85055,
+     "checking balance; savings and time balances"
+    ],
+    [
+     "C044343",
+     0.07488183089,
+     777371.27,
+     58210.98398,
+     "uses digital banking; savings and time balances"
+    ],
+    [
+     "C047468",
+     0.07889030512,
+     709515.81,
+     55973.91874,
+     "uses digital banking; savings and time balances"
+    ],
+    [
+     "C040435",
+     0.06907428974,
+     788263.94,
+     54448.77178,
+     "checking balance; savings and time balances"
+    ],
+    [
+     "C034336",
+     0.09017821087,
+     574617.77,
+     51818.00243,
+     "uses digital banking; savings and time balances"
+    ],
+    [
+     "C002484",
+     0.08009695939,
+     644510.81,
+     51623.35617,
+     "uses digital banking; checking balance"
+    ],
+    [
+     "C009648",
+     0.1833884945,
+     279663.47,
+     51287.06273,
+     "customer for under a year; uses digital banking"
+    ],
+    [
+     "C035962",
+     0.05753601688,
+     868794.8,
+     49986.99228,
+     "checking balance; savings and time balances"
+    ],
+    [
+     "C019831",
+     0.09159005083,
+     534437.47,
+     48949.15504,
+     "uses digital banking; time as a customer"
+    ],
+    [
+     "C019661",
+     0.0756382412,
+     634302.27,
+     47977.50809,
+     "uses digital banking; savings and time balances"
+    ],
+    [
+     "C040197",
+     0.08725062808,
+     545562.89,
+     47600.70481,
+     "uses digital banking; savings and time balances"
+    ],
+    [
+     "C002401",
+     0.2052570244,
+     231661.35,
+     47550.11938,
+     "has complained; uses digital banking"
+    ],
+    [
+     "C011480",
+     0.373477938,
+     121096.61,
+     45226.9122,
+     "has complained; customer for under a year"
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f06.beta_checking": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.01998035703
+  },
+  "f06.beta_savings": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.3799485788
+  },
+  "f06.beta_time": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.7200514212
+  },
+  "f06.beta_tolerance": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.02
+  },
+  "f06.betas_recovered": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 3
+  },
+  "f06.checking_accounts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 39452
+  },
+  "f06.checking_balance": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 455708432.9
+  },
+  "f06.checking_closed": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 8401
+  },
+  "f06.checking_opened": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 14293
+  },
+  "f06.checking_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.4896781611
+  },
+  "f06.cross_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.53374
+  },
+  "f06.customers_scored": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 39200
+  },
+  "f06.depositors": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 39200
+  },
+  "f06.deposits": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 930628459.8
+  },
+  "f06.deposits_start": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 822472510.5
+  },
+  "f06.growth": {
+   "fmt": "spct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.1315009899
+  },
+  "f06.list_balances": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 114622516.6
+  },
+  "f06.list_expected_balance": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 9442587.559
+  },
+  "f06.list_size": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 500
+  },
+  "f06.paid_beta_checking": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.006644190219
+  },
+  "f06.paid_beta_savings": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.3824235125
+  },
+  "f06.paid_beta_time": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.6559069865
+  },
+  "f06.paid_beta_year_checking": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.006807399717
+  },
+  "f06.paid_beta_year_savings": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.382391335
+  },
+  "f06.paid_beta_year_time": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.3213387447
+  },
+  "f06.policy_cut": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 2.58
+  },
+  "f06.policy_move": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": -2.58
+  },
+  "f06.portfolio_expected_balance": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 61088782.85
+  },
+  "f06.products_per_customer": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 2.2925
+  },
+  "f06.savings_accounts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 23083
+  },
+  "f06.savings_balance": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 347348783.6
+  },
+  "f06.savings_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.3732410931
+  },
+  "f06.time_accounts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 4238
+  },
+  "f06.time_balance": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 127571243.3
+  },
+  "f06.time_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.1370807458
+  },
+  "f06.top10_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.4666648275
+  },
+  "f06.top1_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 0.1256791086
+  }
+ }
+}

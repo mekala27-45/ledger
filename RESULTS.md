@@ -456,6 +456,50 @@ The triage model, `aml_triage`, on the test months:
 
 Source: generated, Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
 
+## Deposits and customers
+
+Deposits stood at $930.6M in 2026-08, +13.2% since the first month. Checking is 49.0% of the total: the cheapest money the bank has, and the first to leave when a customer does.
+
+The policy rate fell 2.58 points from 2024-08 to 2026-08. Savings passed on 0.38 of it (its offered beta is 0.38); time deposits passed on only 0.32 in the first year, because a certificate reprices only when it matures, and 0.66 by the end. Treasury's rate shocks use these betas.
+
+| Product | Generator's beta | Recovered from the rate sheet | Within 0.02 | Paid rate beta, first year of cuts | Paid rate beta, whole cycle |
+|---|---:|---:|---|---:|---:|
+| Checking | 0.02 | 0.02 | yes | 0.01 | 0.01 |
+| Savings | 0.38 | 0.38 | yes | 0.38 | 0.38 |
+| Time deposits | 0.72 | 0.72 | yes | 0.32 | 0.66 |
+
+Source: generated, Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
+
+The largest depositors' share of deposits:
+
+| Largest depositors | Customers | Share of deposits |
+|---|---:|---:|
+| Top 1% | 392 | 12.6% |
+| Top 5% | 1,960 | 32.5% |
+| Top 10% | 3,920 | 46.7% |
+
+The 500 customers at the top of the list hold $114,622,517 and carry $9,442,588 of expected balance at risk, out of $61,088,783 across all 39,200 checking customers. The list is ordered by probability times balance, so a call goes to the relationship worth keeping. The attrition model reaches an AUROC of 0.583 on month ends it never saw, against a ceiling of 0.588 that the generator's own hazards reach with perfect knowledge of the year ahead.
+
+| Customer | Probability of leaving within a year | Balances | Expected balance at risk | Why |
+|---|---:|---:|---:|---|
+| C037083 | 6.7% | $1,463,425 | $98,069 | checking balance; savings and time balances |
+| C029680 | 19.5% | $362,451 | $70,606 | has complained; uses digital banking |
+| C041637 | 5.5% | $1,271,418 | $70,198 | checking balance; savings and time balances |
+| C044343 | 7.5% | $777,371 | $58,211 | uses digital banking; savings and time balances |
+| C047468 | 7.9% | $709,516 | $55,974 | uses digital banking; savings and time balances |
+| C040435 | 6.9% | $788,264 | $54,449 | checking balance; savings and time balances |
+| C034336 | 9.0% | $574,618 | $51,818 | uses digital banking; savings and time balances |
+| C002484 | 8.0% | $644,511 | $51,623 | uses digital banking; checking balance |
+| C009648 | 18.3% | $279,663 | $51,287 | customer for under a year; uses digital banking |
+| C035962 | 5.8% | $868,795 | $49,987 | checking balance; savings and time balances |
+| C019831 | 9.2% | $534,437 | $48,949 | uses digital banking; time as a customer |
+| C019661 | 7.6% | $634,302 | $47,978 | uses digital banking; savings and time balances |
+| C040197 | 8.7% | $545,563 | $47,601 | uses digital banking; savings and time balances |
+| C002401 | 20.5% | $231,661 | $47,550 | has complained; uses digital banking |
+| C011480 | 37.3% | $121,097 | $45,227 | has complained; customer for under a year |
+
+Source: generated, Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
+
 ## Controls
 
 786 of 792 account months tie to the cent. The one break is savings deposits, account 2010, first appearing in 2026-03 at $4,217.36 and carried unchanged into every later month: one break, located, not 6. Every posting traces to a sub ledger transaction.
@@ -500,6 +544,7 @@ The warehouse passed 210 of 210 dbt tests over 62 models. The identifier scan fo
 | fraud_card | Card transaction fraud (the desk's model) | f04 | 1 | sole | in use | 2026-08-31 | approved | 1.000 |
 | fraud_account | Application fraud on the BAF suite | f04 | 1 | sole | in use | 2026-08-31 | approved with conditions | 0.880 |
 | aml_triage | Alert triage for transaction monitoring | f05 | 2 | sole | in use | 2026-08-31 | approved | 1.000 |
+| attrition | Deposit customer attrition, twelve month horizon | f06 | 2 | sole | in use | 2026-08-31 | approved | 0.583 |
 
 Source: mixed, the model inventory, as of 2026-08-31.
 
@@ -522,6 +567,8 @@ The effective challenge log:
 | 2026-09-27 | aml_triage | The mule, rapid movement and round tripping rules fired no false alerts on this data, so a model that only learned which rule fired would already rank most of the queue correctly. | A gate now measures the model within structuring alerts alone, where the rules' order carries no information, and the benchmark table includes ranking by each rule's development precision. |
 | 2026-09-27 | fraud_account | customer_age is on the proxy list and never a feature, yet at the suite's threshold older applicants who are not fraudsters are flagged far more often than younger ones. If the model cannot see age, where does the gap come from? | The date of birth count is on the proxy list now, with its reason, so no model may use it. The report publishes a search for a less discriminatory alternative: the next strongest age carriers removed one at a time, with the recall each step costs and the parity it buys, on both variants. The model's use is bounded to asking for documents before an account opens, never to declining one, because a false flag then costs an applicant a delay rather than an account. |
 | 2026-09-27 | fraud_account | Recall at a five percent false positive rate sets the threshold on the same months it reports. A bank has to fix its threshold before the applications arrive, and the false positive rate it then gets is whatever the new months give it. | The report and the page publish both: the suite's measure, and the recall, false positive rate and predictive equality on months 6 and 7 at the threshold fixed on month 5. The recall gate uses the fixed threshold, and a gate watches how far the realised false positive rate drifts from its target. |
+| 2026-09-27 | attrition | The first split trained on every month end up to December 2024 and tested on the summer of 2025. A December 2024 label says whether the customer left by December 2025, which the bank could not have known when it scored the summer of 2025. | Training uses month ends September 2023 to February 2024, validation March to May 2024, and test June to August 2025, so every training and validation outcome was known before the first test month end. The gap is stated in the report beside the split. |
+| 2026-09-27 | attrition | Sorted by probability alone, the top of the retention list fills with new customers holding a few hundred dollars. A retention call costs the same whoever answers. | The list is ranked by expected balance at risk. The report publishes, for the top tenth of the test months, the share of closers and the share of their balances found by each ordering, so the trade between the two is visible. |
 
 ## The board's decision
 

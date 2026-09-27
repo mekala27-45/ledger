@@ -32,6 +32,8 @@ The bank is Harborline Bank, and it does not exist: its name was checked against
 | Against real peers | Net interest margin 5.60%, above 99% of 191 FDIC insured banks its size in its region | FDIC financial data, 2026Q2 |
 | Fair lending on real HMDA data | Black applicants' odds of denial 1.76 times white non Hispanic applicants' after adjustment (2.63 before) | 215,881 New Jersey applications, lender fixed effects, Benjamini and Hochberg across 8 comparisons |
 | Transaction monitoring | 362 of 422 planted laundering episodes found; 41.5% of structuring alerts real | Four rules at the reporting threshold, graded against the generator's truth |
+| Deposit betas | 3 of 3 recovered within 0.02 of the generator's; time deposits passed on 0.32 of the first year's rate cuts | Offered rates from the rate sheet, paid rates from interest actually credited |
+| Deposit attrition | AUROC 0.583 against a ceiling of 0.588 from the generator's own hazards | The logistic regression beat LightGBM on held out customers, so it is the model |
 | Warehouse | 210 of 210 tests pass over 62 models | dbt on DuckDB |
 
 ## The fraud desk
@@ -53,7 +55,8 @@ The model's AUROC of 1.000 is a property of the Sparkov generator, whose fraud b
 | f03 | Fair lending | Are some applicants denied more often than comparable applicants? | Adjusted odds ratio for Black applicants 1.76 | HMDA, ECOA and Regulation B | | [/fair-lending](https://mekala27-45.github.io/ledger/fair-lending/) |
 | f04 | The fraud desk | At what score should the desk decline, and what can it say about its precision? | Cost $24,927 at the operating point | The card networks' chargeback window; the BAF suite's fairness protocol | `fraud_card`, `fraud_account` | [/desk](https://mekala27-45.github.io/ledger/desk/) |
 | f05 | Financial crime | Do the rules find the planted typologies at a workable volume, and in what order? | 362 of 422 planted episodes found, 7.9 alerts per hundred thousand entries | BSA and the reporting threshold | `aml_triage` | [/crime](https://mekala27-45.github.io/ledger/crime/) |
-| f10 | Model risk management | Has every model earned the decisions it makes? | 5 models, each with a validation report | SR 11-7 | | [/models](https://mekala27-45.github.io/ledger/models/) |
+| f06 | Deposits and customers | Where are the deposits, how much of a rate move reaches customers, and whom should the bank call? | Top 1% of depositors hold 12.6% | Deposit betas against the generator's | `attrition` | [/deposits](https://mekala27-45.github.io/ledger/deposits/) |
+| f10 | Model risk management | Has every model earned the decisions it makes? | 6 models, each with a validation report | SR 11-7 | | [/models](https://mekala27-45.github.io/ledger/models/) |
 | f11 | Controls and data | Can every other number be trusted? | 786 of 792 account months tied | Ledger to sub ledger, to the cent | | [/controls](https://mekala27-45.github.io/ledger/controls/) |
 | f12 | The board pack | What should the board decide? | Installment cutoff held at 580 | | | [/report](https://mekala27-45.github.io/ledger/report/) |
 
@@ -77,6 +80,7 @@ The scorecard studio at [/studio](https://mekala27-45.github.io/ledger/studio/) 
 | Graph analytics | f05, the transfer network, [/crime](https://mekala27-45.github.io/ledger/crime/) |
 | Adverse action reason codes | `packages/scorecard`, the studio |
 | Fairness in fraud and credit | subgroup audits in every validation report; the BAF protocol and a less discriminatory alternative search in `report/validation/fraud_account.md` |
+| Deposit betas and customer attrition | f06, [/deposits](https://mekala27-45.github.io/ledger/deposits/) |
 | Model risk management, SR 11-7 | f10, `report/validation`, [/models](https://mekala27-45.github.io/ledger/models/) |
 | Model monitoring, PSI and CSI | f10, the monitoring charts |
 | Ledger reconciliation and controls | f11, [/controls](https://mekala27-45.github.io/ledger/controls/) |

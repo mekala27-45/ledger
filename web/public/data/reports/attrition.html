@@ -1,0 +1,561 @@
+<h1>Validation report: Deposit customer attrition, twelve month horizon</h1>
+<blockquote>
+<p>Harborline Bank is fictional. This is a demonstration on generated data and public datasets; no real customer, account or transaction of any real institution appears here.</p>
+<p>Nothing here is a credit decision, a fraud determination, a suspicious activity finding or investment advice.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>attrition</code></td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Rank customers by the balance the bank stands to lose if they leave in the next twelve months, so retention calls go where they are worth most</td>
+</tr>
+<tr>
+<td>Tier</td>
+<td>2: Informs a decision a person makes; moderate materiality</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>sole</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>in use</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Head of analytics</td>
+</tr>
+<tr>
+<td>Prediction time</td>
+<td>Each month end; features use only that month and earlier</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>The customer's primary checking account closes within the next twelve months</td>
+</tr>
+<tr>
+<td>Last validated</td>
+<td>2026-08-31</td>
+</tr>
+<tr>
+<td>Conclusion</td>
+<td><strong>approved</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Purpose and scope</h2>
+<p>Rank the bank's checking customers by the deposits it stands to lose if they leave in the
+next twelve months, so that retention calls go where they protect the most balance. The
+model informs whom a person calls; it never changes a price, a fee or an account, so it
+is tier two.</p>
+<p>Out of scope: pricing a retention offer, and any customer who holds only a loan or a card.</p>
+<h2>Conceptual soundness</h2>
+<p>Attrition is a rare outcome driven by a few things a bank can see: a falling balance,
+fees, a new relationship, how the customer banks, a complaint, and a savings rate well
+below the market. Two candidates were fitted on the same features: a gradient boosted
+classifier, for the interactions a real bank's data would have, and a logistic
+regression. The champion was chosen on validation month ends for customers neither fit
+had seen, and the boosted model had to beat the logistic by 0.005 of
+AUROC to earn its complexity. It did not (0.598 against
+0.597), so the model is the logistic regression.</p>
+<p>The retention list multiplies the probability by the customer's balances, so the
+probability is used as a probability, and calibration is part of the model's job.</p>
+<h2>Data and assumptions</h2>
+<p>One row per customer with an open checking account per month end. The outcome is known
+only twelve months later, and the split is built around that: training on
+month ends September 2023 to February 2024, validation on month ends March to May 2024, test on
+month ends June to August 2025 (109,061 customer months,
+7,060 of them followed by a closure). Every training and validation
+outcome was known before the first test month end, which is why the windows are apart.
+The same customers appear in every month, so early stopping and the choice of champion
+use customers held out of the fit (80% of customers fit).</p>
+<p>A leakage test recomputed the month's fees, activity, payroll deposits and inflow for
+200 sampled customer months from the posted entries and matched
+every one. Age is never a feature; it is used only for the audit below.</p>
+<h2>Development evidence</h2>
+<p>Development AUROC 0.596, validation 0.596.
+What moves the score most (standardised coefficients for a logistic regression, share of
+gain for a boosted model):</p>
+<table>
+<thead>
+<tr>
+<th>feature</th>
+<th style="text-align:right">weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uses digital banking</td>
+<td style="text-align:right">-0.18</td>
+</tr>
+<tr>
+<td>has complained</td>
+<td style="text-align:right">0.17</td>
+</tr>
+<tr>
+<td>customer for under a year</td>
+<td style="text-align:right">0.14</td>
+</tr>
+<tr>
+<td>money going out</td>
+<td style="text-align:right">-0.05</td>
+</tr>
+<tr>
+<td>time as a customer</td>
+<td style="text-align:right">-0.05</td>
+</tr>
+<tr>
+<td>savings rate far below market</td>
+<td style="text-align:right">0.04</td>
+</tr>
+<tr>
+<td>holds savings or a CD</td>
+<td style="text-align:right">0.04</td>
+</tr>
+<tr>
+<td>savings and time balances</td>
+<td style="text-align:right">0.04</td>
+</tr>
+<tr>
+<td>money coming in</td>
+<td style="text-align:right">0.02</td>
+</tr>
+<tr>
+<td>checking balance</td>
+<td style="text-align:right">0.02</td>
+</tr>
+<tr>
+<td>less than three months of history</td>
+<td style="text-align:right">0.01</td>
+</tr>
+<tr>
+<td>checking balance fell sharply last month</td>
+<td style="text-align:right">0.01</td>
+</tr>
+<tr>
+<td>overdraft last month</td>
+<td style="text-align:right">-0.01</td>
+</tr>
+<tr>
+<td>payroll deposits</td>
+<td style="text-align:right">0.01</td>
+</tr>
+<tr>
+<td>checking balance change over three months</td>
+<td style="text-align:right">-0.01</td>
+</tr>
+<tr>
+<td>income</td>
+<td style="text-align:right">0.00</td>
+</tr>
+<tr>
+<td>account activity</td>
+<td style="text-align:right">0.00</td>
+</tr>
+<tr>
+<td>fees charged last month</td>
+<td style="text-align:right">0.00</td>
+</tr>
+</tbody>
+</table>
+<h2>Outcomes analysis on held out data</h2>
+<p>On the test months the model reaches an AUROC of 0.583, and the
+LightGBM 0.579. That looks weak until it is set against the
+ceiling: the generator's own monthly hazards, used as a score with perfect knowledge of
+the months ahead, reach 0.588. Most attrition in this bank is chance, as it
+is in most banks, and the model reaches 94% of the separation there is
+to find.</p>
+<p>The top 10% of scores holds 17.4% of the customers who
+went on to close. Ranked by probability, it holds 11.2% of the
+balances that left; ranked by expected balance at risk, as the list is, it holds
+47.1% of the balances and 11.1%
+of the closers: fewer people, more money.</p>
+<p>By age band at the top tenth threshold:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th style="text-align:right">N</th>
+<th style="text-align:right">Event rate</th>
+<th style="text-align:right">Mean score</th>
+<th style="text-align:right">Calibration gap</th>
+<th style="text-align:right">Auroc</th>
+<th style="text-align:right">Flag rate</th>
+<th style="text-align:right">Fpr</th>
+<th style="text-align:right">Recall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>under 25</td>
+<td style="text-align:right">14,988</td>
+<td style="text-align:right">6.46%</td>
+<td style="text-align:right">7.04%</td>
+<td style="text-align:right">+0.6%</td>
+<td style="text-align:right">0.573</td>
+<td style="text-align:right">8.82%</td>
+<td style="text-align:right">8.27%</td>
+<td style="text-align:right">16.8%</td>
+</tr>
+<tr>
+<td>25 to 34</td>
+<td style="text-align:right">18,460</td>
+<td style="text-align:right">6.10%</td>
+<td style="text-align:right">7.11%</td>
+<td style="text-align:right">+1.0%</td>
+<td style="text-align:right">0.605</td>
+<td style="text-align:right">9.15%</td>
+<td style="text-align:right">8.62%</td>
+<td style="text-align:right">17.4%</td>
+</tr>
+<tr>
+<td>35 to 49</td>
+<td style="text-align:right">37,400</td>
+<td style="text-align:right">6.46%</td>
+<td style="text-align:right">7.52%</td>
+<td style="text-align:right">+1.1%</td>
+<td style="text-align:right">0.577</td>
+<td style="text-align:right">10.22%</td>
+<td style="text-align:right">9.84%</td>
+<td style="text-align:right">15.7%</td>
+</tr>
+<tr>
+<td>50 to 64</td>
+<td style="text-align:right">27,666</td>
+<td style="text-align:right">6.74%</td>
+<td style="text-align:right">7.66%</td>
+<td style="text-align:right">+0.9%</td>
+<td style="text-align:right">0.579</td>
+<td style="text-align:right">10.31%</td>
+<td style="text-align:right">9.72%</td>
+<td style="text-align:right">18.4%</td>
+</tr>
+<tr>
+<td>65 and over</td>
+<td style="text-align:right">10,547</td>
+<td style="text-align:right">6.51%</td>
+<td style="text-align:right">8.30%</td>
+<td style="text-align:right">+1.8%</td>
+<td style="text-align:right">0.594</td>
+<td style="text-align:right">11.59%</td>
+<td style="text-align:right">10.85%</td>
+<td style="text-align:right">22.1%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Harborline customers with an open checking account at a month end, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
+<p>Calibration on the test sample, ten equal count bins:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Bin</th>
+<th style="text-align:right">Accounts</th>
+<th style="text-align:right">Predicted</th>
+<th style="text-align:right">Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">10,907</td>
+<td style="text-align:right">4.81%</td>
+<td style="text-align:right">4.69%</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">5.21%</td>
+<td style="text-align:right">5.14%</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">5.54%</td>
+<td style="text-align:right">4.71%</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">5.82%</td>
+<td style="text-align:right">5.19%</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">6.16%</td>
+<td style="text-align:right">5.20%</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">6.77%</td>
+<td style="text-align:right">6.64%</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">7.60%</td>
+<td style="text-align:right">6.59%</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">8.30%</td>
+<td style="text-align:right">7.07%</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">9.66%</td>
+<td style="text-align:right">8.21%</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">10,906</td>
+<td style="text-align:right">15.12%</td>
+<td style="text-align:right">11.29%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Harborline customers with an open checking account at a month end, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
+<h2>Benchmarking</h2>
+<p>Against the base rate and the candidate that was not chosen, on the test months:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align:right">AUROC</th>
+<th style="text-align:right">Gini</th>
+<th style="text-align:right">Brier</th>
+<th style="text-align:right">ECE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This model</td>
+<td style="text-align:right">0.583</td>
+<td style="text-align:right">0.166</td>
+<td style="text-align:right">0.0603</td>
+<td style="text-align:right">0.0103</td>
+</tr>
+<tr>
+<td>Base rate</td>
+<td style="text-align:right">0.500</td>
+<td style="text-align:right">0.000</td>
+<td style="text-align:right">0.0606</td>
+<td style="text-align:right">0.0100</td>
+</tr>
+<tr>
+<td>LightGBM on the same features</td>
+<td style="text-align:right">0.579</td>
+<td style="text-align:right">0.158</td>
+<td style="text-align:right">0.0602</td>
+<td style="text-align:right">0.0126</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Harborline customers with an open checking account at a month end, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
+<h2>Limitations</h2>
+<ul>
+<li>The generator's customers leave for the reasons it was written with. Real attrition
+has causes no bank sees, such as a move or a competitor's offer.</li>
+<li>Closure of the primary checking account is the outcome. A customer who keeps the
+account open and moves their salary elsewhere has left in every way that matters, and
+this label does not see it.</li>
+<li>A retention call changes the outcome it predicts. Once the list is used, the model's
+measured capture is no longer a clean measure of the model.</li>
+</ul>
+<h2>Ongoing monitoring plan</h2>
+<p>Monthly:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Trigger</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Score PSI, monthly against validation</td>
+<td>above 0.25</td>
+<td>Revalidate</td>
+</tr>
+<tr>
+<td>Share of the list's customers who close within twelve months</td>
+<td>below the test capture for two quarters</td>
+<td>Refit</td>
+</tr>
+<tr>
+<td>Flag rate by age band</td>
+<td>any band below half the highest</td>
+<td>Review the features</td>
+</tr>
+</tbody>
+</table>
+<h2>Effective challenge</h2>
+<p>From <code>DECISIONS.md</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Challenge</th>
+<th>Response</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-27</td>
+<td>The first split trained on every month end up to December 2024 and tested on the summer of 2025. A December 2024 label says whether the customer left by December 2025, which the bank could not have known when it scored the summer of 2025.</td>
+<td>A random or plain temporal split lets training labels come from the future of the test months whenever the outcome window is longer than the gap. The model a bank could actually have fitted on 31 May 2025 only had month ends whose windows had closed by then.</td>
+<td>Training uses month ends September 2023 to February 2024, validation March to May 2024, and test June to August 2025, so every training and validation outcome was known before the first test month end. The gap is stated in the report beside the split.</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>Sorted by probability alone, the top of the retention list fills with new customers holding a few hundred dollars. A retention call costs the same whoever answers.</td>
+<td>The list exists to protect deposits. What the bank stands to lose is the probability times the balances the customer holds, and the two orderings put different people at the top.</td>
+<td>The list is ranked by expected balance at risk. The report publishes, for the top tenth of the test months, the share of closers and the share of their balances found by each ordering, so the trade between the two is visible.</td>
+</tr>
+</tbody>
+</table>
+<h2>Promotion gates</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Threshold</th>
+<th style="text-align:right">Measured</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Share of the achievable separation reached: (AUROC minus one half) over (the ceiling minus one half)</td>
+<td>at least 0.5</td>
+<td style="text-align:right">0.9417</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test AUROC against the other candidate's (the choice on validation must not cost more than a hundredth)</td>
+<td>at least -0.01</td>
+<td style="text-align:right">0.0040</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test average precision above the base rate</td>
+<td>at least 0</td>
+<td style="text-align:right">0.0304</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Share of closers in the top tenth of scores, test months (a tenth is no better than chance)</td>
+<td>at least 0.15</td>
+<td style="text-align:right">0.1744</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Point in time recompute of sampled customer months</td>
+<td>at least 200</td>
+<td style="text-align:right">200.0000</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Expected calibration error on test</td>
+<td>at most 0.02</td>
+<td style="text-align:right">0.0103</td>
+<td>pass</td>
+</tr>
+</tbody>
+</table>
+<h2>Validation conclusion</h2>
+<p>The model orders customers the way its purpose asks, reaches most of the separation the
+data holds on month ends it never saw, and its probability is calibrated well enough to
+multiply a balance. It is approved for ordering the retention list, with the ceiling
+restated at every revalidation, because a real bank has no generator to measure it by.</p>
+<p><strong>approved.</strong> Conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h2>The integration contract</h2>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>What this model does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trained</td>
+<td>On month ends September 2023 to February 2024, whose twelve month outcomes had all closed before the test months began.</td>
+</tr>
+<tr>
+<td>timed</td>
+<td>Every feature comes from the month end or earlier; a leakage test recomputes the month's activity for 200 sampled customer months from posted entries.</td>
+</tr>
+<tr>
+<td>calibrated</td>
+<td>Reliability on the test months is published, and the probability is used as a probability: it multiplies the balance.</td>
+</tr>
+<tr>
+<td>useful</td>
+<td>Beats the base rate, matches or beats the other candidate on months it never saw, and reaches a stated share of the separation the generator's own hazards reach.</td>
+</tr>
+<tr>
+<td>fair</td>
+<td>Flag rate and capture by age band at the top tenth. Age never enters the model.</td>
+</tr>
+<tr>
+<td>gated</td>
+<td>Every gate in this report.</td>
+</tr>
+<tr>
+<td>served</td>
+<td>Scored monthly in the pipeline; the retention list is published with the deposits page.</td>
+</tr>
+<tr>
+<td>integrated</td>
+<td>Orders the retention list by expected balance at risk: probability times the balances held.</td>
+</tr>
+<tr>
+<td>monitored</td>
+<td>Monthly score PSI; capture of the list against closures as they happen; closure rate by age band.</td>
+</tr>
+<tr>
+<td>documented</td>
+<td>This validation report and the deposits page.</td>
+</tr>
+<tr>
+<td>bounded</td>
+<td>Chooses whom to call. Never changes a price, a fee or an account, and never goes to a customer as a score.</td>
+</tr>
+<tr>
+<td>validated</td>
+<td>This report, rendered from the manifest before the list is used.</td>
+</tr>
+<tr>
+<td>explainable</td>
+<td>Each customer on the list shows the two features that raised the probability most, in plain words.</td>
+</tr>
+</tbody>
+</table>

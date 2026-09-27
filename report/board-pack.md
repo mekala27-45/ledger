@@ -160,8 +160,8 @@ principal reasons.
 
 ## Model risk
 
-We use 5 models in this pack. Each has an SR 11-7 style validation report,
-a tier, an owner and a monitoring plan; 11 challenges were raised and
+We use 6 models in this pack. Each has an SR 11-7 style validation report,
+a tier, an owner and a monitoring plan; 13 challenges were raised and
 answered during development and each is on record.
 
 | Model | Title | Function | Tier | Role | Status | Last validated | Conclusion | Test AUROC |
@@ -171,6 +171,7 @@ answered during development and each is on record.
 | fraud_card | Card transaction fraud (the desk's model) | f04 | 1 | sole | in use | 2026-08-31 | approved | 1.000 |
 | fraud_account | Application fraud on the BAF suite | f04 | 1 | sole | in use | 2026-08-31 | approved with conditions | 0.880 |
 | aml_triage | Alert triage for transaction monitoring | f05 | 2 | sole | in use | 2026-08-31 | approved | 1.000 |
+| attrition | Deposit customer attrition, twelve month horizon | f06 | 2 | sole | in use | 2026-08-31 | approved | 0.583 |
 
 The probability of default scorecard is approved with a condition: its calibration on the
 loosened and recession vintages, which the expected loss overlay covers until it is
@@ -241,6 +242,10 @@ with where its data lives:
 | The investigator's view: alerted communities in the transfer network | `results/f05/network.json` | generated, Louvain communities over transfers between customers |
 | What each rule finds, against the planted truth | `results/f05/rule_scorecard.parquet` | generated, packages/crime |
 | Alerts by month and rule | `results/f05/alerts_monthly.parquet` | generated, packages/crime |
+| Deposits by product | `results/f06/deposits_monthly.parquet` | generated, marts.mart_deposits_monthly |
+| Checking accounts opened and closed each month | `results/f06/deposits_monthly.parquet` | generated, marts.mart_deposits_monthly |
+| The policy rate, and what each product pays | `results/f06/rates.parquet` | generated, marts.mart_deposits_monthly |
+| The retention list: expected balance at risk | `results/f06/retention_list.parquet` | generated, marts.mart_deposits_monthly |
 | The fraud model's monitoring, week by week | `results/f10/fraud_weekly.parquet` | replayed, fraud_card |
 | Score stability by application quarter, against the development quarters | `results/f10/pd_psi_by_quarter.parquet` | generated, pd_scorecard |
 | Reported balance against the sum of postings, by account and month | `results/f11/reconciliation.parquet` | generated, f11 reconciliation |
