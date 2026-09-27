@@ -54,6 +54,39 @@ def _contracts(p: Paths, args: argparse.Namespace) -> int:
     return 0
 
 
+@command("warehouse", "build the dbt warehouse over the staged tables and run every dbt test")
+def _warehouse(p: Paths, args: argparse.Namespace) -> int:
+    from ledger_functions.warehouse import build
+
+    build(p)
+    return 0
+
+
+@command("reconcile", "reconcile the general ledger to its postings and sub ledgers, to the cent")
+def _reconcile(p: Paths, args: argparse.Namespace) -> int:
+    from ledger_functions.f11_controls.reconcile import reconcile
+    from ledger_functions.warehouse import connect
+
+    result = reconcile(connect(p))
+    out = p.results / "f11"
+    out.mkdir(parents=True, exist_ok=True)
+    result.table.write_parquet(out / "reconciliation.parquet")
+    result.subledger.write_parquet(out / "subledger_tie.parquet")
+    breaks = [
+        {
+            "gl_account": b.gl_account,
+            "month": b.month,
+            "amount": str(b.amount),
+            "months_carried": b.months_carried,
+            "kind": b.kind,
+        }
+        for b in result.breaks
+    ]
+    (out / "breaks.json").write_text(json.dumps(breaks, indent=1) + "\n")
+    print(json.dumps({"breaks": breaks, "unsourced_postings": result.unsourced_postings}))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ledger", description=__doc__)
     parser.add_argument("--root", type=Path, default=None, help="repository root (default: discovered)")
