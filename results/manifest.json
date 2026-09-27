@@ -3,6 +3,554 @@
  "figures": {},
  "seed": 20260831,
  "tables": {
+  "models.fraud_card.benchmark": {
+   "columns": [
+    "Model",
+    "AUROC",
+    "Gini",
+    "Brier",
+    "ECE"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float4",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "This model",
+     0.9996245673,
+     0.9992491346,
+     0.001003287075,
+     0.0002240208177
+    ],
+    [
+     "Base rate",
+     0.5,
+     0.0,
+     0.009202528605,
+     0.003127921026
+    ],
+    [
+     "Logistic on the same features",
+     0.9331193248,
+     0.8662386495,
+     0.005334456908,
+     0.001478506668
+    ]
+   ]
+  },
+  "models.fraud_card.challenges": {
+   "columns": [
+    "Date",
+    "Challenge",
+    "Response",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "2026-09-26",
+     "The merchant features were a cumulative count of a merchant's labelled transactions and a fraud rate over every label since the data began. Both grow or settle with the calendar, so the same merchant looks different in March than in August for no reason a fraud analyst would accept.",
+     "A feature whose meaning drifts with elapsed time teaches a model the calendar. On the desk it would also make a new merchant look risky forever and an old one safe forever.",
+     "The merchant fraud rate now uses only labels that arrived in the trailing 90 days, smoothed toward the rate over the same window, and the raw volume count was removed from the model."
+    ],
+    [
+     "2026-09-26",
+     "At 150 km the rule fired on roughly one transaction in thirty, at about twice the base fraud rate. Every one of those is a review an analyst has to clear.",
+     "Sparkov places merchants at random within a band around the cardholder, so consecutive merchants are often far apart for genuine reasons. A rule that doubles the base rate while flooding the queue costs more analyst time than it saves.",
+     "The threshold moved to 220 km, which cut the rule's volume by more than an order of magnitude. Its precision is published in the validation report, and the monitoring plan retires any rule that falls below twice the base rate."
+    ],
+    [
+     "2026-09-26",
+     "Once the stream was corrected, the model separates fraud from genuine transactions almost perfectly on the test months.",
+     "That is a property of the generator, not an achievement. Sparkov draws fraudulent amounts, hours and categories from distributions that barely overlap with genuine ones; real card fraud imitates genuine spending. What carries over to a real desk is the machinery around the score: the cost based operating point, the queue point, labels that arrive late, and precision that only counts what has been labelled.",
+     "The validation report and the desk page lead with cost and late labels, state this limitation beside the discrimination figures, and the AUROC gate is not the reason the model is approved."
+    ]
+   ]
+  },
+  "models.fraud_card.conditions": {
+   "columns": [
+    "Condition"
+   ],
+   "formats": [
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "None"
+    ]
+   ]
+  },
+  "models.fraud_card.contract": {
+   "columns": [
+    "Line",
+    "What this model does"
+   ],
+   "formats": [
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "trained",
+     "On September 2025 to March 2026, whose labels had all arrived by the end of May."
+    ],
+    [
+     "timed",
+     "Every feature is computed from strictly earlier transactions; a leakage test recomputes 200 sampled rows from raw history."
+    ],
+    [
+     "calibrated",
+     "Reliability on the test months is published; the cost curve uses scores as ranks, not as probabilities."
+    ],
+    [
+     "useful",
+     "Beats the base rate and a logistic model on the same features, and saves most of the cost of approving everything."
+    ],
+    [
+     "fair",
+     "False positive rate and recall by cardholder gender and age band at the operating point."
+    ],
+    [
+     "gated",
+     "Every gate in its validation report, including the cost saving measured on data the threshold never saw."
+    ],
+    [
+     "served",
+     "POST /v1/score/fraud_card and the desk's replay worker in the API; recorded replay on the site."
+    ],
+    [
+     "integrated",
+     "Decides approve, review or decline on the desk; alerts at the queue point go to the analyst queue first."
+    ],
+    [
+     "monitored",
+     "Precision and recall over labelled transactions only, with the unlabelled count beside them; weekly score PSI."
+    ],
+    [
+     "documented",
+     "This validation report, docs/fraud-desk.md and the rule file."
+    ],
+    [
+     "bounded",
+     "Scores card authorisations only; the rules can send a transaction to review but never decline it alone."
+    ],
+    [
+     "validated",
+     "This report, rendered from the manifest before the desk uses the model."
+    ],
+    [
+     "explainable",
+     "Every review or decline shows the rules that fired and the two features that moved the score most, in plain words."
+    ]
+   ]
+  },
+  "models.fraud_card.gates": {
+   "columns": [
+    "Gate",
+    "Threshold",
+    "Measured",
+    "Result"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "Test AUROC at or above the floor",
+     "at least 0.9",
+     0.9996245673,
+     "pass"
+    ],
+    [
+     "Test average precision above the logistic benchmark",
+     "at least 0",
+     0.4249522051,
+     "pass"
+    ],
+    [
+     "Test cost at the operating point below approving everything (share saved)",
+     "at least 0.3",
+     0.9841568128,
+     "pass"
+    ],
+    [
+     "Lowest over highest false positive rate across age bands at the operating point",
+     "at least 0.5",
+     0.602043392,
+     "pass"
+    ],
+    [
+     "Point in time recompute of sampled rows",
+     "at least 200",
+     200.0,
+     "pass"
+    ],
+    [
+     "Expected calibration error on test",
+     "at most 0.01",
+     0.0002240208177,
+     "pass"
+    ]
+   ]
+  },
+  "models.fraud_card.monitoring": {
+   "columns": [
+    "Measure",
+    "Trigger",
+    "Action"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "Precision over labelled decisions, weekly",
+     "below 90% at the queue point for two weeks",
+     "Review the threshold on the latest labelled month"
+    ],
+    [
+     "Unlabelled decisions inside the chargeback window",
+     "reported beside every precision figure",
+     "None: it is context, not a trigger"
+    ],
+    [
+     "Score PSI, weekly against validation",
+     "above 0.25",
+     "Revalidate"
+    ],
+    [
+     "Rule precision on labelled months",
+     "any rule below twice the base rate",
+     "Retire or retune the rule"
+    ]
+   ]
+  },
+  "models.fraud_card.operating_points": {
+   "columns": [
+    "point",
+    "threshold",
+    "declined_or_queued",
+    "cost"
+   ],
+   "formats": [
+    "text",
+    "float4",
+    "int",
+    "usd0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "Cost minimum (operating point)",
+     0.05033822858,
+     3676.0,
+     24926.51
+    ],
+    [
+     "Queue point",
+     0.2758569459,
+     2970.0,
+     null
+    ],
+    [
+     "Accuracy maximum",
+     0.6376402422,
+     2659.0,
+     89153.18
+    ],
+    [
+     "Approve everything",
+     null,
+     0.0,
+     1573326.74
+    ]
+   ]
+  },
+  "models.fraud_card.reliability": {
+   "columns": [
+    "Bin",
+    "Accounts",
+    "Predicted",
+    "Observed"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "pct2",
+    "pct2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     1,
+     30341,
+     1.800495636e-06,
+     0.0
+    ],
+    [
+     2,
+     30340,
+     3.455806893e-06,
+     0.0
+    ],
+    [
+     3,
+     30340,
+     5.092822572e-06,
+     0.0
+    ],
+    [
+     4,
+     30340,
+     7.125574405e-06,
+     0.0
+    ],
+    [
+     5,
+     30340,
+     9.965686063e-06,
+     0.0
+    ],
+    [
+     6,
+     30340,
+     1.427206026e-05,
+     0.0
+    ],
+    [
+     7,
+     30340,
+     2.173902731e-05,
+     0.0
+    ],
+    [
+     8,
+     30340,
+     3.779978411e-05,
+     0.0
+    ],
+    [
+     9,
+     30340,
+     9.18253707e-05,
+     0.0
+    ],
+    [
+     10,
+     30340,
+     0.09486190486,
+     0.09281476599
+    ]
+   ]
+  },
+  "models.fraud_card.rules": {
+   "columns": [
+    "rule",
+    "fired",
+    "precision",
+    "recall"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "First purchase over $500 in a category this card has never used",
+     88,
+     1.0,
+     0.03125
+    ],
+    [
+     "Three or more purchases on this card within 10 minutes",
+     272,
+     0.1213235294,
+     0.01171875
+    ],
+    [
+     "Merchant more than 220 km from this card's previous merchant within the hour",
+     521,
+     0.01727447217,
+     0.003196022727
+    ]
+   ]
+  },
+  "models.fraud_card.subgroups": {
+   "columns": [
+    "Group",
+    "N",
+    "Event rate",
+    "Mean score",
+    "Calibration gap",
+    "Auroc",
+    "Flag rate",
+    "Fpr",
+    "Recall"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct2",
+    "pct2",
+    "spct1",
+    "float3",
+    "pct2",
+    "pct2",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "rows": [
+    [
+     "F",
+     155702.0,
+     0.009543872269,
+     0.009602240176,
+     5.836790745e-05,
+     0.9994309907,
+     0.01274871228,
+     0.003579395134,
+     0.964333782
+    ],
+    [
+     "M",
+     147699.0,
+     0.009004800303,
+     0.009403449855,
+     0.0003986495521,
+     0.9997929427,
+     0.01144896039,
+     0.002562017914,
+     0.9894736842
+    ],
+    [
+     "25 to 39",
+     93649.0,
+     0.00745336309,
+     0.007490395059,
+     3.703196966e-05,
+     0.999358429,
+     0.01001612404,
+     0.002915514626,
+     0.9555873926
+    ],
+    [
+     "40 to 59",
+     116789.0,
+     0.008827886188,
+     0.009006949895,
+     0.0001790637067,
+     0.999494958,
+     0.01188468092,
+     0.003343181465,
+     0.9709020369
+    ],
+    [
+     "60 and over",
+     63009.0,
+     0.0126648574,
+     0.01326497195,
+     0.0006001145533,
+     0.9998800871,
+     0.01590249012,
+     0.003359534487,
+     0.9937343358
+    ],
+    [
+     "under 25",
+     29954.0,
+     0.009648127128,
+     0.009840917542,
+     0.0001927904142,
+     0.9999500769,
+     0.01161781398,
+     0.002022585539,
+     0.9965397924
+    ]
+   ]
+  },
   "models.pd_challenger.benchmark": {
    "columns": [
     "Model",
@@ -2026,6 +2574,787 @@
   }
  },
  "values": {
+  "models.fraud_card.accuracy_flagged": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 2659
+  },
+  "models.fraud_card.accuracy_point": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.6376402422
+  },
+  "models.fraud_card.conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "approved"
+  },
+  "models.fraud_card.conditions_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0
+  },
+  "models.fraud_card.cost_acc": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 89153.18
+  },
+  "models.fraud_card.cost_all": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 1573326.74
+  },
+  "models.fraud_card.cost_false_decline": {
+   "fmt": "usd2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 12.0
+  },
+  "models.fraud_card.cost_handling": {
+   "fmt": "usd2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 35.0
+  },
+  "models.fraud_card.cost_op": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 24926.51
+  },
+  "models.fraud_card.development.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9999496544
+  },
+  "models.fraud_card.development.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9958036674
+  },
+  "models.fraud_card.development.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.0005514657445
+  },
+  "models.fraud_card.development.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.0005872319769
+  },
+  "models.fraud_card.development.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.0119699099
+  },
+  "models.fraud_card.development.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 7240
+  },
+  "models.fraud_card.development.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9998993089
+  },
+  "models.fraud_card.development.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9969029974
+  },
+  "models.fraud_card.development.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 604850
+  },
+  "models.fraud_card.feature_count": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "18"
+  },
+  "models.fraud_card.features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "amount, log_amount, hour, weekday, distance_km, count_10m, count_1h, count_24h, count_7d, amount_1h, amount_24h, amount_7d, seconds_since_last, amount_vs_card_mean, merchant_fraud_rate, new_category, km_from_last_merchant, category"
+  },
+  "models.fraud_card.flagged_op": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 3676.0
+  },
+  "models.fraud_card.flagged_queue": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 2970.0
+  },
+  "models.fraud_card.fpr_op": {
+   "fmt": "pct3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.003083986227
+  },
+  "models.fraud_card.fpr_ratio_age": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.602043392
+  },
+  "models.fraud_card.fpr_ratio_all": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.5650634989
+  },
+  "models.fraud_card.labelled_precision_as_of": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.7339673913
+  },
+  "models.fraud_card.labelled_recall_as_of": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9807552651
+  },
+  "models.fraud_card.last_validated": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "2026-08-31"
+  },
+  "models.fraud_card.leakage_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 200
+  },
+  "models.fraud_card.method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "LightGBM on point in time velocity, recency, novelty and merchant history features, early stopped on validation"
+  },
+  "models.fraud_card.naive_precision_as_of": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.2704026115
+  },
+  "models.fraud_card.operating_point": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.05033822858
+  },
+  "models.fraud_card.outcome": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "Fraud as confirmed after the 60 day chargeback window"
+  },
+  "models.fraud_card.owner": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "Head of analytics"
+  },
+  "models.fraud_card.precision_op": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.7478237214
+  },
+  "models.fraud_card.precision_queue": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.8973063973
+  },
+  "models.fraud_card.prediction_time": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "The instant of the authorisation; features use only the card's and the merchant's history strictly before it"
+  },
+  "models.fraud_card.purpose": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "Score every card authorisation at the moment it happens and decide approve, review or decline at a cost based operating point"
+  },
+  "models.fraud_card.queue_point": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.2758569459
+  },
+  "models.fraud_card.recall_op": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9762073864
+  },
+  "models.fraud_card.recall_queue": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9463778409
+  },
+  "models.fraud_card.role": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "sole"
+  },
+  "models.fraud_card.saving": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 1548400.23
+  },
+  "models.fraud_card.saving_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9841568128
+  },
+  "models.fraud_card.status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "in use"
+  },
+  "models.fraud_card.test.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9996245673
+  },
+  "models.fraud_card.test.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9783733286
+  },
+  "models.fraud_card.test.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.001003287075
+  },
+  "models.fraud_card.test.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.0002240208177
+  },
+  "models.fraud_card.test.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.009281446007
+  },
+  "models.fraud_card.test.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 2816
+  },
+  "models.fraud_card.test.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9992491346
+  },
+  "models.fraud_card.test.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9839493705
+  },
+  "models.fraud_card.test.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 303401
+  },
+  "models.fraud_card.test_frauds": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 2816
+  },
+  "models.fraud_card.test_transactions": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 303401
+  },
+  "models.fraud_card.tier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "1"
+  },
+  "models.fraud_card.tier_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "Material: informs a credit, fraud or regulatory decision directly"
+  },
+  "models.fraud_card.title": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "Card transaction fraud (the desk's model)"
+  },
+  "models.fraud_card.trees": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 234
+  },
+  "models.fraud_card.unlabelled_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.6610690143
+  },
+  "models.fraud_card.unlabelled_test": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 200569
+  },
+  "models.fraud_card.validation.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9993446272
+  },
+  "models.fraud_card.validation.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9813631584
+  },
+  "models.fraud_card.validation.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.0009626720896
+  },
+  "models.fraud_card.validation.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.0004851001677
+  },
+  "models.fraud_card.validation.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.01027999219
+  },
+  "models.fraud_card.validation.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 1737
+  },
+  "models.fraud_card.validation.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9986892543
+  },
+  "models.fraud_card.validation.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 0.9821453505
+  },
+  "models.fraud_card.validation.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": 168969
+  },
   "models.pd_challenger.conclusion": {
    "fmt": "text",
    "provenance": {
@@ -3542,7 +4871,7 @@
     "seed": null,
     "source": "config"
    },
-   "value": 0.5
+   "value": 0.9
   },
   "policy.rapid_movement_hours": {
    "fmt": "int",

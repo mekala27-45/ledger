@@ -104,4 +104,6 @@ def format_value(value: float | int | str | None, fmt: str) -> str:
         raise KeyError(f"unknown format {fmt!r}")
     if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
         return "not available"
+    if value is None and fmt != "text":
+        return "not applicable"
     return FORMATS[fmt](value)

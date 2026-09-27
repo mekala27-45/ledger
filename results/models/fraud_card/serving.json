@@ -1,0 +1,40 @@
+{
+ "features": [
+  "amount",
+  "log_amount",
+  "hour",
+  "weekday",
+  "distance_km",
+  "count_10m",
+  "count_1h",
+  "count_24h",
+  "count_7d",
+  "amount_1h",
+  "amount_24h",
+  "amount_7d",
+  "seconds_since_last",
+  "amount_vs_card_mean",
+  "merchant_fraud_rate",
+  "new_category",
+  "km_from_last_merchant",
+  "category"
+ ],
+ "category_levels": [
+  "entertainment",
+  "food_dining",
+  "gas_transport",
+  "grocery_net",
+  "grocery_pos",
+  "health_fitness",
+  "home",
+  "kids_pets",
+  "misc_net",
+  "misc_pos",
+  "personal_care",
+  "shopping_net",
+  "shopping_pos",
+  "travel"
+ ],
+ "operating_point": 0.05033822858374328,
+ "queue_point": 0.2758569459100205
+}

@@ -1,0 +1,16 @@
+# The desk's rule set. Rules fire in plain words beside the model's score; a rule on its
+# own sends a transaction to review, never to decline. Thresholds are stated here and
+# evaluated on the test months in the fraud_card validation report.
+
+rules:
+  - id: new_category_large
+    statement: First purchase over ${amount} in a category this card has never used
+    amount: 500
+  - id: burst
+    statement: Three or more purchases on this card within {minutes} minutes
+    count: 3
+    minutes: 10
+  - id: distant_merchant
+    statement: Merchant more than {km} km from this card's previous merchant within the hour
+    km: 220
+    minutes: 60

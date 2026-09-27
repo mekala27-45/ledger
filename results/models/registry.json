@@ -1,4 +1,40 @@
 {
+ "fraud_card": {
+  "auroc_test": 0.9996245673209968,
+  "conclusion": "approved",
+  "conditions": [],
+  "function": "f04",
+  "last_validated": "2026-08-31",
+  "model_id": "fraud_card",
+  "monitoring": [
+   [
+    "Precision over labelled decisions, weekly",
+    "below 90% at the queue point for two weeks",
+    "Review the threshold on the latest labelled month"
+   ],
+   [
+    "Unlabelled decisions inside the chargeback window",
+    "reported beside every precision figure",
+    "None: it is context, not a trigger"
+   ],
+   [
+    "Score PSI, weekly against validation",
+    "above 0.25",
+    "Revalidate"
+   ],
+   [
+    "Rule precision on labelled months",
+    "any rule below twice the base rate",
+    "Retire or retune the rule"
+   ]
+  ],
+  "owner": "Head of analytics",
+  "purpose": "Score every card authorisation at the moment it happens and decide approve, review or decline at a cost based operating point",
+  "role": "sole",
+  "status": "in use",
+  "tier": 1,
+  "title": "Card transaction fraud (the desk's model)"
+ },
  "pd_challenger": {
   "auroc_test": 0.6671986744202846,
   "conclusion": "not approved",

@@ -156,3 +156,60 @@ with another model. A small gain does not buy that.
 
 **Changed:** Promotion requires a test AUROC at least 0.01 above the champion's, stated
 as a gate in the validation report, together with the stability and age band gates.
+
+## 2026-09-26: Sparkov's time of day followed the date, and the wrapper corrects it
+
+The first card fraud model stopped improving on validation after its first few trees
+while its training loss kept falling, and its test predictions averaged many times
+the fraud rate. The feature it leaned on hardest was the hour. Every genuine
+transaction in September 2025 had been generated before noon and every one from May
+2026 after it, and merchant categories came in monthly bands (gas stations in
+September, home goods in June, travel in August). At the pinned commit, Sparkov's
+`closest_rand_parallel` compares column 1 of its random array whatever column it is
+asked to map, so the daypart and the category are drawn from the same number as the
+date. The wrapper now replaces that one method at run time with the comparison the
+code intends; Sparkov is otherwise unmodified, and data/PROVENANCE.md says so. The
+stream was regenerated with the same seed.
+
+## 2026-09-26: Challenge (fraud_card): the merchant history feature learned the calendar
+
+**Raised:** The merchant features were a cumulative count of a merchant's labelled
+transactions and a fraud rate over every label since the data began. Both grow or
+settle with the calendar, so the same merchant looks different in March than in
+August for no reason a fraud analyst would accept.
+
+**Response:** A feature whose meaning drifts with elapsed time teaches a model the
+calendar. On the desk it would also make a new merchant look risky forever and an old
+one safe forever.
+
+**Changed:** The merchant fraud rate now uses only labels that arrived in the trailing
+90 days, smoothed toward the rate over the same window, and the raw volume count was
+removed from the model.
+
+## 2026-09-26: Challenge (fraud_card): the distant merchant rule was mostly noise
+
+**Raised:** At 150 km the rule fired on roughly one transaction in thirty, at about
+twice the base fraud rate. Every one of those is a review an analyst has to clear.
+
+**Response:** Sparkov places merchants at random within a band around the cardholder,
+so consecutive merchants are often far apart for genuine reasons. A rule that doubles
+the base rate while flooding the queue costs more analyst time than it saves.
+
+**Changed:** The threshold moved to 220 km, which cut the rule's volume by more than
+an order of magnitude. Its precision is published in the validation report, and the
+monitoring plan retires any rule that falls below twice the base rate.
+
+## 2026-09-26: Challenge (fraud_card): nobody believes a card fraud AUROC this high
+
+**Raised:** Once the stream was corrected, the model separates fraud from genuine
+transactions almost perfectly on the test months.
+
+**Response:** That is a property of the generator, not an achievement. Sparkov draws
+fraudulent amounts, hours and categories from distributions that barely overlap with
+genuine ones; real card fraud imitates genuine spending. What carries over to a real
+desk is the machinery around the score: the cost based operating point, the queue
+point, labels that arrive late, and precision that only counts what has been labelled.
+
+**Changed:** The validation report and the desk page lead with cost and late labels,
+state this limitation beside the discrimination figures, and the AUROC gate is not the
+reason the model is approved.

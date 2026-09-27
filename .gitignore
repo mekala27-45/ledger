@@ -51,3 +51,6 @@ web/tsconfig.tsbuildinfo
 *.log
 .DS_Store
 warehouse/.user.yml
+results/models/**/scored_stream.parquet
+results/models/**/replay_stream.parquet
+results/models/**/replay_history.parquet

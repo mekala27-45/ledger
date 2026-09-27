@@ -35,7 +35,10 @@ fraud_desk:
   cost_false_decline: 12.0
   # A missed fraud costs the transaction amount plus investigation and card reissue.
   cost_missed_fraud_handling: 35.0
-  queue_precision_floor: 0.5
+  # The analyst queue works alerts that end in a card block and a call to the customer, so it
+  # holds only alerts where validation precision reached nine in ten. Always at or above
+  # the operating point.
+  queue_precision_floor: 0.9
   replay_speed_seconds_per_hour: 1.0
 
 scorecard:
