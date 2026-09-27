@@ -1,0 +1,173 @@
+# ledger: results
+
+Every figure below is rendered from `results/manifest.json`, written by the pipeline run with seed {{ v('policy.seed') }} and data to {{ v('policy.as_of') }}. CI re-renders this file and fails if a single character differs. Each table carries the backend and population that produced it: `generated` is the seeded bank, `replayed` is the scored card stream, and `real:` names a public dataset.
+
+{{ statements() }}
+
+## The bank at a glance
+
+{{ v('policy.bank_name') }} closed {{ v('f01.peer_quarter') }} with total assets of {{ v('f01.total_assets') }}, gross loans of {{ v('f01.total_loans') }} and deposits of {{ v('f01.total_deposits') }}. Net income over the trailing twelve months was {{ v('f01.net_income_ttm') }}.
+
+{{ table('f01.peer_table') }}
+
+{{ label('f01.peer_table') }}
+
+{{ figure('f01.fig_ratios').callout }}
+
+{{ label('f01.fig_ratios') }}
+
+What moved, ranked by dollar materiality and written by a rules engine from the metric layer:
+
+{{ table('f01.insights') }}
+
+## Known parameter recovery
+
+The generator states the loan book's risk structure; the pipeline has to recover it before any credit figure is used.
+
+{{ table('models.pd_scorecard.known_parameters') }}
+
+{{ label('models.pd_scorecard.known_parameters') }}
+
+## The scorecard
+
+Every candidate characteristic with its information value, and why each dropped one was dropped:
+
+{{ table('models.pd_scorecard.iv') }}
+
+{{ label('models.pd_scorecard.iv') }}
+
+The scorecard, points per bin, with {{ v('policy.base_score') }} points at odds of {{ v('policy.base_odds') }} to one and {{ v('policy.pdo') }} points to double the odds:
+
+{{ table('models.pd_scorecard.scorecard') }}
+
+{{ label('models.pd_scorecard.scorecard') }}
+
+The same engine on the UCI credit card accounts, a real default label:
+
+{{ table('models.pd_scorecard.uci_iv') }}
+
+{{ label('models.pd_scorecard.uci_iv') }}
+
+{{ table('models.pd_scorecard.side_by_side') }}
+
+The first adverse action reason on declined test applications:
+
+{{ table('models.pd_scorecard.reasons') }}
+
+## Champion and challenger
+
+{{ table('models.pd_challenger.benchmark') }}
+
+{{ label('models.pd_challenger.benchmark') }}
+
+The challenger ranks {{ v('models.pd_challenger.improvement') }} AUROC better, agrees with the champion's ranking at {{ v('models.pd_challenger.rank_agreement') }}, and was {{ v('models.pd_challenger.conclusion') }} for promotion. The gates it was held to are in its validation report.
+
+## Consumer lending
+
+{{ figure('f02.fig_vintages').callout }}
+
+{{ label('f02.fig_vintages') }}
+
+{{ figure('f02.fig_rolls').callout }}
+
+{{ label('f02.fig_rolls') }}
+
+Expected loss on the open installment book, {{ v('f02.el_total') }} on {{ v('f02.ead_total') }} of exposure ({{ v('f02.el_rate') }}), with loss given default of {{ v('f02.lgd_installment') }} from the generated recoveries:
+
+{{ table('f02.el_table') }}
+
+{{ label('f02.el_table') }}
+
+A CECL style lifetime illustration, simplified: {{ v('f02.cecl_total') }} on the open book.
+
+{{ table('f02.cecl_table') }}
+
+{{ label('f02.cecl_table') }}
+
+Portfolio limits:
+
+{{ table('f02.limits') }}
+
+## Time to default
+
+{{ figure('f02.fig_survival').callout }}
+
+{{ table('f02.cox') }}
+
+{{ label('f02.cox') }}
+
+Loans at risk by months since origination:
+
+{{ table('f02.at_risk') }}
+
+## The fraud desk
+
+{{ figure('f04.fig_cost').callout }}
+
+{{ table('models.fraud_card.operating_points') }}
+
+{{ label('models.fraud_card.operating_points') }}
+
+{{ figure('f04.fig_pr').callout }}
+
+{{ table('models.fraud_card.benchmark') }}
+
+{{ figure('f04.fig_lag').callout }}
+
+{{ label('f04.fig_lag') }}
+
+Fairness at the operating point, by the demographic fields Sparkov generates:
+
+{{ table('models.fraud_card.subgroups') }}
+
+The lowest false positive rate across age bands is {{ v('models.fraud_card.fpr_ratio_age') }} of the highest.
+
+The desk's rules, on the labelled test months:
+
+{{ table('models.fraud_card.rules') }}
+
+## Controls
+
+{{ figure('f11.fig_recon').callout }}
+
+{{ table('f11.breaks_table') }}
+
+{{ label('f11.breaks_table') }}
+
+Every data quality rule, with the injected defects held to their injected counts:
+
+{{ table('f11.dq_table') }}
+
+{{ label('f11.dq_table') }}
+
+The warehouse passed {{ v('f11.dbt_tests_passed') }} of {{ v('f11.dbt_tests') }} dbt tests over {{ v('f11.dbt_models') }} models. The identifier scan found {{ v('f11.identifier_findings') }} card numbers, Social Security numbers or generator person names across {{ v('f11.tables_scanned') }} staged tables, and the bank's name matches none of {{ v('f11.fdic_institutions') }} FDIC institutions.
+
+## Model risk
+
+{{ table('f10.inventory') }}
+
+{{ label('f10.inventory') }}
+
+{{ figure('f10.fig_psi').callout }}
+
+{{ figure('f10.fig_fraud_monitoring').callout }}
+
+The effective challenge log:
+
+{{ table('f10.challenges') }}
+
+## The board's decision
+
+{{ table('f12.cutoffs') }}
+
+{{ label('f12.cutoffs') }}
+
+{{ figure('f12.fig_cutoffs').callout }}
+
+## Limitations
+
+- The customers, accounts, loans, ledger and card stream are generated. Their structure is stated in the generator and recovered by the pipeline, which is what makes them testable, and it is also why no figure about them describes a real bank.
+- The card fraud model's discrimination is a property of the Sparkov generator. The cost curve, the late label analysis and the subgroup audit are the parts that transfer.
+- The scorecard's calibration fails on the loosened and recession vintages; the lending figures carry an observed to expected overlay for it and the validation report states the condition.
+- The capital ratio uses stated, simplified risk weights, and the CECL figure is an illustration of the method without qualitative factors, reversion or prepayment.
+- The peer benchmark compares a generated bank with real ones. The peers' figures are the FDIC's; the comparison is illustrative.
