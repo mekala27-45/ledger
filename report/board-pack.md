@@ -158,6 +158,48 @@ Our own scorecard uses none of the 32 protected attributes and proxies
 on our list, every model's features are tested against that list, and every decline carries its
 principal reasons.
 
+## Deposits, rates and liquidity
+
+Deposits stand at $930.6M, and the largest one percent of depositors hold
+12.6% of them, which is the figure our liquidity planning starts from.
+When the policy rate fell 2.58 points, savings passed on
+0.38 of the cut and time deposits
+0.32 in the first year, because certificates reprice only as they
+mature. The retention list puts $9,442,588 of expected balance at risk
+in front of 500 calls.
+
+Over twelve months our balance sheet is close to neutral to rates: a two point rise
+changes net interest income by -$6,981 and a two point fall by
+-$175,123, on $54.7M earned over the last year. Our simplified
+liquidity coverage is 378%, and 180% if the largest one
+percent of depositors also left.
+
+## Stress
+
+On the Federal Reserve's 2026 severely adverse scenario, applied to our
+own starting point, unemployment at the bank peaks at 10.5
+and nine quarters of losses come to $59.8M ($55.9M to
+$63.9M), 8.3% of loans. Pre provision revenue
+absorbs them, and the capital ratio ends the horizon at 21.7%. This is
+an illustrative projection in the shape of the supervisory exercise, not the exercise.
+
+| Scenario | Peak unemployment, bank | Losses over 9 quarters | Low | High | Share of loans | Capital ratio at its lowest | Low | Capital ratio after 9 quarters |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Baseline | 5.1 | $27.2M | $27.2M | $27.2M | 3.8% | 19.8% | 19.8% | 28.8% |
+| Severely adverse | 10.5 | $59.8M | $55.9M | $63.9M | 8.3% | 19.8% | 19.8% | 21.7% |
+
+## Collections and complaints
+
+We expect about 1,053 unsecured charge offs over the next six
+months; the method missed by 6.7% on average when backtested, against
+21.5% for repeating the last six months. The collections queue is now ordered
+by the balance likely to be lost without a call, and its first 300 calls
+cover $4,663,027 of $6,687,255.
+
+On the Bureau's public complaint database, 31.2% of narratives are form
+letters, and whether a complaint ends in a refund is predicted almost as well from the form as
+from the consumer's words. We did not approve the model that reads the narratives.
+
 ## Model risk
 
 We use 8 models in this pack. Each has an SR 11-7 style validation report,

@@ -42,6 +42,12 @@ export default function Glance() {
   const functions: [string, string, string, string][] = [
     ["/lending/", "Consumer lending", "Expected loss, open installment book", m.v("f02.el_total")],
     ["/desk/", "The fraud desk", "Cost at the operating point, test months", m.v("models.fraud_card.cost_op")],
+    ["/fair-lending/", "Fair lending", "Adjusted odds ratio, Black applicants, real HMDA", m.v("f03.black_or")],
+    ["/crime/", "Financial crime", "Planted laundering episodes found", `${m.v("f05.episodes_found")} of ${m.v("f05.episodes")}`],
+    ["/deposits/", "Deposits", "Held by the largest 1% of depositors", m.v("f06.top1_share")],
+    ["/complaints/", "Complaints", "CFPB narratives that are form letters", m.v("f07.template_share")],
+    ["/treasury/", "Treasury and stress", "Severely adverse losses, nine quarters", m.v("f08.severe_loss")],
+    ["/collections/", "Collections", "Charge offs expected in six months", m.v("f09.forecast_charge_offs")],
     ["/models/", "Model risk", "Models in the inventory, each with a validation report", m.v("f10.models")],
     ["/controls/", "Controls", "Ledger account months tied to the cent", `${m.v("f11.account_months_tied")} of ${m.v("f11.account_months")}`],
     ["/studio/", "Scorecard studio", "Scorecard AUROC, out of time", m.v("models.pd_scorecard.test.auroc")],

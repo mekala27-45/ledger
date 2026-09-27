@@ -114,6 +114,45 @@ Our own scorecard uses none of the {{ v('f03.proxy_entries') }} protected attrib
 on our list, every model's features are tested against that list, and every decline carries its
 principal reasons.
 
+## Deposits, rates and liquidity
+
+Deposits stand at {{ v('f06.deposits') }}, and the largest one percent of depositors hold
+{{ v('f06.top1_share') }} of them, which is the figure our liquidity planning starts from.
+When the policy rate fell {{ v('f06.policy_cut') }} points, savings passed on
+{{ v('f06.paid_beta_savings') }} of the cut and time deposits
+{{ v('f06.paid_beta_year_time') }} in the first year, because certificates reprice only as they
+mature. The retention list puts {{ v('f06.list_expected_balance') }} of expected balance at risk
+in front of {{ v('f06.list_size') }} calls.
+
+Over twelve months our balance sheet is {{ v('f08.stance') }} to rates: a two point rise
+changes net interest income by {{ v('f08.nii_up200') }} and a two point fall by
+{{ v('f08.nii_down200') }}, on {{ v('f08.base_nii') }} earned over the last year. Our simplified
+liquidity coverage is {{ v('f08.lcr') }}, and {{ v('f08.lcr_concentration') }} if the largest one
+percent of depositors also left.
+
+## Stress
+
+On the Federal Reserve's {{ v('f08.scenario_year') }} severely adverse scenario, applied to our
+own starting point, unemployment at the bank peaks at {{ v('f08.severe_peak_unemployment') }}
+and nine quarters of losses come to {{ v('f08.severe_loss') }} ({{ v('f08.severe_loss_low') }} to
+{{ v('f08.severe_loss_high') }}), {{ v('f08.severe_loss_rate') }} of loans. Pre provision revenue
+absorbs them, and the capital ratio ends the horizon at {{ v('f08.severe_capital_end') }}. This is
+an illustrative projection in the shape of the supervisory exercise, not the exercise.
+
+{{ table('f08.scenario_table') }}
+
+## Collections and complaints
+
+We expect about {{ v('f09.forecast_charge_offs') }} unsecured charge offs over the next six
+months; the method missed by {{ v('f09.mape_flat') }} on average when backtested, against
+{{ v('f09.mape_naive') }} for repeating the last six months. The collections queue is now ordered
+by the balance likely to be lost without a call, and its first {{ v('f09.queue_size') }} calls
+cover {{ v('f09.queue_exposure') }} of {{ v('f09.total_exposure') }}.
+
+On the Bureau's public complaint database, {{ v('f07.template_share') }} of narratives are form
+letters, and whether a complaint ends in a refund is predicted almost as well from the form as
+from the consumer's words. We did not approve the model that reads the narratives.
+
 ## Model risk
 
 We use {{ v('f10.models') }} models in this pack. Each has an SR 11-7 style validation report,
