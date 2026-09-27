@@ -1,0 +1,326 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f10.fig_fraud_monitoring": {
+   "callout": "Score stability is measurable the day a transaction is scored; discrimination is not. For the first 8 weeks of the test months no test transaction had cleared the 60 day chargeback window, so the model's AUROC on the new months could not be computed at all. That gap is the monitoring lag, and the plan says so rather than filling it.",
+   "data": "f10/fraud_weekly.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "fraud_card scored stream, April to August 2026",
+    "seed": null,
+    "source": "fraud_card"
+   },
+   "title": "The fraud model's monitoring, week by week"
+  },
+  "f10.fig_psi": {
+   "callout": "The worst quarter's population stability index is 0.005 (2026Q3), against a warning line at 0.10 and a breach at 0.25. Stability says the applicants look alike; it says nothing about whether they default alike, which is why calibration is monitored separately as outcomes mature.",
+   "data": "f10/pd_psi_by_quarter.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "every installment application, approved or declined",
+    "seed": 20260831,
+    "source": "pd_scorecard"
+   },
+   "title": "Score stability by application quarter, against the development quarters"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f10.challenges": {
+   "columns": [
+    "Date",
+    "Models",
+    "Challenge",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "DECISIONS.md",
+    "seed": null,
+    "source": "effective challenge log"
+   },
+   "rows": [
+    [
+     "2026-09-26",
+     "pd_scorecard",
+     "On the validation months the scorecard's mean predicted default rate sat well under the observed rate, while its rank ordering held up.",
+     "Calibration became a non critical gate, so the report concludes approved with a stated condition rather than approved, and expected loss in function 2 applies an observed to expected overlay by vintage instead of the raw scorecard probability."
+    ],
+    [
+     "2026-09-26",
+     "pd_scorecard",
+     "The fitted scorecard has no delinquency characteristic. Delinquencies in the last 24 months fell under the information value floor and were dropped.",
+     "The published information value table now lists every candidate with the reason it was kept or dropped, so a reviewer sees the decision instead of an absence, and the challenger, which sees every candidate, confirms the characteristic adds little."
+    ],
+    [
+     "2026-09-26",
+     "pd_challenger",
+     "The first fit's development AUROC was far above its validation AUROC.",
+     "Seven leaves and a minimum of 150 loans per leaf. The development to validation gap narrowed and the validation and test AUROC held."
+    ],
+    [
+     "2026-09-26",
+     "pd_challenger",
+     "The challenger's test AUROC is above the champion's.",
+     "Promotion requires a test AUROC at least 0.01 above the champion's, stated as a gate in the validation report, together with the stability and age band gates."
+    ],
+    [
+     "2026-09-26",
+     "fraud_card",
+     "The merchant features were a cumulative count of a merchant's labelled transactions and a fraud rate over every label since the data began. Both grow or settle with the calendar, so the same merchant looks different in March than in August for no reason a fraud analyst would accept.",
+     "The merchant fraud rate now uses only labels that arrived in the trailing 90 days, smoothed toward the rate over the same window, and the raw volume count was removed from the model."
+    ],
+    [
+     "2026-09-26",
+     "fraud_card",
+     "At 150 km the rule fired on roughly one transaction in thirty, at about twice the base fraud rate. Every one of those is a review an analyst has to clear.",
+     "The threshold moved to 220 km, which cut the rule's volume by more than an order of magnitude. Its precision is published in the validation report, and the monitoring plan retires any rule that falls below twice the base rate."
+    ],
+    [
+     "2026-09-26",
+     "fraud_card",
+     "Once the stream was corrected, the model separates fraud from genuine transactions almost perfectly on the test months.",
+     "The validation report and the desk page lead with cost and late labels, state this limitation beside the discrimination figures, and the AUROC gate is not the reason the model is approved."
+    ]
+   ]
+  },
+  "f10.inventory": {
+   "columns": [
+    "Model",
+    "Title",
+    "Function",
+    "Tier",
+    "Role",
+    "Status",
+    "Last validated",
+    "Conclusion",
+    "Test AUROC"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "float3"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "the model inventory",
+    "seed": null,
+    "source": "results/models/registry.json"
+   },
+   "rows": [
+    [
+     "pd_scorecard",
+     "Probability of default scorecard (champion)",
+     "f02",
+     "1",
+     "champion",
+     "in use",
+     "2026-08-31",
+     "approved with conditions",
+     0.6618484974
+    ],
+    [
+     "pd_challenger",
+     "Probability of default challenger (monotone GBM)",
+     "f02",
+     "1",
+     "challenger",
+     "validated",
+     "2026-08-31",
+     "not approved",
+     0.6671986744
+    ],
+    [
+     "fraud_card",
+     "Card transaction fraud (the desk's model)",
+     "f04",
+     "1",
+     "sole",
+     "in use",
+     "2026-08-31",
+     "approved",
+     0.9996245673
+    ]
+   ]
+  },
+  "f10.pd_csi": {
+   "columns": [
+    "Characteristic",
+    "Stability index, last six months against development"
+   ],
+   "formats": [
+    "text",
+    "float3"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "every installment application, approved or declined",
+    "seed": 20260831,
+    "source": "pd_scorecard"
+   },
+   "rows": [
+    [
+     "purpose",
+     0.002794992164
+    ],
+    [
+     "oldest_trade_months",
+     0.002704054888
+    ],
+    [
+     "revolving_utilization",
+     0.001812123009
+    ],
+    [
+     "bureau_score",
+     0.0004088653778
+    ],
+    [
+     "dti",
+     0.0003288676016
+    ],
+    [
+     "employment_months",
+     0.0002556097823
+    ],
+    [
+     "loan_amount",
+     0.0001179582474
+    ],
+    [
+     "inquiries_6m",
+     0.0001087708755
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f10.approved": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "the model inventory",
+    "seed": null,
+    "source": "results/models/registry.json"
+   },
+   "value": 1
+  },
+  "f10.challenge_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "DECISIONS.md",
+    "seed": null,
+    "source": "effective challenge log"
+   },
+   "value": 7
+  },
+  "f10.fraud_first_labelled_week": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "fraud_card scored stream, April to August 2026",
+    "seed": null,
+    "source": "fraud_card"
+   },
+   "value": "2026-07-27"
+  },
+  "f10.fraud_psi_max": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "fraud_card scored stream, April to August 2026",
+    "seed": null,
+    "source": "fraud_card"
+   },
+   "value": 0.03144944641
+  },
+  "f10.fraud_weeks_without_labels": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "fraud_card scored stream, April to August 2026",
+    "seed": null,
+    "source": "fraud_card"
+   },
+   "value": 8
+  },
+  "f10.models": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "the model inventory",
+    "seed": null,
+    "source": "results/models/registry.json"
+   },
+   "value": 3
+  },
+  "f10.not_approved": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "the model inventory",
+    "seed": null,
+    "source": "results/models/registry.json"
+   },
+   "value": 1
+  },
+  "f10.pd_psi_worst": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "every installment application, approved or declined",
+    "seed": 20260831,
+    "source": "pd_scorecard"
+   },
+   "value": 0.005377547788
+  },
+  "f10.pd_psi_worst_quarter": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "every installment application, approved or declined",
+    "seed": 20260831,
+    "source": "pd_scorecard"
+   },
+   "value": "2026Q3"
+  },
+  "f10.with_conditions": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "the model inventory",
+    "seed": null,
+    "source": "results/models/registry.json"
+   },
+   "value": 1
+  }
+ }
+}
