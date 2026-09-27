@@ -61,16 +61,15 @@ def test_the_link_recovers_a_known_macro_sensitivity() -> None:
                     "rolled": int(rng.binomial(n, p)),
                     "unemployment": u,
                     "hpi_growth": g,
-                    "loose_vintage": 0.0,
+                    "loose_vintage": float(month % 2),
                     "card": card,
-                    "mob_6_11": 0.0,
-                    "mob_12_23": 0.0,
-                    "mob_24_plus": 0.0,
+                    "mob_6_11": float(month % 3 == 0),
+                    "mob_12_23": float(month % 3 == 1),
+                    "mob_24_plus": float(month % 5 == 0),
                 }
             )
-    fit = fit_link(
-        pl.DataFrame(rows).with_columns(loose_vintage=pl.Series([float(i % 2) * 0 for i in range(72)]))
-    )
+    # The other terms vary but carry no effect, so the design is full rank.
+    fit = fit_link(pl.DataFrame(rows))
     low, high = fit.interval("unemployment")
     assert low < 0.30 < high
     assert abs(fit.coef("hpi_growth")) < 0.02
