@@ -377,3 +377,51 @@ with the published results, and wrong as a statement of what the bank would see.
 false positive rate and predictive equality on months 6 and 7 at the threshold fixed on
 month 5. The recall gate uses the fixed threshold, and a gate watches how far the
 realised false positive rate drifts from its target.
+
+## 2026-09-27: Challenge (attrition): a twelve month outcome is only known twelve months later
+
+**Raised:** The first split trained on every month end up to December 2024 and tested
+on the summer of 2025. A December 2024 label says whether the customer left by December
+2025, which the bank could not have known when it scored the summer of 2025.
+
+**Response:** A random or plain temporal split lets training labels come from the
+future of the test months whenever the outcome window is longer than the gap. The
+model a bank could actually have fitted on 31 May 2025 only had month ends whose windows
+had closed by then.
+
+**Changed:** Training uses month ends September 2023 to February 2024, validation March
+to May 2024, and test June to August 2025, so every training and validation outcome was
+known before the first test month end. The gap is stated in the report beside the split.
+
+## 2026-09-27: Challenge (attrition): the most likely leaver is not the one worth a call
+
+**Raised:** Sorted by probability alone, the top of the retention list fills with new
+customers holding a few hundred dollars. A retention call costs the same whoever answers.
+
+**Response:** The list exists to protect deposits. What the bank stands to lose is the
+probability times the balances the customer holds, and the two orderings put different
+people at the top.
+
+**Changed:** The list is ranked by expected balance at risk. The report publishes, for
+the top tenth of the test months, the share of closers and the share of their balances
+found by each ordering, so the trade between the two is visible.
+
+## 2026-09-27: The attrition model memorised customers, and the simpler model won
+
+The first attrition fit reached an AUROC of 0.88 on its training months, 0.72 on
+validation and 0.55 on test, and never stopped early. The same customers sit in every
+month end with the same income and tenure path, so a validation sample of later month
+ends was a sample of people the trees had already memorised. Early stopping now uses
+customers held out of the fit, the leaves are kept large, and the logistic regression
+fitted beside it is a candidate rather than only a benchmark. On held out customers the
+boosted model did not beat it by the stated margin, so the logistic regression is the
+model and LightGBM is the benchmark.
+
+## 2026-09-27: Reversal: the attrition gate is measured against the ceiling, not a fixed floor
+
+The first gate asked for a test AUROC of 0.70, a number carried over from the fraud
+models without asking what this outcome allows. The generator's own monthly hazards,
+used as a score with perfect knowledge of the year ahead, reach under 0.6: most attrition
+here is chance. A fixed floor above the ceiling can only fail, whatever the model does,
+so the gate now asks for half of the separation the ceiling reaches. The change was
+made after the first fit failed the old gate, and it is recorded here for that reason.

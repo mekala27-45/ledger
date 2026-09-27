@@ -1,0 +1,1330 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {},
+ "seed": 20260831,
+ "tables": {
+  "models.attrition.benchmark": {
+   "columns": [
+    "Model",
+    "AUROC",
+    "Gini",
+    "Brier",
+    "ECE"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float4",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     "This model",
+     0.583038203,
+     0.166076406,
+     0.06027967743,
+     0.01025185416
+    ],
+    [
+     "Base rate",
+     0.5,
+     0.0,
+     0.0606432695,
+     0.009969917809
+    ],
+    [
+     "LightGBM on the same features",
+     0.5790513073,
+     0.1581026146,
+     0.06024107531,
+     0.01258072928
+    ]
+   ]
+  },
+  "models.attrition.challenges": {
+   "columns": [
+    "Date",
+    "Challenge",
+    "Response",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     "2026-09-27",
+     "The first split trained on every month end up to December 2024 and tested on the summer of 2025. A December 2024 label says whether the customer left by December 2025, which the bank could not have known when it scored the summer of 2025.",
+     "A random or plain temporal split lets training labels come from the future of the test months whenever the outcome window is longer than the gap. The model a bank could actually have fitted on 31 May 2025 only had month ends whose windows had closed by then.",
+     "Training uses month ends September 2023 to February 2024, validation March to May 2024, and test June to August 2025, so every training and validation outcome was known before the first test month end. The gap is stated in the report beside the split."
+    ],
+    [
+     "2026-09-27",
+     "Sorted by probability alone, the top of the retention list fills with new customers holding a few hundred dollars. A retention call costs the same whoever answers.",
+     "The list exists to protect deposits. What the bank stands to lose is the probability times the balances the customer holds, and the two orderings put different people at the top.",
+     "The list is ranked by expected balance at risk. The report publishes, for the top tenth of the test months, the share of closers and the share of their balances found by each ordering, so the trade between the two is visible."
+    ]
+   ]
+  },
+  "models.attrition.conditions": {
+   "columns": [
+    "Condition"
+   ],
+   "formats": [
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     "None"
+    ]
+   ]
+  },
+  "models.attrition.contract": {
+   "columns": [
+    "Line",
+    "What this model does"
+   ],
+   "formats": [
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     "trained",
+     "On month ends September 2023 to February 2024, whose twelve month outcomes had all closed before the test months began."
+    ],
+    [
+     "timed",
+     "Every feature comes from the month end or earlier; a leakage test recomputes the month's activity for 200 sampled customer months from posted entries."
+    ],
+    [
+     "calibrated",
+     "Reliability on the test months is published, and the probability is used as a probability: it multiplies the balance."
+    ],
+    [
+     "useful",
+     "Beats the base rate, matches or beats the other candidate on months it never saw, and reaches a stated share of the separation the generator's own hazards reach."
+    ],
+    [
+     "fair",
+     "Flag rate and capture by age band at the top tenth. Age never enters the model."
+    ],
+    [
+     "gated",
+     "Every gate in this report."
+    ],
+    [
+     "served",
+     "Scored monthly in the pipeline; the retention list is published with the deposits page."
+    ],
+    [
+     "integrated",
+     "Orders the retention list by expected balance at risk: probability times the balances held."
+    ],
+    [
+     "monitored",
+     "Monthly score PSI; capture of the list against closures as they happen; closure rate by age band."
+    ],
+    [
+     "documented",
+     "This validation report and the deposits page."
+    ],
+    [
+     "bounded",
+     "Chooses whom to call. Never changes a price, a fee or an account, and never goes to a customer as a score."
+    ],
+    [
+     "validated",
+     "This report, rendered from the manifest before the list is used."
+    ],
+    [
+     "explainable",
+     "Each customer on the list shows the two features that raised the probability most, in plain words."
+    ]
+   ]
+  },
+  "models.attrition.gates": {
+   "columns": [
+    "Gate",
+    "Threshold",
+    "Measured",
+    "Result"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     "Share of the achievable separation reached: (AUROC minus one half) over (the ceiling minus one half)",
+     "at least 0.5",
+     0.9416633215,
+     "pass"
+    ],
+    [
+     "Test AUROC against the other candidate's (the choice on validation must not cost more than a hundredth)",
+     "at least -0.01",
+     0.003986895729,
+     "pass"
+    ],
+    [
+     "Test average precision above the base rate",
+     "at least 0",
+     0.03037688481,
+     "pass"
+    ],
+    [
+     "Share of closers in the top tenth of scores, test months (a tenth is no better than chance)",
+     "at least 0.15",
+     0.1743626062,
+     "pass"
+    ],
+    [
+     "Point in time recompute of sampled customer months",
+     "at least 200",
+     200.0,
+     "pass"
+    ],
+    [
+     "Expected calibration error on test",
+     "at most 0.02",
+     0.01025185416,
+     "pass"
+    ]
+   ]
+  },
+  "models.attrition.importance": {
+   "columns": [
+    "feature",
+    "weight"
+   ],
+   "formats": [
+    "text",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     "uses digital banking",
+     -0.184639883
+    ],
+    [
+     "has complained",
+     0.1749669652
+    ],
+    [
+     "customer for under a year",
+     0.1380348086
+    ],
+    [
+     "money going out",
+     -0.05386284203
+    ],
+    [
+     "time as a customer",
+     -0.04829391099
+    ],
+    [
+     "savings rate far below market",
+     0.04355407817
+    ],
+    [
+     "holds savings or a CD",
+     0.04355407817
+    ],
+    [
+     "savings and time balances",
+     0.03675994599
+    ],
+    [
+     "money coming in",
+     0.01673539663
+    ],
+    [
+     "checking balance",
+     0.01633888541
+    ],
+    [
+     "less than three months of history",
+     0.01202625156
+    ],
+    [
+     "checking balance fell sharply last month",
+     0.008570074933
+    ],
+    [
+     "overdraft last month",
+     -0.006824359876
+    ],
+    [
+     "payroll deposits",
+     0.006440767834
+    ],
+    [
+     "checking balance change over three months",
+     -0.006212585433
+    ],
+    [
+     "income",
+     -0.004849043608
+    ],
+    [
+     "account activity",
+     0.002895567099
+    ],
+    [
+     "fees charged last month",
+     -0.001995478653
+    ]
+   ]
+  },
+  "models.attrition.monitoring": {
+   "columns": [
+    "Measure",
+    "Trigger",
+    "Action"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     "Score PSI, monthly against validation",
+     "above 0.25",
+     "Revalidate"
+    ],
+    [
+     "Share of the list's customers who close within twelve months",
+     "below the test capture for two quarters",
+     "Refit"
+    ],
+    [
+     "Flag rate by age band",
+     "any band below half the highest",
+     "Review the features"
+    ]
+   ]
+  },
+  "models.attrition.reliability": {
+   "columns": [
+    "Bin",
+    "Accounts",
+    "Predicted",
+    "Observed"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "pct2",
+    "pct2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     1,
+     10907,
+     0.04814518112,
+     0.04694233061
+    ],
+    [
+     2,
+     10906,
+     0.05209276749,
+     0.05143957455
+    ],
+    [
+     3,
+     10906,
+     0.05544659999,
+     0.04713002017
+    ],
+    [
+     4,
+     10906,
+     0.05816413722,
+     0.05189803778
+    ],
+    [
+     5,
+     10906,
+     0.06157767977,
+     0.05198973042
+    ],
+    [
+     6,
+     10906,
+     0.06768633057,
+     0.06638547588
+    ],
+    [
+     7,
+     10906,
+     0.07597625022,
+     0.06592701265
+    ],
+    [
+     8,
+     10906,
+     0.08297574454,
+     0.07069503026
+    ],
+    [
+     9,
+     10906,
+     0.09662309022,
+     0.08206491839
+    ],
+    [
+     10,
+     10906,
+     0.1511773684,
+     0.1128736475
+    ]
+   ]
+  },
+  "models.attrition.subgroups": {
+   "columns": [
+    "Group",
+    "N",
+    "Event rate",
+    "Mean score",
+    "Calibration gap",
+    "Auroc",
+    "Flag rate",
+    "Fpr",
+    "Recall"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct2",
+    "pct2",
+    "spct1",
+    "float3",
+    "pct2",
+    "pct2",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "rows": [
+    [
+     "under 25",
+     14988.0,
+     0.06458500133,
+     0.07044037656,
+     0.005855375221,
+     0.5731463906,
+     0.08820389645,
+     0.08266761769,
+     0.1683884298
+    ],
+    [
+     "25 to 34",
+     18460.0,
+     0.06099674973,
+     0.07110814593,
+     0.0101113962,
+     0.6048321136,
+     0.09154929577,
+     0.08618899273,
+     0.1740674956
+    ],
+    [
+     "35 to 49",
+     37400.0,
+     0.06457219251,
+     0.075244285,
+     0.01067209249,
+     0.5771195878,
+     0.1021657754,
+     0.09841360583,
+     0.1565217391
+    ],
+    [
+     "50 to 64",
+     27666.0,
+     0.06737511747,
+     0.07663235248,
+     0.009257235012,
+     0.5785648333,
+     0.1030868214,
+     0.09724052399,
+     0.1840128755
+    ],
+    [
+     "65 and over",
+     10547.0,
+     0.06513700578,
+     0.08300121415,
+     0.01786420836,
+     0.5935150329,
+     0.1158623305,
+     0.1085192698,
+     0.2212518195
+    ]
+   ]
+  }
+ },
+ "values": {
+  "models.attrition.as_of_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "2026-08"
+  },
+  "models.attrition.auc_boosted_holdout": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.5979148439
+  },
+  "models.attrition.auc_logistic_holdout": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.5965416577
+  },
+  "models.attrition.capture": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1743626062
+  },
+  "models.attrition.capture_other": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.178611898
+  },
+  "models.attrition.ceiling": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.5881824757
+  },
+  "models.attrition.champion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "logistic regression"
+  },
+  "models.attrition.conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "approved"
+  },
+  "models.attrition.conditions_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0
+  },
+  "models.attrition.customers_scored": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 39200
+  },
+  "models.attrition.development.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.5961655273
+  },
+  "models.attrition.development.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1161834852
+  },
+  "models.attrition.development.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.06827934047
+  },
+  "models.attrition.development.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.002150006114
+  },
+  "models.attrition.development.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.07470433249
+  },
+  "models.attrition.development.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 15084
+  },
+  "models.attrition.development.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1923310546
+  },
+  "models.attrition.development.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1350962968
+  },
+  "models.attrition.development.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 201916
+  },
+  "models.attrition.feature_count": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "18"
+  },
+  "models.attrition.features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "log_checking_balance, log_other_balance, has_other, change_3m, change_3m_missing, balance_drop, fee_count, overdraft_count, log_inflow, log_outflow, entries, payroll_credits, tenure_months, new_customer, digital_active, complaint_flag, rate_gap, log_income"
+  },
+  "models.attrition.fit_customers_share": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.8
+  },
+  "models.attrition.flag_ratio_age": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.7612819115
+  },
+  "models.attrition.found_by_expected_balance": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1111898017
+  },
+  "models.attrition.last_validated": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "2026-08-31"
+  },
+  "models.attrition.leakage_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 200
+  },
+  "models.attrition.list_balances": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 114622516.6
+  },
+  "models.attrition.list_expected_balance": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 9442587.559
+  },
+  "models.attrition.list_size": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 500
+  },
+  "models.attrition.margin": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.005
+  },
+  "models.attrition.mean_probability_now": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.07560318352
+  },
+  "models.attrition.method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "Logistic regression on balances, flows, fees, tenure and product holding, standardised; chosen over LightGBM on held out customers"
+  },
+  "models.attrition.money_by_expected_balance": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.47061159
+  },
+  "models.attrition.money_by_probability": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1123900609
+  },
+  "models.attrition.other": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "LightGBM"
+  },
+  "models.attrition.other_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.5790513073
+  },
+  "models.attrition.outcome": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "The customer's primary checking account closes within the next twelve months"
+  },
+  "models.attrition.owner": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "Head of analytics"
+  },
+  "models.attrition.portfolio_expected_balance": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 61088782.85
+  },
+  "models.attrition.prediction_time": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "Each month end; features use only that month and earlier"
+  },
+  "models.attrition.purpose": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "Rank customers by the balance the bank stands to lose if they leave in the next twelve months, so retention calls go where they are worth most"
+  },
+  "models.attrition.role": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "sole"
+  },
+  "models.attrition.separation": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.9416633215
+  },
+  "models.attrition.status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "in use"
+  },
+  "models.attrition.test.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.583038203
+  },
+  "models.attrition.test.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.09511129949
+  },
+  "models.attrition.test.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.06027967743
+  },
+  "models.attrition.test.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.01025185416
+  },
+  "models.attrition.test.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.06473441469
+  },
+  "models.attrition.test.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 7060
+  },
+  "models.attrition.test.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.166076406
+  },
+  "models.attrition.test.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1280602759
+  },
+  "models.attrition.test.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 109061
+  },
+  "models.attrition.test_closers": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 7060
+  },
+  "models.attrition.test_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "month ends June to August 2025"
+  },
+  "models.attrition.test_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 109061
+  },
+  "models.attrition.tier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "2"
+  },
+  "models.attrition.tier_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "Informs a decision a person makes; moderate materiality"
+  },
+  "models.attrition.title": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "Deposit customer attrition, twelve month horizon"
+  },
+  "models.attrition.top_share": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1
+  },
+  "models.attrition.train_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "month ends September 2023 to February 2024"
+  },
+  "models.attrition.trees": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 95
+  },
+  "models.attrition.validation.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.5961792707
+  },
+  "models.attrition.validation.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1183866499
+  },
+  "models.attrition.validation.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.06776315955
+  },
+  "models.attrition.validation.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.002484058819
+  },
+  "models.attrition.validation.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.07413774578
+  },
+  "models.attrition.validation.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 7590
+  },
+  "models.attrition.validation.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.1923585414
+  },
+  "models.attrition.validation.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 0.137528613
+  },
+  "models.attrition.validation.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": 102377
+  },
+  "models.attrition.validation_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline customers with an open checking account at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (attrition)"
+   },
+   "value": "month ends March to May 2024"
+  }
+ }
+}

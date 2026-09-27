@@ -1,0 +1,89 @@
+{% set model = 'attrition' %}
+{% set m = 'models.attrition' %}
+{% set purpose %}
+Rank the bank's checking customers by the deposits it stands to lose if they leave in the
+next twelve months, so that retention calls go where they protect the most balance. The
+model informs whom a person calls; it never changes a price, a fee or an account, so it
+is tier two.
+
+Out of scope: pricing a retention offer, and any customer who holds only a loan or a card.
+{% endset %}
+{% set soundness %}
+Attrition is a rare outcome driven by a few things a bank can see: a falling balance,
+fees, a new relationship, how the customer banks, a complaint, and a savings rate well
+below the market. Two candidates were fitted on the same features: a gradient boosted
+classifier, for the interactions a real bank's data would have, and a logistic
+regression. The champion was chosen on validation month ends for customers neither fit
+had seen, and the boosted model had to beat the logistic by {{ v(m ~ '.margin') }} of
+AUROC to earn its complexity. It did not ({{ v(m ~ '.auc_boosted_holdout') }} against
+{{ v(m ~ '.auc_logistic_holdout') }}), so the model is the {{ v(m ~ '.champion') }}.
+
+The retention list multiplies the probability by the customer's balances, so the
+probability is used as a probability, and calibration is part of the model's job.
+{% endset %}
+{% set data %}
+One row per customer with an open checking account per month end. The outcome is known
+only twelve months later, and the split is built around that: training on
+{{ v(m ~ '.train_period') }}, validation on {{ v(m ~ '.validation_period') }}, test on
+{{ v(m ~ '.test_period') }} ({{ v(m ~ '.test_rows') }} customer months,
+{{ v(m ~ '.test_closers') }} of them followed by a closure). Every training and validation
+outcome was known before the first test month end, which is why the windows are apart.
+The same customers appear in every month, so early stopping and the choice of champion
+use customers held out of the fit ({{ v(m ~ '.fit_customers_share') }} of customers fit).
+
+A leakage test recomputed the month's fees, activity, payroll deposits and inflow for
+{{ v(m ~ '.leakage_rows') }} sampled customer months from the posted entries and matched
+every one. Age is never a feature; it is used only for the audit below.
+{% endset %}
+{% set development %}
+Development AUROC {{ v(m ~ '.development.auroc') }}, validation {{ v(m ~ '.validation.auroc') }}.
+What moves the score most (standardised coefficients for a logistic regression, share of
+gain for a boosted model):
+
+{{ table(m ~ '.importance') }}
+{% endset %}
+{% set outcomes %}
+On the test months the model reaches an AUROC of {{ v(m ~ '.test.auroc') }}, and the
+{{ v(m ~ '.other') }} {{ v(m ~ '.other_auroc') }}. That looks weak until it is set against the
+ceiling: the generator's own monthly hazards, used as a score with perfect knowledge of
+the months ahead, reach {{ v(m ~ '.ceiling') }}. Most attrition in this bank is chance, as it
+is in most banks, and the model reaches {{ v(m ~ '.separation') }} of the separation there is
+to find.
+
+The top {{ v(m ~ '.top_share') }} of scores holds {{ v(m ~ '.capture') }} of the customers who
+went on to close. Ranked by probability, it holds {{ v(m ~ '.money_by_probability') }} of the
+balances that left; ranked by expected balance at risk, as the list is, it holds
+{{ v(m ~ '.money_by_expected_balance') }} of the balances and {{ v(m ~ '.found_by_expected_balance') }}
+of the closers: fewer people, more money.
+
+By age band at the top tenth threshold:
+
+{{ table(m ~ '.subgroups') }}
+
+{{ label(m ~ '.subgroups') }}
+{% endset %}
+{% set benchmarking %}
+Against the base rate and the candidate that was not chosen, on the test months:
+{% endset %}
+{% set limitations %}
+- The generator's customers leave for the reasons it was written with. Real attrition
+  has causes no bank sees, such as a move or a competitor's offer.
+- Closure of the primary checking account is the outcome. A customer who keeps the
+  account open and moves their salary elsewhere has left in every way that matters, and
+  this label does not see it.
+- A retention call changes the outcome it predicts. Once the list is used, the model's
+  measured capture is no longer a clean measure of the model.
+{% endset %}
+{% set monitoring %}
+Monthly:
+{% endset %}
+{% set challenge %}
+From `DECISIONS.md`:
+{% endset %}
+{% set conclusion %}
+The model orders customers the way its purpose asks, reaches most of the separation the
+data holds on month ends it never saw, and its probability is calibrated well enough to
+multiply a balance. It is approved for ordering the retention list, with the ceiling
+restated at every revalidation, because a real bank has no generator to measure it by.
+{% endset %}
+{% include "validation/_report.md.j2" %}

@@ -30,6 +30,37 @@
   "tier": 2,
   "title": "Alert triage for transaction monitoring"
  },
+ "attrition": {
+  "auroc_test": 0.5830382030082303,
+  "conclusion": "approved",
+  "conditions": [],
+  "function": "f06",
+  "last_validated": "2026-08-31",
+  "model_id": "attrition",
+  "monitoring": [
+   [
+    "Score PSI, monthly against validation",
+    "above 0.25",
+    "Revalidate"
+   ],
+   [
+    "Share of the list's customers who close within twelve months",
+    "below the test capture for two quarters",
+    "Refit"
+   ],
+   [
+    "Flag rate by age band",
+    "any band below half the highest",
+    "Review the features"
+   ]
+  ],
+  "owner": "Head of analytics",
+  "purpose": "Rank customers by the balance the bank stands to lose if they leave in the next twelve months, so retention calls go where they are worth most",
+  "role": "sole",
+  "status": "in use",
+  "tier": 2,
+  "title": "Deposit customer attrition, twelve month horizon"
+ },
  "fraud_account": {
   "auroc_test": 0.8800948351517073,
   "conclusion": "approved with conditions",
