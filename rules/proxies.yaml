@@ -1,0 +1,44 @@
+# Features no credit or fraud model may use: protected attributes under the Equal Credit
+# Opportunity Act and Regulation B, and variables that stand in for them. Every model's
+# feature list is tested against this file (tests/models/test_proxy_list.py), and no
+# adverse action reason may name one. docs/fair-lending.md gives the reasoning per entry.
+
+protected:
+  - race
+  - ethnicity
+  - derived_race
+  - derived_ethnicity
+  - sex
+  - derived_sex
+  - gender
+  - marital_status
+  - marriage
+  - religion
+  - national_origin
+  - age
+  - applicant_age
+  - customer_age
+  - birth_year
+  - public_assistance_income
+
+proxies:
+  # Fine resolution geography reproduces the racial composition of a neighbourhood.
+  - applicant_zip5
+  - zip5
+  - zip_code
+  - census_tract
+  - county_fips
+  - customer_lat
+  - customer_long
+  - lat
+  - long
+  # A name carries sex, and often ethnicity and national origin.
+  - first_name
+  - last_name
+  - name
+  - name_email_similarity
+  # Education level tracks race and national origin closely enough in public data that
+  # a lender keeping it out of the model is the defensible choice.
+  - education
+  # Population of the home city is a location proxy at a coarser grain.
+  - city_pop

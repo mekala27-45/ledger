@@ -1,0 +1,33 @@
+# Plain language adverse action reasons for each scorecard characteristic, in the style
+# of the sample reasons in Regulation B's model notice forms. A characteristic with no
+# entry here cannot be used in a scorecard that makes credit decisions.
+
+generated:
+  bureau_score: Credit history reported by the credit bureau is insufficient or delinquent
+  dti: Income insufficient for amount of credit requested
+  revolving_utilization: Proportion of balances to credit limits on revolving accounts is too high
+  delinquencies_24m: Delinquent past or present credit obligations with others
+  inquiries_6m: Number of recent inquiries on credit bureau report
+  oldest_trade_months: Length of credit history is too short
+  employment_months: Length of employment
+  annual_income: Income insufficient for amount of credit requested
+  loan_amount: Amount of credit requested relative to income
+  term_months: Term of the credit requested
+  purpose: Purpose of the credit requested
+  housing_status: Temporary or irregular residence
+  channel: Application channel
+uci:
+  limit_bal: Amount of existing credit limit is too low
+  pay_status_1: Delinquent past or present credit obligations with the bank
+  pay_status_2: Delinquent credit obligations in recent months
+  pay_status_3: Delinquent credit obligations in recent months
+  pay_status_4: Delinquent credit obligations in prior months
+  pay_status_5: Delinquent credit obligations in prior months
+  pay_status_6: Delinquent credit obligations in prior months
+  months_delinquent_6m: Number of months with a delinquent payment in the last six months
+  utilization_1: Proportion of balance to credit limit is too high
+  payment_ratio_1: Recent payments are small relative to the balance
+  payment_ratio_avg: Payments are small relative to balances over six months
+  bill_growth_6m: Balance has grown relative to the credit limit
+  bill_amt_1: Amount of the most recent balance
+  pay_amt_1: Amount of the most recent payment
