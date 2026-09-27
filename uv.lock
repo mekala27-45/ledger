@@ -1260,8 +1260,11 @@ dependencies = [
     { name = "ledger-scan" },
     { name = "ledger-scorecard" },
     { name = "ledger-stress" },
+    { name = "markdown-it-py" },
     { name = "openpyxl" },
     { name = "polars" },
+    { name = "pyarrow" },
+    { name = "pyyaml" },
 ]
 
 [package.metadata]
@@ -1280,8 +1283,11 @@ requires-dist = [
     { name = "ledger-scan", editable = "packages/scan" },
     { name = "ledger-scorecard", editable = "packages/scorecard" },
     { name = "ledger-stress", editable = "packages/stress" },
+    { name = "markdown-it-py", specifier = ">=3.0" },
     { name = "openpyxl", specifier = ">=3.1" },
     { name = "polars", specifier = ">=1.30" },
+    { name = "pyarrow", specifier = ">=19" },
+    { name = "pyyaml", specifier = ">=6.0" },
 ]
 
 [[package]]

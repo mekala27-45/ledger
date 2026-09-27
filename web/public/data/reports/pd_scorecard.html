@@ -1,0 +1,1527 @@
+<h1>Validation report: Probability of default scorecard (champion)</h1>
+<blockquote>
+<p>Harborline Bank is fictional. This is a demonstration on generated data and public datasets; no real customer, account or transaction of any real institution appears here.</p>
+<p>Nothing here is a credit decision, a fraud determination, a suspicious activity finding or investment advice.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>pd_scorecard</code></td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Rank and price installment loan applications by twelve month default risk and state the reasons for a decline</td>
+</tr>
+<tr>
+<td>Tier</td>
+<td>1: Material: informs a credit, fraud or regulatory decision directly</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>champion</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>in use</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Head of analytics</td>
+</tr>
+<tr>
+<td>Prediction time</td>
+<td>The application date, before any loan exists</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>90 days past due or charge off within 12 months of origination</td>
+</tr>
+<tr>
+<td>Last validated</td>
+<td>2026-08-31</td>
+</tr>
+<tr>
+<td>Conclusion</td>
+<td><strong>approved with conditions</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Purpose and scope</h2>
+<p>The scorecard decides installment loan applications at Harborline: it ranks each
+application by the probability of default within 12
+months, approves at or above a score of 580, and states the
+reasons for every decline. It also supplies the probability of default used in expected
+loss. It is the champion; <code>pd_challenger</code> is shadow scored beside it.</p>
+<p>In scope: consumer installment loan applications through every channel. Out of scope:
+cards and mortgages, which it has never seen, and any use as a pricing model without a
+separate calibration.</p>
+<h2>Conceptual soundness</h2>
+<p>A weight of evidence scorecard is the method most consumer lenders still use for
+application decisions, for reasons that hold here: each characteristic's effect is
+monotone and visible in a table, the model is a logistic regression a reviewer can
+reproduce by hand, and the points give Regulation B reasons directly, as the
+characteristics where an applicant earned the fewest points against the best
+attainable. The alternatives considered were a logistic regression on raw
+characteristics, which ranks about as well but gives no natural reason codes, and a
+gradient boosted model, which is the challenger.</p>
+<p>Each characteristic is fine classed into up to 20 quantile bins,
+then coarse classed until every bin holds at least 5% of
+applicants and weight of evidence is monotone. Characteristics enter only above an
+information value of 0.02 and below a weight of evidence correlation of
+0.7 with any stronger one; a characteristic whose sign reverses
+in the joint fit is removed. Points are scaled to 600 at odds of
+30 to one, with 20 points to double the odds. Of
+13 candidates, 8 were kept:</p>
+<table>
+<thead>
+<tr>
+<th>characteristic</th>
+<th style="text-align:right">iv</th>
+<th>kept</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>revolving_utilization</td>
+<td style="text-align:right">0.333</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>bureau_score</td>
+<td style="text-align:right">0.310</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>dti</td>
+<td style="text-align:right">0.233</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>employment_months</td>
+<td style="text-align:right">0.074</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>oldest_trade_months</td>
+<td style="text-align:right">0.069</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>purpose</td>
+<td style="text-align:right">0.045</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>inquiries_6m</td>
+<td style="text-align:right">0.030</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>loan_amount</td>
+<td style="text-align:right">0.024</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>annual_income</td>
+<td style="text-align:right">0.011</td>
+<td>information value 0.0113 below the floor</td>
+</tr>
+<tr>
+<td>housing_status</td>
+<td style="text-align:right">0.009</td>
+<td>information value 0.0087 below the floor</td>
+</tr>
+<tr>
+<td>term_months</td>
+<td style="text-align:right">0.008</td>
+<td>information value 0.0084 below the floor</td>
+</tr>
+<tr>
+<td>delinquencies_24m</td>
+<td style="text-align:right">0.004</td>
+<td>information value 0.0036 below the floor</td>
+</tr>
+<tr>
+<td>channel</td>
+<td style="text-align:right">0.002</td>
+<td>information value 0.0021 below the floor</td>
+</tr>
+</tbody>
+</table>
+<h2>Data and assumptions</h2>
+<p>Generated data: installment loan applications to the fictional bank from its core
+banking generator, with the application record as it stood on the application date.
+The outcome is 90 days past due or charge off within 12 months of origination. Under the censoring calendar only loans
+originated at least 12 months before the as of date have
+an outcome; later ones are excluded, never counted as good. The split is by
+origination month: development 5,721 loans, validation
+3,725, test 3,742. The validation months are the two
+vintages written under a loosened cutoff; the test months include the recession quarter.</p>
+<p>Declined applicants have no outcome, so the scorecard is fitted on booked loans only.
+No reject inference was applied; the effect is that the scorecard's view of the lowest
+score bands rests on the applicants a legacy policy chose to book.</p>
+<p>Age, ZIP code and county are held on the application for the fairness audit and are
+on the committed proxy list; none is a candidate characteristic.</p>
+<p>Before any figure here was trusted, the pipeline recovered the generator's stated
+parameters:</p>
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th style="text-align:right">stated</th>
+<th style="text-align:right">estimate</th>
+<th style="text-align:right">interval_low</th>
+<th style="text-align:right">interval_high</th>
+<th style="text-align:right">tolerance</th>
+<th>within</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Latent risk rank order (Spearman; perfect ordering is 1)</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">0.775</td>
+<td style="text-align:right">0.775</td>
+<td style="text-align:right">0.775</td>
+<td style="text-align:right">0.600</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Latent risk coefficient</td>
+<td style="text-align:right">0.950</td>
+<td style="text-align:right">0.913</td>
+<td style="text-align:right">0.863</td>
+<td style="text-align:right">0.963</td>
+<td style="text-align:right">0.150</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Macro sensitivity per point of unemployment</td>
+<td style="text-align:right">0.300</td>
+<td style="text-align:right">0.322</td>
+<td style="text-align:right">0.271</td>
+<td style="text-align:right">0.373</td>
+<td style="text-align:right">0.100</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Loose vintage effect</td>
+<td style="text-align:right">0.450</td>
+<td style="text-align:right">0.459</td>
+<td style="text-align:right">0.387</td>
+<td style="text-align:right">0.532</td>
+<td style="text-align:right">0.150</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Deposit beta, checking</td>
+<td style="text-align:right">0.020</td>
+<td style="text-align:right">0.020</td>
+<td style="text-align:right">0.020</td>
+<td style="text-align:right">0.020</td>
+<td style="text-align:right">0.010</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Deposit beta, savings</td>
+<td style="text-align:right">0.380</td>
+<td style="text-align:right">0.380</td>
+<td style="text-align:right">0.380</td>
+<td style="text-align:right">0.380</td>
+<td style="text-align:right">0.030</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Deposit beta, time</td>
+<td style="text-align:right">0.720</td>
+<td style="text-align:right">0.720</td>
+<td style="text-align:right">0.720</td>
+<td style="text-align:right">0.720</td>
+<td style="text-align:right">0.030</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Recovery share at 24 months, installment</td>
+<td style="text-align:right">0.220</td>
+<td style="text-align:right">0.204</td>
+<td style="text-align:right">0.204</td>
+<td style="text-align:right">0.204</td>
+<td style="text-align:right">0.050</td>
+<td>true</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, booked installment loans with an observed outcome, seed 20260831, as of 2026-08-31.</p>
+<h2>Development evidence</h2>
+<p>The fitted scorecard:</p>
+<table>
+<thead>
+<tr>
+<th>characteristic</th>
+<th>bin</th>
+<th style="text-align:right">share</th>
+<th style="text-align:right">bad_rate</th>
+<th style="text-align:right">woe</th>
+<th style="text-align:right">points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>revolving_utilization</td>
+<td>(-inf, 0.0697]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">1.05%</td>
+<td style="text-align:right">1.331</td>
+<td style="text-align:right">96.1</td>
+</tr>
+<tr>
+<td>revolving_utilization</td>
+<td>(0.0697, 0.1322]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">1.40%</td>
+<td style="text-align:right">1.038</td>
+<td style="text-align:right">91.3</td>
+</tr>
+<tr>
+<td>revolving_utilization</td>
+<td>(0.1322, 0.1832]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">1.92%</td>
+<td style="text-align:right">0.715</td>
+<td style="text-align:right">86.1</td>
+</tr>
+<tr>
+<td>revolving_utilization</td>
+<td>(0.1832, 0.3486]</td>
+<td style="text-align:right">30.0%</td>
+<td style="text-align:right">2.86%</td>
+<td style="text-align:right">0.307</td>
+<td style="text-align:right">79.4</td>
+</tr>
+<tr>
+<td>revolving_utilization</td>
+<td>(0.3486, 0.48]</td>
+<td style="text-align:right">20.0%</td>
+<td style="text-align:right">4.29%</td>
+<td style="text-align:right">-0.113</td>
+<td style="text-align:right">72.5</td>
+</tr>
+<tr>
+<td>revolving_utilization</td>
+<td>(0.48, 0.5197]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">4.88%</td>
+<td style="text-align:right">-0.249</td>
+<td style="text-align:right">70.3</td>
+</tr>
+<tr>
+<td>revolving_utilization</td>
+<td>(0.5197, 0.6275]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">6.65%</td>
+<td style="text-align:right">-0.578</td>
+<td style="text-align:right">64.9</td>
+</tr>
+<tr>
+<td>revolving_utilization</td>
+<td>(0.6275, +inf]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">8.39%</td>
+<td style="text-align:right">-0.829</td>
+<td style="text-align:right">60.9</td>
+</tr>
+<tr>
+<td>bureau_score</td>
+<td>(-inf, 672]</td>
+<td style="text-align:right">5.3%</td>
+<td style="text-align:right">8.55%</td>
+<td style="text-align:right">-0.850</td>
+<td style="text-align:right">60.9</td>
+</tr>
+<tr>
+<td>bureau_score</td>
+<td>(672, 694]</td>
+<td style="text-align:right">15.4%</td>
+<td style="text-align:right">6.48%</td>
+<td style="text-align:right">-0.549</td>
+<td style="text-align:right">65.7</td>
+</tr>
+<tr>
+<td>bureau_score</td>
+<td>(694, 716]</td>
+<td style="text-align:right">19.7%</td>
+<td style="text-align:right">4.53%</td>
+<td style="text-align:right">-0.170</td>
+<td style="text-align:right">71.7</td>
+</tr>
+<tr>
+<td>bureau_score</td>
+<td>(716, 747]</td>
+<td style="text-align:right">24.9%</td>
+<td style="text-align:right">3.73%</td>
+<td style="text-align:right">0.032</td>
+<td style="text-align:right">74.9</td>
+</tr>
+<tr>
+<td>bureau_score</td>
+<td>(747, 763]</td>
+<td style="text-align:right">10.4%</td>
+<td style="text-align:right">2.01%</td>
+<td style="text-align:right">0.666</td>
+<td style="text-align:right">84.9</td>
+</tr>
+<tr>
+<td>bureau_score</td>
+<td>(763, 795]</td>
+<td style="text-align:right">14.4%</td>
+<td style="text-align:right">1.71%</td>
+<td style="text-align:right">0.835</td>
+<td style="text-align:right">87.6</td>
+</tr>
+<tr>
+<td>bureau_score</td>
+<td>(795, +inf]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">1.23%</td>
+<td style="text-align:right">1.170</td>
+<td style="text-align:right">92.9</td>
+</tr>
+<tr>
+<td>dti</td>
+<td>(-inf, 0.1193]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">1.22%</td>
+<td style="text-align:right">1.174</td>
+<td style="text-align:right">96.2</td>
+</tr>
+<tr>
+<td>dti</td>
+<td>(0.1193, 0.1672]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">2.27%</td>
+<td style="text-align:right">0.544</td>
+<td style="text-align:right">84.5</td>
+</tr>
+<tr>
+<td>dti</td>
+<td>(0.1672, 0.2117]</td>
+<td style="text-align:right">15.0%</td>
+<td style="text-align:right">2.56%</td>
+<td style="text-align:right">0.420</td>
+<td style="text-align:right">82.2</td>
+</tr>
+<tr>
+<td>dti</td>
+<td>(0.2117, 0.2491]</td>
+<td style="text-align:right">15.0%</td>
+<td style="text-align:right">3.04%</td>
+<td style="text-align:right">0.244</td>
+<td style="text-align:right">78.9</td>
+</tr>
+<tr>
+<td>dti</td>
+<td>(0.2491, 0.2713]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">3.32%</td>
+<td style="text-align:right">0.154</td>
+<td style="text-align:right">77.2</td>
+</tr>
+<tr>
+<td>dti</td>
+<td>(0.2713, 0.2843]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">4.88%</td>
+<td style="text-align:right">-0.249</td>
+<td style="text-align:right">69.8</td>
+</tr>
+<tr>
+<td>dti</td>
+<td>(0.2843, +inf]</td>
+<td style="text-align:right">35.0%</td>
+<td style="text-align:right">5.95%</td>
+<td style="text-align:right">-0.459</td>
+<td style="text-align:right">65.9</td>
+</tr>
+<tr>
+<td>employment_months</td>
+<td>(-inf, 15]</td>
+<td style="text-align:right">5.9%</td>
+<td style="text-align:right">6.19%</td>
+<td style="text-align:right">-0.502</td>
+<td style="text-align:right">62.7</td>
+</tr>
+<tr>
+<td>employment_months</td>
+<td>(15, 25]</td>
+<td style="text-align:right">9.4%</td>
+<td style="text-align:right">5.21%</td>
+<td style="text-align:right">-0.319</td>
+<td style="text-align:right">66.9</td>
+</tr>
+<tr>
+<td>employment_months</td>
+<td>(25, 71]</td>
+<td style="text-align:right">40.1%</td>
+<td style="text-align:right">4.05%</td>
+<td style="text-align:right">-0.055</td>
+<td style="text-align:right">73.1</td>
+</tr>
+<tr>
+<td>employment_months</td>
+<td>(71, 206]</td>
+<td style="text-align:right">34.6%</td>
+<td style="text-align:right">3.39%</td>
+<td style="text-align:right">0.132</td>
+<td style="text-align:right">77.5</td>
+</tr>
+<tr>
+<td>employment_months</td>
+<td>(206, +inf]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">1.92%</td>
+<td style="text-align:right">0.713</td>
+<td style="text-align:right">91.1</td>
+</tr>
+<tr>
+<td>oldest_trade_months</td>
+<td>(-inf, 77]</td>
+<td style="text-align:right">10.3%</td>
+<td style="text-align:right">6.25%</td>
+<td style="text-align:right">-0.511</td>
+<td style="text-align:right">69.3</td>
+</tr>
+<tr>
+<td>oldest_trade_months</td>
+<td>(77, 95]</td>
+<td style="text-align:right">10.2%</td>
+<td style="text-align:right">4.78%</td>
+<td style="text-align:right">-0.227</td>
+<td style="text-align:right">72.1</td>
+</tr>
+<tr>
+<td>oldest_trade_months</td>
+<td>(95, 134]</td>
+<td style="text-align:right">24.9%</td>
+<td style="text-align:right">4.00%</td>
+<td style="text-align:right">-0.042</td>
+<td style="text-align:right">74.0</td>
+</tr>
+<tr>
+<td>oldest_trade_months</td>
+<td>(134, 150]</td>
+<td style="text-align:right">9.7%</td>
+<td style="text-align:right">3.79%</td>
+<td style="text-align:right">0.015</td>
+<td style="text-align:right">74.5</td>
+</tr>
+<tr>
+<td>oldest_trade_months</td>
+<td>(150, 170]</td>
+<td style="text-align:right">10.3%</td>
+<td style="text-align:right">3.41%</td>
+<td style="text-align:right">0.126</td>
+<td style="text-align:right">75.6</td>
+</tr>
+<tr>
+<td>oldest_trade_months</td>
+<td>(170, 196]</td>
+<td style="text-align:right">9.9%</td>
+<td style="text-align:right">3.00%</td>
+<td style="text-align:right">0.256</td>
+<td style="text-align:right">76.9</td>
+</tr>
+<tr>
+<td>oldest_trade_months</td>
+<td>(196, +inf]</td>
+<td style="text-align:right">24.7%</td>
+<td style="text-align:right">2.83%</td>
+<td style="text-align:right">0.316</td>
+<td style="text-align:right">77.5</td>
+</tr>
+<tr>
+<td>purpose</td>
+<td>home_improvement</td>
+<td style="text-align:right">15.8%</td>
+<td style="text-align:right">4.76%</td>
+<td style="text-align:right">-0.223</td>
+<td style="text-align:right">67.7</td>
+</tr>
+<tr>
+<td>purpose</td>
+<td>auto</td>
+<td style="text-align:right">25.7%</td>
+<td style="text-align:right">4.28%</td>
+<td style="text-align:right">-0.111</td>
+<td style="text-align:right">71.1</td>
+</tr>
+<tr>
+<td>purpose</td>
+<td>other</td>
+<td style="text-align:right">8.2%</td>
+<td style="text-align:right">3.82%</td>
+<td style="text-align:right">0.006</td>
+<td style="text-align:right">74.6</td>
+</tr>
+<tr>
+<td>purpose</td>
+<td>debt_consolidation</td>
+<td style="text-align:right">37.5%</td>
+<td style="text-align:right">3.73%</td>
+<td style="text-align:right">0.031</td>
+<td style="text-align:right">75.3</td>
+</tr>
+<tr>
+<td>purpose</td>
+<td>major_purchase</td>
+<td style="text-align:right">12.8%</td>
+<td style="text-align:right">2.19%</td>
+<td style="text-align:right">0.579</td>
+<td style="text-align:right">91.6</td>
+</tr>
+<tr>
+<td>inquiries_6m</td>
+<td>(-inf, 1]</td>
+<td style="text-align:right">73.4%</td>
+<td style="text-align:right">3.45%</td>
+<td style="text-align:right">0.111</td>
+<td style="text-align:right">75.3</td>
+</tr>
+<tr>
+<td>inquiries_6m</td>
+<td>(1, 2]</td>
+<td style="text-align:right">18.4%</td>
+<td style="text-align:right">4.76%</td>
+<td style="text-align:right">-0.222</td>
+<td style="text-align:right">72.6</td>
+</tr>
+<tr>
+<td>inquiries_6m</td>
+<td>(2, +inf]</td>
+<td style="text-align:right">8.3%</td>
+<td style="text-align:right">5.30%</td>
+<td style="text-align:right">-0.335</td>
+<td style="text-align:right">71.7</td>
+</tr>
+<tr>
+<td>loan_amount</td>
+<td>(-inf, 5,600]</td>
+<td style="text-align:right">10.1%</td>
+<td style="text-align:right">2.78%</td>
+<td style="text-align:right">0.335</td>
+<td style="text-align:right">83.2</td>
+</tr>
+<tr>
+<td>loan_amount</td>
+<td>(5,600, 14,100]</td>
+<td style="text-align:right">55.1%</td>
+<td style="text-align:right">3.62%</td>
+<td style="text-align:right">0.063</td>
+<td style="text-align:right">76.1</td>
+</tr>
+<tr>
+<td>loan_amount</td>
+<td>(14,100, 15,200]</td>
+<td style="text-align:right">5.1%</td>
+<td style="text-align:right">3.81%</td>
+<td style="text-align:right">0.011</td>
+<td style="text-align:right">74.7</td>
+</tr>
+<tr>
+<td>loan_amount</td>
+<td>(15,200, +inf]</td>
+<td style="text-align:right">29.8%</td>
+<td style="text-align:right">4.63%</td>
+<td style="text-align:right">-0.194</td>
+<td style="text-align:right">69.3</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, booked installment loans with an observed outcome, seed 20260831, as of 2026-08-31.</p>
+<p>On the development sample the scorecard's AUROC is 0.722; on
+validation 0.666. Its scores move very little between development
+and test (population stability index 0.0032).</p>
+<h2>Outcomes analysis on held out data</h2>
+<p>On the out of time test sample (3,742 loans, 254
+defaults) the scorecard reaches an AUROC of 0.662 (Gini
+0.324, KS 0.238). At the cutoff it approves
+80.3% of test applicants.</p>
+<p>Calibration is where it falls short. The mean predicted default rate on the test months
+is 3.93% against an observed 6.79%, and on the
+validation months 4.44% against 9.61%.
+The ranking holds; the level does not, because the loosened vintages and the recession
+raised default for reasons no application characteristic carries. The known parameter
+recovery above attributes it: the vintage effect and the macro sensitivity are both
+present and both outside the scorecard.</p>
+<p>By applicant age band on the test sample (age is never an input):</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th style="text-align:right">N</th>
+<th style="text-align:right">Event rate</th>
+<th style="text-align:right">Mean score</th>
+<th style="text-align:right">Calibration gap</th>
+<th style="text-align:right">Auroc</th>
+<th style="text-align:right">Approval rate</th>
+<th style="text-align:right">Adverse impact ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>18 to 24</td>
+<td style="text-align:right">492</td>
+<td style="text-align:right">6.71%</td>
+<td style="text-align:right">3.83%</td>
+<td style="text-align:right">-2.9%</td>
+<td style="text-align:right">0.590</td>
+<td style="text-align:right">82.3%</td>
+<td style="text-align:right">1.00</td>
+</tr>
+<tr>
+<td>25 to 34</td>
+<td style="text-align:right">611</td>
+<td style="text-align:right">7.04%</td>
+<td style="text-align:right">4.20%</td>
+<td style="text-align:right">-2.8%</td>
+<td style="text-align:right">0.658</td>
+<td style="text-align:right">78.4%</td>
+<td style="text-align:right">0.95</td>
+</tr>
+<tr>
+<td>35 to 49</td>
+<td style="text-align:right">1,238</td>
+<td style="text-align:right">6.87%</td>
+<td style="text-align:right">4.00%</td>
+<td style="text-align:right">-2.9%</td>
+<td style="text-align:right">0.708</td>
+<td style="text-align:right">78.8%</td>
+<td style="text-align:right">0.96</td>
+</tr>
+<tr>
+<td>50 to 64</td>
+<td style="text-align:right">988</td>
+<td style="text-align:right">6.98%</td>
+<td style="text-align:right">3.76%</td>
+<td style="text-align:right">-3.2%</td>
+<td style="text-align:right">0.652</td>
+<td style="text-align:right">81.7%</td>
+<td style="text-align:right">0.99</td>
+</tr>
+<tr>
+<td>65 and over</td>
+<td style="text-align:right">413</td>
+<td style="text-align:right">5.81%</td>
+<td style="text-align:right">3.84%</td>
+<td style="text-align:right">-2.0%</td>
+<td style="text-align:right">0.634</td>
+<td style="text-align:right">81.8%</td>
+<td style="text-align:right">0.99</td>
+</tr>
+</tbody>
+</table>
+<p>The adverse impact ratio compares each band's approval rate with the most approved band.</p>
+<p>Calibration on the test sample, ten equal count bins:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Bin</th>
+<th style="text-align:right">Accounts</th>
+<th style="text-align:right">Predicted</th>
+<th style="text-align:right">Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">375</td>
+<td style="text-align:right">0.54%</td>
+<td style="text-align:right">2.13%</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">375</td>
+<td style="text-align:right">1.03%</td>
+<td style="text-align:right">3.20%</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">1.52%</td>
+<td style="text-align:right">4.81%</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">2.09%</td>
+<td style="text-align:right">4.55%</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">2.76%</td>
+<td style="text-align:right">5.35%</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">3.53%</td>
+<td style="text-align:right">6.42%</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">4.42%</td>
+<td style="text-align:right">7.49%</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">5.56%</td>
+<td style="text-align:right">6.95%</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">7.11%</td>
+<td style="text-align:right">10.70%</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">10.75%</td>
+<td style="text-align:right">16.31%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, booked installment loans with an observed outcome, seed 20260831, as of 2026-08-31.</p>
+<h2>Benchmarking</h2>
+<p>Against the base rate, a logistic regression on the same raw characteristics, and the
+gradient boosted challenger, all on the same test sample. The challenger's case for
+promotion is in its own report.</p>
+<p>The same machinery on real data, 30,000 credit card accounts from the UCI Default of
+Credit Card Clients dataset (Yeh and Lien (2009), CC BY 4.0), split at random because the
+data has no dates:</p>
+<table>
+<thead>
+<tr>
+<th>measure</th>
+<th>generated</th>
+<th>uci</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Loans or accounts with an outcome</td>
+<td>13,188</td>
+<td>30,000</td>
+</tr>
+<tr>
+<td>Default rate</td>
+<td>6.3%</td>
+<td>22.1%</td>
+</tr>
+<tr>
+<td>Characteristics kept</td>
+<td>8</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Scorecard AUROC, test</td>
+<td>0.662</td>
+<td>0.768</td>
+</tr>
+<tr>
+<td>Scorecard Gini, test</td>
+<td>0.324</td>
+<td>0.536</td>
+</tr>
+<tr>
+<td>Challenger AUROC, test</td>
+<td>0.667</td>
+<td>0.788</td>
+</tr>
+<tr>
+<td>Logistic AUROC, test</td>
+<td>0.668</td>
+<td>0.750</td>
+</tr>
+<tr>
+<td>Scorecard calibration error, test</td>
+<td>0.0286</td>
+<td>0.0125</td>
+</tr>
+</tbody>
+</table>
+<p>The real accounts' scorecard:</p>
+<table>
+<thead>
+<tr>
+<th>characteristic</th>
+<th>bin</th>
+<th style="text-align:right">share</th>
+<th style="text-align:right">bad_rate</th>
+<th style="text-align:right">woe</th>
+<th style="text-align:right">points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pay_status_1</td>
+<td>(-inf, -2]</td>
+<td style="text-align:right">9.3%</td>
+<td style="text-align:right">12.30%</td>
+<td style="text-align:right">0.706</td>
+<td style="text-align:right">91.9</td>
+</tr>
+<tr>
+<td>pay_status_1</td>
+<td>(-2, 0]</td>
+<td style="text-align:right">68.3%</td>
+<td style="text-align:right">14.12%</td>
+<td style="text-align:right">0.547</td>
+<td style="text-align:right">88.5</td>
+</tr>
+<tr>
+<td>pay_status_1</td>
+<td>(0, 1]</td>
+<td style="text-align:right">12.1%</td>
+<td style="text-align:right">34.71%</td>
+<td style="text-align:right">-0.627</td>
+<td style="text-align:right">63.5</td>
+</tr>
+<tr>
+<td>pay_status_1</td>
+<td>(1, +inf]</td>
+<td style="text-align:right">10.4%</td>
+<td style="text-align:right">68.81%</td>
+<td style="text-align:right">-2.050</td>
+<td style="text-align:right">33.1</td>
+</tr>
+<tr>
+<td>pay_status_3</td>
+<td>(-inf, -1]</td>
+<td style="text-align:right">33.2%</td>
+<td style="text-align:right">16.80%</td>
+<td style="text-align:right">0.341</td>
+<td style="text-align:right">81.0</td>
+</tr>
+<tr>
+<td>pay_status_3</td>
+<td>(-1, 0]</td>
+<td style="text-align:right">52.6%</td>
+<td style="text-align:right">17.27%</td>
+<td style="text-align:right">0.308</td>
+<td style="text-align:right">80.6</td>
+</tr>
+<tr>
+<td>pay_status_3</td>
+<td>(0, +inf]</td>
+<td style="text-align:right">14.2%</td>
+<td style="text-align:right">52.63%</td>
+<td style="text-align:right">-1.364</td>
+<td style="text-align:right">60.3</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(-inf, 0]</td>
+<td style="text-align:right">17.1%</td>
+<td style="text-align:right">36.32%</td>
+<td style="text-align:right">-0.697</td>
+<td style="text-align:right">66.7</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(0, 1,000]</td>
+<td style="text-align:right">8.6%</td>
+<td style="text-align:right">23.33%</td>
+<td style="text-align:right">-0.069</td>
+<td style="text-align:right">75.8</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(1,000, 2,000]</td>
+<td style="text-align:right">22.0%</td>
+<td style="text-align:right">22.63%</td>
+<td style="text-align:right">-0.030</td>
+<td style="text-align:right">76.4</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(2,000, 3,615]</td>
+<td style="text-align:right">17.2%</td>
+<td style="text-align:right">21.36%</td>
+<td style="text-align:right">0.045</td>
+<td style="text-align:right">77.5</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(3,615, 4,370]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">20.00%</td>
+<td style="text-align:right">0.127</td>
+<td style="text-align:right">78.7</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(4,370, 6,245]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">16.11%</td>
+<td style="text-align:right">0.391</td>
+<td style="text-align:right">82.5</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(6,245, 8,015]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">14.78%</td>
+<td style="text-align:right">0.493</td>
+<td style="text-align:right">84.0</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(8,015, 18,224]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">14.72%</td>
+<td style="text-align:right">0.498</td>
+<td style="text-align:right">84.1</td>
+</tr>
+<tr>
+<td>pay_amt_1</td>
+<td>(18,224, +inf]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">8.00%</td>
+<td style="text-align:right">1.184</td>
+<td style="text-align:right">94.1</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(-inf, 20,000]</td>
+<td style="text-align:right">8.3%</td>
+<td style="text-align:right">36.22%</td>
+<td style="text-align:right">-0.693</td>
+<td style="text-align:right">68.1</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(20,000, 30,000]</td>
+<td style="text-align:right">5.4%</td>
+<td style="text-align:right">36.18%</td>
+<td style="text-align:right">-0.691</td>
+<td style="text-align:right">68.1</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(30,000, 70,000]</td>
+<td style="text-align:right">17.3%</td>
+<td style="text-align:right">27.66%</td>
+<td style="text-align:right">-0.298</td>
+<td style="text-align:right">73.1</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(70,000, 100,000]</td>
+<td style="text-align:right">10.6%</td>
+<td style="text-align:right">24.88%</td>
+<td style="text-align:right">-0.154</td>
+<td style="text-align:right">74.9</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(100,000, 140,000]</td>
+<td style="text-align:right">9.2%</td>
+<td style="text-align:right">23.01%</td>
+<td style="text-align:right">-0.051</td>
+<td style="text-align:right">76.2</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(140,000, 160,000]</td>
+<td style="text-align:right">5.9%</td>
+<td style="text-align:right">17.75%</td>
+<td style="text-align:right">0.275</td>
+<td style="text-align:right">80.3</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(160,000, 200,000]</td>
+<td style="text-align:right">11.2%</td>
+<td style="text-align:right">17.26%</td>
+<td style="text-align:right">0.309</td>
+<td style="text-align:right">80.8</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(200,000, 240,000]</td>
+<td style="text-align:right">8.8%</td>
+<td style="text-align:right">17.00%</td>
+<td style="text-align:right">0.327</td>
+<td style="text-align:right">81.0</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(240,000, 360,000]</td>
+<td style="text-align:right">15.2%</td>
+<td style="text-align:right">14.86%</td>
+<td style="text-align:right">0.487</td>
+<td style="text-align:right">83.0</td>
+</tr>
+<tr>
+<td>limit_bal</td>
+<td>(360,000, +inf]</td>
+<td style="text-align:right">8.2%</td>
+<td style="text-align:right">11.08%</td>
+<td style="text-align:right">0.824</td>
+<td style="text-align:right">87.3</td>
+</tr>
+<tr>
+<td>payment_ratio_avg</td>
+<td>(-inf, 0.03451]</td>
+<td style="text-align:right">9.7%</td>
+<td style="text-align:right">34.48%</td>
+<td style="text-align:right">-0.617</td>
+<td style="text-align:right">71.8</td>
+</tr>
+<tr>
+<td>payment_ratio_avg</td>
+<td>(0.03451, 0.07259]</td>
+<td style="text-align:right">33.8%</td>
+<td style="text-align:right">25.54%</td>
+<td style="text-align:right">-0.189</td>
+<td style="text-align:right">75.3</td>
+</tr>
+<tr>
+<td>payment_ratio_avg</td>
+<td>(0.07259, 0.1296]</td>
+<td style="text-align:right">9.6%</td>
+<td style="text-align:right">23.21%</td>
+<td style="text-align:right">-0.063</td>
+<td style="text-align:right">76.3</td>
+</tr>
+<tr>
+<td>payment_ratio_avg</td>
+<td>(0.1296, 0.3005]</td>
+<td style="text-align:right">9.6%</td>
+<td style="text-align:right">16.82%</td>
+<td style="text-align:right">0.340</td>
+<td style="text-align:right">79.7</td>
+</tr>
+<tr>
+<td>payment_ratio_avg</td>
+<td>(0.3005, 0.6116]</td>
+<td style="text-align:right">9.7%</td>
+<td style="text-align:right">15.77%</td>
+<td style="text-align:right">0.416</td>
+<td style="text-align:right">80.3</td>
+</tr>
+<tr>
+<td>payment_ratio_avg</td>
+<td>(0.6116, 1]</td>
+<td style="text-align:right">14.5%</td>
+<td style="text-align:right">14.93%</td>
+<td style="text-align:right">0.482</td>
+<td style="text-align:right">80.8</td>
+</tr>
+<tr>
+<td>payment_ratio_avg</td>
+<td>(1, +inf]</td>
+<td style="text-align:right">9.6%</td>
+<td style="text-align:right">14.00%</td>
+<td style="text-align:right">0.556</td>
+<td style="text-align:right">81.4</td>
+</tr>
+<tr>
+<td>payment_ratio_avg</td>
+<td>missing</td>
+<td style="text-align:right">3.5%</td>
+<td style="text-align:right">36.06%</td>
+<td style="text-align:right">-0.686</td>
+<td style="text-align:right">71.2</td>
+</tr>
+<tr>
+<td>bill_growth_6m</td>
+<td>(-inf, -0.0493]</td>
+<td style="text-align:right">20.0%</td>
+<td style="text-align:right">29.61%</td>
+<td style="text-align:right">-0.393</td>
+<td style="text-align:right">72.9</td>
+</tr>
+<tr>
+<td>bill_growth_6m</td>
+<td>(-0.0493, -0.02985]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">26.78%</td>
+<td style="text-align:right">-0.253</td>
+<td style="text-align:right">74.3</td>
+</tr>
+<tr>
+<td>bill_growth_6m</td>
+<td>(-0.02985, 0]</td>
+<td style="text-align:right">19.0%</td>
+<td style="text-align:right">23.52%</td>
+<td style="text-align:right">-0.080</td>
+<td style="text-align:right">76.0</td>
+</tr>
+<tr>
+<td>bill_growth_6m</td>
+<td>(0, 0.006685]</td>
+<td style="text-align:right">6.0%</td>
+<td style="text-align:right">19.11%</td>
+<td style="text-align:right">0.184</td>
+<td style="text-align:right">78.7</td>
+</tr>
+<tr>
+<td>bill_growth_6m</td>
+<td>(0.006685, +inf]</td>
+<td style="text-align:right">50.0%</td>
+<td style="text-align:right">18.48%</td>
+<td style="text-align:right">0.225</td>
+<td style="text-align:right">79.1</td>
+</tr>
+<tr>
+<td>utilization_1</td>
+<td>(-inf, 0.2205]</td>
+<td style="text-align:right">45.0%</td>
+<td style="text-align:right">18.17%</td>
+<td style="text-align:right">0.246</td>
+<td style="text-align:right">77.0</td>
+</tr>
+<tr>
+<td>utilization_1</td>
+<td>(0.2205, 0.4258]</td>
+<td style="text-align:right">10.0%</td>
+<td style="text-align:right">20.40%</td>
+<td style="text-align:right">0.103</td>
+<td style="text-align:right">76.9</td>
+</tr>
+<tr>
+<td>utilization_1</td>
+<td>(0.4258, 0.526]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">23.22%</td>
+<td style="text-align:right">-0.063</td>
+<td style="text-align:right">76.8</td>
+</tr>
+<tr>
+<td>utilization_1</td>
+<td>(0.526, 0.6302]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">25.44%</td>
+<td style="text-align:right">-0.184</td>
+<td style="text-align:right">76.7</td>
+</tr>
+<tr>
+<td>utilization_1</td>
+<td>(0.6302, 0.9827]</td>
+<td style="text-align:right">25.0%</td>
+<td style="text-align:right">26.24%</td>
+<td style="text-align:right">-0.226</td>
+<td style="text-align:right">76.7</td>
+</tr>
+<tr>
+<td>utilization_1</td>
+<td>(0.9827, 1.013]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">27.56%</td>
+<td style="text-align:right">-0.292</td>
+<td style="text-align:right">76.6</td>
+</tr>
+<tr>
+<td>utilization_1</td>
+<td>(1.013, +inf]</td>
+<td style="text-align:right">5.0%</td>
+<td style="text-align:right">30.56%</td>
+<td style="text-align:right">-0.438</td>
+<td style="text-align:right">76.5</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, booked installment loans with an observed outcome, seed 20260831, as of 2026-08-31.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align:right">AUROC</th>
+<th style="text-align:right">Gini</th>
+<th style="text-align:right">Brier</th>
+<th style="text-align:right">ECE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This model</td>
+<td style="text-align:right">0.662</td>
+<td style="text-align:right">0.324</td>
+<td style="text-align:right">0.0626</td>
+<td style="text-align:right">0.0286</td>
+</tr>
+<tr>
+<td>Base rate</td>
+<td style="text-align:right">0.500</td>
+<td style="text-align:right">0.000</td>
+<td style="text-align:right">0.0641</td>
+<td style="text-align:right">0.0307</td>
+</tr>
+<tr>
+<td>Logistic on raw characteristics</td>
+<td style="text-align:right">0.668</td>
+<td style="text-align:right">0.336</td>
+<td style="text-align:right">0.0624</td>
+<td style="text-align:right">0.0285</td>
+</tr>
+<tr>
+<td>Challenger (GBM)</td>
+<td style="text-align:right">0.667</td>
+<td style="text-align:right">0.334</td>
+<td style="text-align:right">0.0624</td>
+<td style="text-align:right">0.0279</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, booked installment loans with an observed outcome, seed 20260831, as of 2026-08-31.</p>
+<h2>Limitations</h2>
+<ul>
+<li>The data is generated. The scorecard proves the method and the controls, not a
+real portfolio's risk.</li>
+<li>Fitted on booked loans only, with no reject inference.</li>
+<li>Through the cycle by construction: it does not move with unemployment or with
+underwriting changes, which is why calibration fails on later vintages.</li>
+<li>The UCI comparison uses a random split, so it cannot show drift, and the UCI data
+is a Taiwanese card portfolio two decades old, not a US installment book.</li>
+<li>Simplified: no bureau attributes beyond the handful the generator produces.</li>
+</ul>
+<h2>Ongoing monitoring plan</h2>
+<p>Monthly, on every application and on each vintage as its outcomes mature:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Trigger</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Score PSI, monthly applications against development</td>
+<td>above 0.1 warns, above 0.25 breaches</td>
+<td>Investigate the shift; revalidate on breach</td>
+</tr>
+<tr>
+<td>Characteristic stability index, each characteristic</td>
+<td>above 0.25</td>
+<td>Review the characteristic's bins</td>
+</tr>
+<tr>
+<td>Rolling test AUROC as outcomes mature</td>
+<td>falls 0.03 below the validation figure</td>
+<td>Redevelop</td>
+</tr>
+<tr>
+<td>Observed over predicted default by vintage</td>
+<td>outside 0.8 to 1.25 for two vintages</td>
+<td>Recalibrate the intercept or apply an overlay</td>
+</tr>
+</tbody>
+</table>
+<h2>Effective challenge</h2>
+<p>Challenges raised during development and what each changed, from <code>DECISIONS.md</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Challenge</th>
+<th>Response</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-26</td>
+<td>On the validation months the scorecard's mean predicted default rate sat well under the observed rate, while its rank ordering held up.</td>
+<td>The validation months are the two vintages written under the loosened cutoff, and the test months carry the recession quarter. The hazard fit recovers a vintage effect close to the generator's stated one, and no application characteristic carries it, so a scorecard fitted on earlier vintages cannot see it. That is a calibration problem, not a ranking problem, and a bank would treat it the same way: keep the scorecard for decisions and adjust the probability used for loss.</td>
+<td>Calibration became a non critical gate, so the report concludes approved with a stated condition rather than approved, and expected loss in function 2 applies an observed to expected overlay by vintage instead of the raw scorecard probability.</td>
+</tr>
+<tr>
+<td>2026-09-26</td>
+<td>The fitted scorecard has no delinquency characteristic. Delinquencies in the last 24 months fell under the information value floor and were dropped.</td>
+<td>In this book the characteristic is nearly empty (most applicants have none) and carries little information once the bureau score is in the model, which already reflects payment history. Forcing it in would add a characteristic whose bins barely differ, and whose points would move with noise.</td>
+<td>The published information value table now lists every candidate with the reason it was kept or dropped, so a reviewer sees the decision instead of an absence, and the challenger, which sees every candidate, confirms the characteristic adds little.</td>
+</tr>
+</tbody>
+</table>
+<h2>Promotion gates</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Threshold</th>
+<th style="text-align:right">Measured</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recovers the generator's latent risk ordering (Spearman)</td>
+<td>at least 0.4</td>
+<td style="text-align:right">0.7754</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test AUROC at or above the floor</td>
+<td>at least 0.62</td>
+<td style="text-align:right">0.6618</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test AUROC no more than 0.02 below the logistic benchmark</td>
+<td>at least -0.02</td>
+<td style="text-align:right">-0.0063</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Score stability, development to test (PSI)</td>
+<td>at most 0.25</td>
+<td style="text-align:right">0.0032</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Lowest adverse impact ratio across age bands</td>
+<td>at least 0.8</td>
+<td style="text-align:right">0.9524</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Point in time recompute of sampled rows</td>
+<td>at least 200</td>
+<td style="text-align:right">200.0000</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Expected calibration error on test</td>
+<td>at most 0.02</td>
+<td style="text-align:right">0.0286</td>
+<td>FAIL</td>
+</tr>
+</tbody>
+</table>
+<h2>Validation conclusion</h2>
+<p>The scorecard ranks risk soundly out of time, recovers the generator's risk ordering,
+is stable, and passes the age band audit. It under predicts the level of default on
+the loosened and recession vintages. For decisions, which depend on rank, it is fit for
+use. For expected loss, its probability is used only with the vintage overlay in
+the lending function, and recalibration is the condition below.</p>
+<p>The adverse action reasons it produced for declined test month applicants, by the
+first reason given:</p>
+<table>
+<thead>
+<tr>
+<th>reason</th>
+<th style="text-align:right">declines</th>
+<th style="text-align:right">share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proportion of balances to credit limits on revolving accounts is too high</td>
+<td style="text-align:right">1,539</td>
+<td style="text-align:right">61.1%</td>
+</tr>
+<tr>
+<td>Credit history reported by the credit bureau is insufficient or delinquent</td>
+<td style="text-align:right">680</td>
+<td style="text-align:right">27.0%</td>
+</tr>
+<tr>
+<td>Income insufficient for amount of credit requested</td>
+<td style="text-align:right">284</td>
+<td style="text-align:right">11.3%</td>
+</tr>
+<tr>
+<td>Length of employment</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">0.6%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>approved with conditions.</strong> Conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Remediate before the next validation: Expected calibration error on test (measured 0.02859)</td>
+</tr>
+</tbody>
+</table>
+<h2>The integration contract</h2>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>What this model does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trained</td>
+<td>On loans originated in the first twelve months of the window, with outcomes observed under the censoring calendar.</td>
+</tr>
+<tr>
+<td>timed</td>
+<td>Scores the application as submitted; a leakage test recomputes 200 sampled rows from the application record.</td>
+</tr>
+<tr>
+<td>calibrated</td>
+<td>Points convert back to the logistic probability exactly; calibration on later vintages is reported, not assumed.</td>
+</tr>
+<tr>
+<td>useful</td>
+<td>Benchmarked on the out of time test sample against the base rate, a logistic model on raw characteristics and the challenger.</td>
+</tr>
+<tr>
+<td>fair</td>
+<td>Approval rates, AUROC and calibration by applicant age band; age is never an input.</td>
+</tr>
+<tr>
+<td>gated</td>
+<td>Promoted only after every gate in its validation report passed or was accepted with a stated condition.</td>
+</tr>
+<tr>
+<td>served</td>
+<td>POST /v1/scorecard/score in the API; in the browser from the published scorecard table on /studio.</td>
+</tr>
+<tr>
+<td>integrated</td>
+<td>Sets the approve or decline decision at the stated cutoff and supplies expected loss in function 2.</td>
+</tr>
+<tr>
+<td>monitored</td>
+<td>Score PSI and characteristic stability monthly; rolling AUROC and calibration as twelve month outcomes arrive.</td>
+</tr>
+<tr>
+<td>documented</td>
+<td>This validation report, the scorecard table, and docs/models.md.</td>
+</tr>
+<tr>
+<td>bounded</td>
+<td>Scores installment loan applications only; it has never seen a card or mortgage application.</td>
+</tr>
+<tr>
+<td>validated</td>
+<td>This report, rendered from the manifest before the model is used anywhere.</td>
+</tr>
+<tr>
+<td>explainable</td>
+<td>Every decline returns up to four adverse action reasons, the largest point shortfalls, in plain words.</td>
+</tr>
+</tbody>
+</table>

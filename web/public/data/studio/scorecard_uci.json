@@ -1,0 +1,605 @@
+{
+ "target": "bad",
+ "intercept": -1.2514691407009648,
+ "scaling": {
+  "base_score": 600,
+  "base_odds": 30.0,
+  "pdo": 20.0,
+  "factor": 28.85390081777927,
+  "offset": 501.8621880878296
+ },
+ "cutoff": 580,
+ "candidates": [
+  "limit_bal",
+  "pay_status_1",
+  "pay_status_2",
+  "pay_status_3",
+  "months_delinquent_6m",
+  "utilization_1",
+  "payment_ratio_1",
+  "payment_ratio_avg",
+  "bill_growth_6m",
+  "pay_amt_1"
+ ],
+ "iv": {
+  "limit_bal": 0.19354116386946243,
+  "pay_status_1": 0.8428771933377762,
+  "pay_status_2": 0.535745437249288,
+  "pay_status_3": 0.4226612287583444,
+  "months_delinquent_6m": 0.8372969856915066,
+  "utilization_1": 0.05718187081129878,
+  "payment_ratio_1": 0.14887498233563537,
+  "payment_ratio_avg": 0.15459806685012134,
+  "bill_growth_6m": 0.06455801053263584,
+  "pay_amt_1": 0.19421943068066708
+ },
+ "dropped": {
+  "months_delinquent_6m": "WoE correlation with pay_status_1 above the ceiling",
+  "payment_ratio_1": "coefficient sign reversed in the joint fit",
+  "pay_status_2": "coefficient sign reversed in the joint fit"
+ },
+ "characteristics": [
+  {
+   "name": "pay_status_1",
+   "kind": "numeric",
+   "direction": -1,
+   "coefficient": -0.7396083964666583,
+   "bins": [
+    {
+     "label": "(-inf, -2]",
+     "lower": null,
+     "upper": -2.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1462.0,
+     "bads": 205.0,
+     "woe": 0.7057414871113628,
+     "points": 91.91407419227751
+    },
+    {
+     "label": "(-2, 0]",
+     "lower": -2.0,
+     "upper": 0.0,
+     "categories": [],
+     "missing": false,
+     "goods": 10553.0,
+     "bads": 1735.0,
+     "woe": 0.5465935922301778,
+     "points": 88.51776464546438
+    },
+    {
+     "label": "(0, 1]",
+     "lower": 0.0,
+     "upper": 1.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1420.0,
+     "bads": 755.0,
+     "woe": -0.6271147727136711,
+     "points": 63.47013880027639
+    },
+    {
+     "label": "(1, +inf]",
+     "lower": 1.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 583.0,
+     "bads": 1286.0,
+     "woe": -2.0499138925070253,
+     "points": 33.10676995170243
+    }
+   ]
+  },
+  {
+   "name": "pay_status_3",
+   "kind": "numeric",
+   "direction": -1,
+   "coefficient": -0.41970092105310375,
+   "bins": [
+    {
+     "label": "(-inf, -1]",
+     "lower": null,
+     "upper": -1.0,
+     "categories": [],
+     "missing": false,
+     "goods": 4972.0,
+     "bads": 1004.0,
+     "woe": 0.34102097831897427,
+     "points": 80.98290339540627
+    },
+    {
+     "label": "(-1, 0]",
+     "lower": -1.0,
+     "upper": 0.0,
+     "categories": [],
+     "missing": false,
+     "goods": 7839.0,
+     "bads": 1636.0,
+     "woe": 0.30804786296607695,
+     "points": 80.5835986799944
+    },
+    {
+     "label": "(0, +inf]",
+     "lower": 0.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 1207.0,
+     "bads": 1341.0,
+     "woe": -1.3640868362440999,
+     "points": 60.334032842723495
+    }
+   ]
+  },
+  {
+   "name": "pay_amt_1",
+   "kind": "numeric",
+   "direction": 1,
+   "coefficient": -0.5035831444736492,
+   "bins": [
+    {
+     "label": "(-inf, 0]",
+     "lower": null,
+     "upper": 0.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1964.0,
+     "bads": 1120.0,
+     "woe": -0.6971546494346821,
+     "points": 66.72324359713905
+    },
+    {
+     "label": "(0, 1,000]",
+     "lower": 0.0,
+     "upper": 1000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1183.0,
+     "bads": 360.0,
+     "woe": -0.06910434153172186,
+     "points": 75.84902691738337
+    },
+    {
+     "label": "(1,000, 2,000]",
+     "lower": 1000.0,
+     "upper": 2000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 3070.0,
+     "bads": 898.0,
+     "woe": -0.02954640178090967,
+     "points": 76.42381715666619
+    },
+    {
+     "label": "(2,000, 3,615]",
+     "lower": 2000.0,
+     "upper": 3614.7000000000007,
+     "categories": [],
+     "missing": false,
+     "goods": 2441.0,
+     "bads": 663.0,
+     "woe": 0.044578906147144805,
+     "points": 77.50088294293491
+    },
+    {
+     "label": "(3,615, 4,370]",
+     "lower": 3614.7000000000007,
+     "upper": 4370.200000000001,
+     "categories": [],
+     "missing": false,
+     "goods": 720.0,
+     "bads": 180.0,
+     "woe": 0.1274851870599377,
+     "points": 78.70553923555526
+    },
+    {
+     "label": "(4,370, 6,245]",
+     "lower": 4370.200000000001,
+     "upper": 6244.600000000006,
+     "categories": [],
+     "missing": false,
+     "goods": 1510.0,
+     "bads": 290.0,
+     "woe": 0.39117483276849746,
+     "points": 82.53703894226366
+    },
+    {
+     "label": "(6,245, 8,015]",
+     "lower": 6244.600000000006,
+     "upper": 8015.300000000001,
+     "categories": [],
+     "missing": false,
+     "goods": 767.0,
+     "bads": 133.0,
+     "woe": 0.4933284990855495,
+     "points": 84.02136625242875
+    },
+    {
+     "label": "(8,015, 18,224]",
+     "lower": 8015.300000000001,
+     "upper": 18224.100000000046,
+     "categories": [],
+     "missing": false,
+     "goods": 1535.0,
+     "bads": 265.0,
+     "woe": 0.49774665997512246,
+     "points": 84.08556362395277
+    },
+    {
+     "label": "(18,224, +inf]",
+     "lower": 18224.100000000046,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 828.0,
+     "bads": 72.0,
+     "woe": 1.1835378613092515,
+     "points": 94.05034164818755
+    }
+   ]
+  },
+  {
+   "name": "limit_bal",
+   "kind": "numeric",
+   "direction": 1,
+   "coefficient": -0.4394363152318298,
+   "bins": [
+    {
+     "label": "(-inf, 20,000]",
+     "lower": null,
+     "upper": 20000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 949.0,
+     "bads": 539.0,
+     "woe": -0.6931159463590222,
+     "points": 68.06480609221406
+    },
+    {
+     "label": "(20,000, 30,000]",
+     "lower": 20000.0,
+     "upper": 30000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 621.0,
+     "bads": 352.0,
+     "woe": -0.6911092677245712,
+     "points": 68.09024967734891
+    },
+    {
+     "label": "(30,000, 70,000]",
+     "lower": 30000.0,
+     "upper": 70000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 2249.0,
+     "bads": 860.0,
+     "woe": -0.2975006113481906,
+     "points": 73.08099168575356
+    },
+    {
+     "label": "(70,000, 100,000]",
+     "lower": 70000.0,
+     "upper": 100000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1428.0,
+     "bads": 473.0,
+     "woe": -0.1538744196523561,
+     "points": 74.90209306853959
+    },
+    {
+     "label": "(100,000, 140,000]",
+     "lower": 100000.0,
+     "upper": 140000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1278.0,
+     "bads": 382.0,
+     "woe": -0.051178147729048044,
+     "points": 76.20422550412329
+    },
+    {
+     "label": "(140,000, 160,000]",
+     "lower": 140000.0,
+     "upper": 160000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 876.0,
+     "bads": 189.0,
+     "woe": 0.27480990181679615,
+     "points": 80.33757528378521
+    },
+    {
+     "label": "(160,000, 200,000]",
+     "lower": 160000.0,
+     "upper": 200000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1664.0,
+     "bads": 347.0,
+     "woe": 0.308845667374342,
+     "points": 80.7691301345348
+    },
+    {
+     "label": "(200,000, 240,000]",
+     "lower": 200000.0,
+     "upper": 240000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1313.0,
+     "bads": 269.0,
+     "woe": 0.3265493206410044,
+     "points": 80.99360275379468
+    },
+    {
+     "label": "(240,000, 360,000]",
+     "lower": 240000.0,
+     "upper": 360000.0,
+     "categories": [],
+     "missing": false,
+     "goods": 2332.0,
+     "bads": 407.0,
+     "woe": 0.48685918796783517,
+     "points": 83.02624399851553
+    },
+    {
+     "label": "(360,000, +inf]",
+     "lower": 360000.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 1308.0,
+     "bads": 163.0,
+     "woe": 0.8236951571504287,
+     "points": 87.29713945294318
+    }
+   ]
+  },
+  {
+   "name": "payment_ratio_avg",
+   "kind": "numeric",
+   "direction": 1,
+   "coefficient": -0.2857834222262886,
+   "bins": [
+    {
+     "label": "(-inf, 0.03451]",
+     "lower": null,
+     "upper": 0.03450978562386454,
+     "categories": [],
+     "missing": false,
+     "goods": 1138.0,
+     "bads": 599.0,
+     "woe": -0.6170431574891261,
+     "points": 71.76501914607884
+    },
+    {
+     "label": "(0.03451, 0.07259]",
+     "lower": 0.03450978562386454,
+     "upper": 0.07258554136213781,
+     "categories": [],
+     "missing": false,
+     "goods": 4525.0,
+     "bads": 1552.0,
+     "woe": -0.18873601866909048,
+     "points": 75.29682547318701
+    },
+    {
+     "label": "(0.07259, 0.1296]",
+     "lower": 0.07258554136213781,
+     "upper": 0.12955773285637714,
+     "categories": [],
+     "missing": false,
+     "goods": 1333.0,
+     "bads": 403.0,
+     "woe": -0.0625584158279271,
+     "points": 76.33728176182478
+    },
+    {
+     "label": "(0.1296, 0.3005]",
+     "lower": 0.12955773285637714,
+     "upper": 0.3005289704009207,
+     "categories": [],
+     "missing": false,
+     "goods": 1444.0,
+     "bads": 292.0,
+     "woe": 0.33960934312453694,
+     "points": 79.653543637684
+    },
+    {
+     "label": "(0.3005, 0.6116]",
+     "lower": 0.3005289704009207,
+     "upper": 0.6116020676419341,
+     "categories": [],
+     "missing": false,
+     "goods": 1463.0,
+     "bads": 274.0,
+     "woe": 0.41630712057210123,
+     "points": 80.28599094269671
+    },
+    {
+     "label": "(0.6116, 1]",
+     "lower": 0.6116020676419341,
+     "upper": 1.0,
+     "categories": [],
+     "missing": false,
+     "goods": 2223.0,
+     "bads": 390.0,
+     "woe": 0.4816570007805516,
+     "points": 80.8248638670001
+    },
+    {
+     "label": "(1, +inf]",
+     "lower": 1.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 1486.0,
+     "bads": 242.0,
+     "woe": 0.5560963250610653,
+     "points": 81.4386880428097
+    },
+    {
+     "label": "missing",
+     "lower": null,
+     "upper": null,
+     "categories": [],
+     "missing": true,
+     "goods": 406.0,
+     "bads": 229.0,
+     "woe": -0.6861780180124599,
+     "points": 71.194935400819
+    }
+   ]
+  },
+  {
+   "name": "bill_growth_6m",
+   "kind": "numeric",
+   "direction": 1,
+   "coefficient": -0.3507822752917095,
+   "bins": [
+    {
+     "label": "(-inf, -0.0493]",
+     "lower": null,
+     "upper": -0.04929785714285714,
+     "categories": [],
+     "missing": false,
+     "goods": 2534.0,
+     "bads": 1066.0,
+     "woe": -0.39292341790465846,
+     "points": 72.87618675205414
+    },
+    {
+     "label": "(-0.0493, -0.02985]",
+     "lower": -0.04929785714285714,
+     "upper": -0.029845942982456138,
+     "categories": [],
+     "missing": false,
+     "goods": 659.0,
+     "bads": 241.0,
+     "woe": -0.2528825730481007,
+     "points": 74.29360133788201
+    },
+    {
+     "label": "(-0.02985, 0]",
+     "lower": -0.029845942982456138,
+     "upper": 0.0,
+     "categories": [],
+     "missing": false,
+     "goods": 2621.0,
+     "bads": 806.0,
+     "woe": -0.07958171324317478,
+     "points": 76.0476550689604
+    },
+    {
+     "label": "(0, 0.006685]",
+     "lower": 0.0,
+     "upper": 0.006685,
+     "categories": [],
+     "missing": false,
+     "goods": 868.0,
+     "bads": 205.0,
+     "woe": 0.18437256146198922,
+     "points": 78.71925162596443
+    },
+    {
+     "label": "(0.006685, +inf]",
+     "lower": 0.006685,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 7336.0,
+     "bads": 1663.0,
+     "woe": 0.22536136068342033,
+     "points": 79.134117174166
+    }
+   ]
+  },
+  {
+   "name": "utilization_1",
+   "kind": "numeric",
+   "direction": -1,
+   "coefficient": -0.026779782861842592,
+   "bins": [
+    {
+     "label": "(-inf, 0.2205]",
+     "lower": null,
+     "upper": 0.22045466666666672,
+     "categories": [],
+     "missing": false,
+     "goods": 6628.0,
+     "bads": 1472.0,
+     "woe": 0.2458719051976791,
+     "points": 77.04312188015636
+    },
+    {
+     "label": "(0.2205, 0.4258]",
+     "lower": 0.22045466666666672,
+     "upper": 0.42582507177033496,
+     "categories": [],
+     "missing": false,
+     "goods": 1432.0,
+     "bads": 367.0,
+     "woe": 0.10265632540606767,
+     "points": 76.93245902999072
+    },
+    {
+     "label": "(0.4258, 0.526]",
+     "lower": 0.42582507177033496,
+     "upper": 0.5259983333333333,
+     "categories": [],
+     "missing": false,
+     "goods": 691.0,
+     "bads": 209.0,
+     "woe": -0.06300360225709402,
+     "points": 76.80445340532255
+    },
+    {
+     "label": "(0.526, 0.6302]",
+     "lower": 0.5259983333333333,
+     "upper": 0.630182,
+     "categories": [],
+     "missing": false,
+     "goods": 671.0,
+     "bads": 229.0,
+     "woe": -0.18376204064251084,
+     "points": 76.71114321523899
+    },
+    {
+     "label": "(0.6302, 0.9827]",
+     "lower": 0.630182,
+     "upper": 0.9827221848739496,
+     "categories": [],
+     "missing": false,
+     "goods": 3319.0,
+     "bads": 1181.0,
+     "woe": -0.2255071785373405,
+     "points": 76.67888669715121
+    },
+    {
+     "label": "(0.9827, 1.013]",
+     "lower": 0.9827221848739496,
+     "upper": 1.0132355555555557,
+     "categories": [],
+     "missing": false,
+     "goods": 652.0,
+     "bads": 248.0,
+     "woe": -0.2921933582982822,
+     "points": 76.62735820611873
+    },
+    {
+     "label": "(1.013, +inf]",
+     "lower": 1.0132355555555557,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 625.0,
+     "bads": 275.0,
+     "woe": -0.43782862199012257,
+     "points": 76.5148256633031
+    }
+   ]
+  }
+ ]
+}

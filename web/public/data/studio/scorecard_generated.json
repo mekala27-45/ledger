@@ -1,0 +1,631 @@
+{
+ "target": "bad",
+ "intercept": -3.231437849041228,
+ "scaling": {
+  "base_score": 600,
+  "base_odds": 30.0,
+  "pdo": 20.0,
+  "factor": 28.85390081777927,
+  "offset": 501.8621880878296
+ },
+ "cutoff": 580,
+ "candidates": [
+  "bureau_score",
+  "dti",
+  "revolving_utilization",
+  "delinquencies_24m",
+  "inquiries_6m",
+  "oldest_trade_months",
+  "employment_months",
+  "annual_income",
+  "loan_amount",
+  "term_months",
+  "purpose",
+  "housing_status",
+  "channel"
+ ],
+ "iv": {
+  "bureau_score": 0.3104851509315467,
+  "dti": 0.2334610863626036,
+  "revolving_utilization": 0.333266409440127,
+  "delinquencies_24m": 0.003574578739185632,
+  "inquiries_6m": 0.0295872319116273,
+  "oldest_trade_months": 0.06936722538093497,
+  "employment_months": 0.0739387124496311,
+  "annual_income": 0.011288525389386956,
+  "loan_amount": 0.024104045274360695,
+  "term_months": 0.008371199153278518,
+  "purpose": 0.04548810774881795,
+  "housing_status": 0.008688179618680202,
+  "channel": 0.002116722744008732
+ },
+ "dropped": {
+  "annual_income": "information value 0.0113 below the floor",
+  "housing_status": "information value 0.0087 below the floor",
+  "term_months": "information value 0.0084 below the floor",
+  "delinquencies_24m": "information value 0.0036 below the floor",
+  "channel": "information value 0.0021 below the floor"
+ },
+ "characteristics": [
+  {
+   "name": "revolving_utilization",
+   "kind": "numeric",
+   "direction": -1,
+   "coefficient": -0.5658450241628189,
+   "bins": [
+    {
+     "label": "(-inf, 0.0697]",
+     "lower": null,
+     "upper": 0.0697,
+     "categories": [],
+     "missing": false,
+     "goods": 284.0,
+     "bads": 3.0,
+     "woe": 1.33130432297,
+     "points": 96.12370953106966
+    },
+    {
+     "label": "(0.0697, 0.1322]",
+     "lower": 0.0697,
+     "upper": 0.1322,
+     "categories": [],
+     "missing": false,
+     "goods": 565.0,
+     "bads": 8.0,
+     "woe": 1.0383265629435086,
+     "points": 91.34030963128399
+    },
+    {
+     "label": "(0.1322, 0.1832]",
+     "lower": 0.1322,
+     "upper": 0.1832,
+     "categories": [],
+     "missing": false,
+     "goods": 562.0,
+     "bads": 11.0,
+     "woe": 0.714548950572224,
+     "points": 86.05404558711349
+    },
+    {
+     "label": "(0.1832, 0.3486]",
+     "lower": 0.1832,
+     "upper": 0.3486,
+     "categories": [],
+     "missing": false,
+     "goods": 1666.0,
+     "bads": 49.0,
+     "woe": 0.307302898093065,
+     "points": 79.40500599297917
+    },
+    {
+     "label": "(0.3486, 0.48]",
+     "lower": 0.3486,
+     "upper": 0.48,
+     "categories": [],
+     "missing": false,
+     "goods": 1094.0,
+     "bads": 49.0,
+     "woe": -0.1132819416517966,
+     "points": 72.53818620397868
+    },
+    {
+     "label": "(0.48, 0.5197]",
+     "lower": 0.48,
+     "upper": 0.5197,
+     "categories": [],
+     "missing": false,
+     "goods": 273.0,
+     "bads": 14.0,
+     "woe": -0.2486431609533954,
+     "points": 70.32816574787446
+    },
+    {
+     "label": "(0.5197, 0.6275]",
+     "lower": 0.5197,
+     "upper": 0.6275,
+     "categories": [],
+     "missing": false,
+     "goods": 533.0,
+     "bads": 38.0,
+     "woe": -0.5781223620836379,
+     "points": 64.94881279792577
+    },
+    {
+     "label": "(0.6275, +inf]",
+     "lower": 0.6275,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 524.0,
+     "bads": 48.0,
+     "woe": -0.8287669531099454,
+     "points": 60.85657961446278
+    }
+   ]
+  },
+  {
+   "name": "bureau_score",
+   "kind": "numeric",
+   "direction": 1,
+   "coefficient": -0.5485909080819907,
+   "bins": [
+    {
+     "label": "(-inf, 672]",
+     "lower": null,
+     "upper": 672.0,
+     "categories": [],
+     "missing": false,
+     "goods": 278.0,
+     "bads": 26.0,
+     "woe": -0.8495330508539416,
+     "points": 60.940473738993916
+    },
+    {
+     "label": "(672, 694]",
+     "lower": 672.0,
+     "upper": 694.0,
+     "categories": [],
+     "missing": false,
+     "goods": 823.0,
+     "bads": 57.0,
+     "woe": -0.549152693680577,
+     "points": 65.69519070339418
+    },
+    {
+     "label": "(694, 716]",
+     "lower": 694.0,
+     "upper": 716.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1076.0,
+     "bads": 51.0,
+     "woe": -0.16987751852569252,
+     "points": 71.69873276737808
+    },
+    {
+     "label": "(716, 747]",
+     "lower": 716.0,
+     "upper": 747.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1369.0,
+     "bads": 53.0,
+     "woe": 0.03248628521323053,
+     "points": 74.90194691783832
+    },
+    {
+     "label": "(747, 763]",
+     "lower": 747.0,
+     "upper": 763.0,
+     "categories": [],
+     "missing": false,
+     "goods": 584.0,
+     "bads": 12.0,
+     "woe": 0.6659367065171303,
+     "points": 84.92882581438957
+    },
+    {
+     "label": "(763, 795]",
+     "lower": 763.0,
+     "upper": 795.0,
+     "categories": [],
+     "missing": false,
+     "goods": 807.0,
+     "bads": 14.0,
+     "woe": 0.8352087121315939,
+     "points": 87.60823030097733
+    },
+    {
+     "label": "(795, +inf]",
+     "lower": 795.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 564.0,
+     "bads": 7.0,
+     "woe": 1.1700864759196492,
+     "points": 92.90900628868454
+    }
+   ]
+  },
+  {
+   "name": "dti",
+   "kind": "numeric",
+   "direction": -1,
+   "coefficient": -0.6427381060592254,
+   "bins": [
+    {
+     "label": "(-inf, 0.1193]",
+     "lower": null,
+     "upper": 0.1193,
+     "categories": [],
+     "missing": false,
+     "goods": 566.0,
+     "bads": 7.0,
+     "woe": 1.1736263026247733,
+     "points": 96.15321034128684
+    },
+    {
+     "label": "(0.1193, 0.1672]",
+     "lower": 0.1193,
+     "upper": 0.1672,
+     "categories": [],
+     "missing": false,
+     "goods": 560.0,
+     "bads": 13.0,
+     "woe": 0.5439297997445617,
+     "points": 84.47517286225123
+    },
+    {
+     "label": "(0.1672, 0.2117]",
+     "lower": 0.1672,
+     "upper": 0.2117,
+     "categories": [],
+     "missing": false,
+     "goods": 837.0,
+     "bads": 22.0,
+     "woe": 0.41972399060806287,
+     "points": 82.17171383464742
+    },
+    {
+     "label": "(0.2117, 0.2491]",
+     "lower": 0.2117,
+     "upper": 0.2491,
+     "categories": [],
+     "missing": false,
+     "goods": 830.0,
+     "bads": 26.0,
+     "woe": 0.244271536246065,
+     "points": 78.91786006786229
+    },
+    {
+     "label": "(0.2491, 0.2713]",
+     "lower": 0.2491,
+     "upper": 0.2713,
+     "categories": [],
+     "missing": false,
+     "goods": 554.0,
+     "bads": 19.0,
+     "woe": 0.15366808105774687,
+     "points": 77.2375735479599
+    },
+    {
+     "label": "(0.2713, 0.2843]",
+     "lower": 0.2713,
+     "upper": 0.2843,
+     "categories": [],
+     "missing": false,
+     "goods": 273.0,
+     "bads": 14.0,
+     "woe": -0.2486431609533954,
+     "points": 69.77650978001131
+    },
+    {
+     "label": "(0.2843, +inf]",
+     "lower": 0.2843,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 1881.0,
+     "bads": 119.0,
+     "woe": -0.4586222903335955,
+     "points": 65.88234150767501
+    }
+   ]
+  },
+  {
+   "name": "employment_months",
+   "kind": "numeric",
+   "direction": 1,
+   "coefficient": -0.810881810085931,
+   "bins": [
+    {
+     "label": "(-inf, 15]",
+     "lower": null,
+     "upper": 15.0,
+     "categories": [],
+     "missing": false,
+     "goods": 318.0,
+     "bads": 21.0,
+     "woe": -0.5015286814663427,
+     "points": 62.65340353056379
+    },
+    {
+     "label": "(15, 25]",
+     "lower": 15.0,
+     "upper": 25.0,
+     "categories": [],
+     "missing": false,
+     "goods": 509.0,
+     "bads": 28.0,
+     "woe": -0.3188141201477776,
+     "points": 66.92839500038025
+    },
+    {
+     "label": "(25, 71]",
+     "lower": 25.0,
+     "upper": 71.0,
+     "categories": [],
+     "missing": false,
+     "goods": 2201.0,
+     "bads": 93.0,
+     "woe": -0.05499003814989083,
+     "points": 73.10111430602285
+    },
+    {
+     "label": "(71, 206]",
+     "lower": 71.0,
+     "upper": 206.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1912.0,
+     "bads": 67.0,
+     "woe": 0.13215484769728394,
+     "points": 77.47976253659033
+    },
+    {
+     "label": "(206, +inf]",
+     "lower": 206.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 561.0,
+     "bads": 11.0,
+     "woe": 0.7127680062012292,
+     "points": 91.06442859689386
+    }
+   ]
+  },
+  {
+   "name": "oldest_trade_months",
+   "kind": "numeric",
+   "direction": 1,
+   "coefficient": -0.34323846292601484,
+   "bins": [
+    {
+     "label": "(-inf, 77]",
+     "lower": null,
+     "upper": 77.0,
+     "categories": [],
+     "missing": false,
+     "goods": 555.0,
+     "bads": 37.0,
+     "woe": -0.5110074254208866,
+     "points": 69.32682263342606
+    },
+    {
+     "label": "(77, 95]",
+     "lower": 77.0,
+     "upper": 95.0,
+     "categories": [],
+     "missing": false,
+     "goods": 558.0,
+     "bads": 28.0,
+     "woe": -0.22690317431698948,
+     "points": 72.14052538500826
+    },
+    {
+     "label": "(95, 134]",
+     "lower": 95.0,
+     "upper": 134.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1367.0,
+     "bads": 57.0,
+     "woe": -0.041735057633697045,
+     "points": 73.97438755846282
+    },
+    {
+     "label": "(134, 150]",
+     "lower": 134.0,
+     "upper": 150.0,
+     "categories": [],
+     "missing": false,
+     "goods": 533.0,
+     "bads": 21.0,
+     "woe": 0.014941359919324864,
+     "points": 74.5356976810644
+    },
+    {
+     "label": "(150, 170]",
+     "lower": 150.0,
+     "upper": 170.0,
+     "categories": [],
+     "missing": false,
+     "goods": 567.0,
+     "bads": 20.0,
+     "woe": 0.12556940365066455,
+     "points": 75.63133222310157
+    },
+    {
+     "label": "(170, 196]",
+     "lower": 170.0,
+     "upper": 196.0,
+     "categories": [],
+     "missing": false,
+     "goods": 549.0,
+     "bads": 17.0,
+     "woe": 0.25582747093021807,
+     "points": 76.92137797530759
+    },
+    {
+     "label": "(196, +inf]",
+     "lower": 196.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 1372.0,
+     "bads": 40.0,
+     "woe": 0.31608772764879756,
+     "points": 77.51818161158303
+    }
+   ]
+  },
+  {
+   "name": "purpose",
+   "kind": "categorical",
+   "direction": 0,
+   "coefficient": -1.0313225254728318,
+   "bins": [
+    {
+     "label": "home_improvement",
+     "lower": null,
+     "upper": null,
+     "categories": [
+      "home_improvement"
+     ],
+     "missing": false,
+     "goods": 860.0,
+     "bads": 43.0,
+     "woe": -0.2233253529691055,
+     "points": 67.74207799848155
+    },
+    {
+     "label": "auto",
+     "lower": null,
+     "upper": null,
+     "categories": [
+      "auto"
+     ],
+     "missing": false,
+     "goods": 1410.0,
+     "bads": 63.0,
+     "woe": -0.11084736954241536,
+     "points": 71.08916159576304
+    },
+    {
+     "label": "other",
+     "lower": null,
+     "upper": null,
+     "categories": [
+      "other"
+     ],
+     "missing": false,
+     "goods": 453.0,
+     "bads": 18.0,
+     "woe": 0.006462741063772691,
+     "points": 74.58003807703608
+    },
+    {
+     "label": "debt_consolidation",
+     "lower": null,
+     "upper": null,
+     "categories": [
+      "debt_consolidation"
+     ],
+     "missing": false,
+     "goods": 2064.0,
+     "bads": 80.0,
+     "woe": 0.03131686540447522,
+     "points": 75.31963910268729
+    },
+    {
+     "label": "major_purchase",
+     "lower": null,
+     "upper": null,
+     "categories": [
+      "major_purchase"
+     ],
+     "missing": false,
+     "goods": 714.0,
+     "bads": 16.0,
+     "woe": 0.5792366135767065,
+     "points": 91.6244584625506
+    }
+   ]
+  },
+  {
+   "name": "inquiries_6m",
+   "kind": "numeric",
+   "direction": -1,
+   "coefficient": -0.2777882864180562,
+   "bins": [
+    {
+     "label": "(-inf, 1]",
+     "lower": null,
+     "upper": 1.0,
+     "categories": [],
+     "missing": false,
+     "goods": 4053.0,
+     "bads": 145.0,
+     "woe": 0.11142125768463768,
+     "points": 75.28079400560449
+    },
+    {
+     "label": "(1, 2]",
+     "lower": 1.0,
+     "upper": 2.0,
+     "categories": [],
+     "missing": false,
+     "goods": 1001.0,
+     "bads": 50.0,
+     "woe": -0.22232585263602198,
+     "points": 72.6057189141049
+    },
+    {
+     "label": "(2, +inf]",
+     "lower": 2.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 447.0,
+     "bads": 25.0,
+     "woe": -0.3353748567777285,
+     "points": 71.69959998229525
+    }
+   ]
+  },
+  {
+   "name": "loan_amount",
+   "kind": "numeric",
+   "direction": -1,
+   "coefficient": -0.9149553931000486,
+   "bins": [
+    {
+     "label": "(-inf, 5,600]",
+     "lower": null,
+     "upper": 5600.0,
+     "categories": [],
+     "missing": false,
+     "goods": 559.0,
+     "bads": 16.0,
+     "woe": 0.3345031243922214,
+     "points": 83.2186151536753
+    },
+    {
+     "label": "(5,600, 14,100]",
+     "lower": 5600.0,
+     "upper": 14100.0,
+     "categories": [],
+     "missing": false,
+     "goods": 3037.0,
+     "bads": 114.0,
+     "woe": 0.06336939012815687,
+     "points": 76.06067584803291
+    },
+    {
+     "label": "(14,100, 15,200]",
+     "lower": 14100.0,
+     "upper": 15200.0,
+     "categories": [],
+     "missing": false,
+     "goods": 278.0,
+     "bads": 11.0,
+     "woe": 0.010668214369169978,
+     "points": 74.66936311285174
+    },
+    {
+     "label": "(15,200, +inf]",
+     "lower": 15200.0,
+     "upper": null,
+     "categories": [],
+     "missing": false,
+     "goods": 1627.0,
+     "bads": 79.0,
+     "woe": -0.19401237177108022,
+     "points": 69.26578905515694
+    }
+   ]
+  }
+ ]
+}

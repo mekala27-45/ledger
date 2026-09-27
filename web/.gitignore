@@ -1,0 +1,8 @@
+node_modules/
+.next/
+out/
+src/app/tokens.css
+public/duckdb/
+public/data/nj_counties.json
+test-results/
+playwright-report/

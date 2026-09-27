@@ -1,0 +1,441 @@
+<h1>Validation report: Probability of default challenger (monotone GBM)</h1>
+<blockquote>
+<p>Harborline Bank is fictional. This is a demonstration on generated data and public datasets; no real customer, account or transaction of any real institution appears here.</p>
+<p>Nothing here is a credit decision, a fraud determination, a suspicious activity finding or investment advice.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>pd_challenger</code></td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Test whether a gradient boosted model beats the scorecard enough to justify its opacity</td>
+</tr>
+<tr>
+<td>Tier</td>
+<td>1: Informs a decision a person makes, with a method whose behaviour is hard to inspect</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>challenger</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>validated</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Head of analytics</td>
+</tr>
+<tr>
+<td>Prediction time</td>
+<td>The application date</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>90 days past due or charge off within 12 months of origination</td>
+</tr>
+<tr>
+<td>Last validated</td>
+<td>2026-08-31</td>
+</tr>
+<tr>
+<td>Conclusion</td>
+<td><strong>not approved</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Purpose and scope</h2>
+<p>The challenger exists to answer one question for the model risk function: would a
+gradient boosted model decide installment loan applications better enough than the
+scorecard to justify giving up the scorecard's transparency? It is shadow scored on
+every application, including declines, and decides nothing.</p>
+<h2>Conceptual soundness</h2>
+<p>LightGBM on the same raw characteristics the scorecard considered, with monotone
+constraints on every numeric characteristic in the direction the scorecard's weight of
+evidence runs, so a higher bureau score can never raise predicted risk and a higher
+utilisation can never lower it. Categorical characteristics are unconstrained. Early
+stopped on the validation months, 132 trees. Without the constraints a
+tree model can learn non monotone effects that a lender could not defend to an examiner
+or explain to an applicant.</p>
+<h2>Data and assumptions</h2>
+<p>Identical to the champion's: the same booked loans, the same censoring, the same split
+by origination month, the same leakage test and the same exclusion of every protected
+attribute and proxy.</p>
+<h2>Development evidence</h2>
+<p>Development AUROC 0.776, validation 0.670.
+Its rank order agrees with the champion's on every application at a Spearman correlation
+of 0.962, so the two models mostly disagree at the margin rather than
+about who is risky.</p>
+<h2>Outcomes analysis on held out data</h2>
+<p>On the test sample the challenger's AUROC is 0.667, an improvement of
+0.005 over the champion. Stability from development to test is
+0.0035. By age band, at the threshold that approves the champion's share
+of applicants:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th style="text-align:right">N</th>
+<th style="text-align:right">Event rate</th>
+<th style="text-align:right">Mean score</th>
+<th style="text-align:right">Calibration gap</th>
+<th style="text-align:right">Auroc</th>
+<th style="text-align:right">Approval rate</th>
+<th style="text-align:right">Adverse impact ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>18 to 24</td>
+<td style="text-align:right">492</td>
+<td style="text-align:right">6.71%</td>
+<td style="text-align:right">3.90%</td>
+<td style="text-align:right">-2.8%</td>
+<td style="text-align:right">0.625</td>
+<td style="text-align:right">18.3%</td>
+<td style="text-align:right">0.91</td>
+</tr>
+<tr>
+<td>25 to 34</td>
+<td style="text-align:right">611</td>
+<td style="text-align:right">7.04%</td>
+<td style="text-align:right">4.33%</td>
+<td style="text-align:right">-2.7%</td>
+<td style="text-align:right">0.663</td>
+<td style="text-align:right">19.8%</td>
+<td style="text-align:right">0.99</td>
+</tr>
+<tr>
+<td>35 to 49</td>
+<td style="text-align:right">1,238</td>
+<td style="text-align:right">6.87%</td>
+<td style="text-align:right">4.08%</td>
+<td style="text-align:right">-2.8%</td>
+<td style="text-align:right">0.708</td>
+<td style="text-align:right">18.1%</td>
+<td style="text-align:right">0.90</td>
+</tr>
+<tr>
+<td>50 to 64</td>
+<td style="text-align:right">988</td>
+<td style="text-align:right">6.98%</td>
+<td style="text-align:right">3.81%</td>
+<td style="text-align:right">-3.2%</td>
+<td style="text-align:right">0.650</td>
+<td style="text-align:right">20.0%</td>
+<td style="text-align:right">1.00</td>
+</tr>
+<tr>
+<td>65 and over</td>
+<td style="text-align:right">413</td>
+<td style="text-align:right">5.81%</td>
+<td style="text-align:right">3.83%</td>
+<td style="text-align:right">-2.0%</td>
+<td style="text-align:right">0.651</td>
+<td style="text-align:right">19.9%</td>
+<td style="text-align:right">0.99</td>
+</tr>
+</tbody>
+</table>
+<p>Calibration on the test sample, ten equal count bins:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Bin</th>
+<th style="text-align:right">Accounts</th>
+<th style="text-align:right">Predicted</th>
+<th style="text-align:right">Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">375</td>
+<td style="text-align:right">0.85%</td>
+<td style="text-align:right">2.93%</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">375</td>
+<td style="text-align:right">1.15%</td>
+<td style="text-align:right">3.20%</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">1.51%</td>
+<td style="text-align:right">3.74%</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">1.99%</td>
+<td style="text-align:right">5.35%</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">2.59%</td>
+<td style="text-align:right">4.81%</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">3.38%</td>
+<td style="text-align:right">6.15%</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">4.43%</td>
+<td style="text-align:right">6.42%</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">5.72%</td>
+<td style="text-align:right">7.49%</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">7.47%</td>
+<td style="text-align:right">7.75%</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">10.90%</td>
+<td style="text-align:right">20.05%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, booked installment loans with an observed outcome, seed 20260831, as of 2026-08-31.</p>
+<h2>Benchmarking</h2>
+<p>Against the champion first, then the logistic model and the base rate, on the same test
+sample.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align:right">AUROC</th>
+<th style="text-align:right">Gini</th>
+<th style="text-align:right">Brier</th>
+<th style="text-align:right">ECE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This model</td>
+<td style="text-align:right">0.667</td>
+<td style="text-align:right">0.334</td>
+<td style="text-align:right">0.0624</td>
+<td style="text-align:right">0.0279</td>
+</tr>
+<tr>
+<td>Champion scorecard</td>
+<td style="text-align:right">0.662</td>
+<td style="text-align:right">0.324</td>
+<td style="text-align:right">0.0626</td>
+<td style="text-align:right">0.0286</td>
+</tr>
+<tr>
+<td>Logistic on raw characteristics</td>
+<td style="text-align:right">0.668</td>
+<td style="text-align:right">0.336</td>
+<td style="text-align:right">0.0624</td>
+<td style="text-align:right">0.0285</td>
+</tr>
+<tr>
+<td>Base rate</td>
+<td style="text-align:right">0.500</td>
+<td style="text-align:right">0.000</td>
+<td style="text-align:right">0.0641</td>
+<td style="text-align:right">0.0307</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, booked installment loans with an observed outcome, seed 20260831, as of 2026-08-31.</p>
+<h2>Limitations</h2>
+<ul>
+<li>Cannot produce Regulation B reasons on its own; reasons would have to come from a
+separate explanation method, and a bank would have to validate that method too.</li>
+<li>Shares every limitation of the champion's data.</li>
+</ul>
+<h2>Ongoing monitoring plan</h2>
+<p>While it stays in shadow:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Trigger</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rank agreement with the champion</td>
+<td>below 0.7</td>
+<td>Investigate before any promotion case</td>
+</tr>
+</tbody>
+</table>
+<h2>Effective challenge</h2>
+<p>From <code>DECISIONS.md</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Challenge</th>
+<th>Response</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-26</td>
+<td>The first fit's development AUROC was far above its validation AUROC.</td>
+<td>With fifteen leaves and a small minimum leaf, the trees were learning the development months' noise; early stopping alone did not close the gap.</td>
+<td>Seven leaves and a minimum of 150 loans per leaf. The development to validation gap narrowed and the validation and test AUROC held.</td>
+</tr>
+<tr>
+<td>2026-09-26</td>
+<td>The challenger's test AUROC is above the champion's.</td>
+<td>The gain has to pay for what the bank gives up. A gradient boosted model cannot state Regulation B reasons directly; declined applicants would still get reasons computed from the scorecard, which means explaining one model's decision with another model. A small gain does not buy that.</td>
+<td>Promotion requires a test AUROC at least 0.01 above the champion's, stated as a gate in the validation report, together with the stability and age band gates.</td>
+</tr>
+</tbody>
+</table>
+<h2>Promotion gates</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Threshold</th>
+<th style="text-align:right">Measured</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test AUROC at least 0.01 above the champion</td>
+<td>at least 0.01</td>
+<td style="text-align:right">0.0054</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>Score stability, development to test (PSI)</td>
+<td>at most 0.25</td>
+<td style="text-align:right">0.0035</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Lowest adverse impact ratio across age bands at the champion's approval rate</td>
+<td>at least 0.8</td>
+<td style="text-align:right">0.9029</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Expected calibration error on test</td>
+<td>at most 0.02</td>
+<td style="text-align:right">0.0279</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>Rank agreement with the champion on every application (Spearman)</td>
+<td>at least 0.7</td>
+<td style="text-align:right">0.9617</td>
+<td>pass</td>
+</tr>
+</tbody>
+</table>
+<h2>Validation conclusion</h2>
+<p>Not approved for promotion. The challenger is at least as stable and as fair as the
+champion and ranks marginally better, but the improvement is under the materiality
+margin set before evaluation, and it would cost the bank directly stated adverse action
+reasons. It stays in shadow and is re-evaluated at the next validation.</p>
+<p><strong>not approved.</strong> Conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test AUROC at least 0.01 above the champion (measured 0.00535)</td>
+</tr>
+</tbody>
+</table>
+<h2>The integration contract</h2>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>What this model does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trained</td>
+<td>Same development sample as the champion, early stopped on the validation months.</td>
+</tr>
+<tr>
+<td>timed</td>
+<td>Same application record as the champion, under the same leakage test.</td>
+</tr>
+<tr>
+<td>calibrated</td>
+<td>Reported on the out of time test sample beside the champion's calibration.</td>
+</tr>
+<tr>
+<td>useful</td>
+<td>Judged only against the champion, on the same test sample, by a stated materiality margin.</td>
+</tr>
+<tr>
+<td>fair</td>
+<td>The same age band audit, at the threshold that approves the champion's share of applicants.</td>
+</tr>
+<tr>
+<td>gated</td>
+<td>Promotion requires every gate in this report; it has not been promoted.</td>
+</tr>
+<tr>
+<td>served</td>
+<td>Shadow scored in batch on every application, including declines; not served for decisions.</td>
+</tr>
+<tr>
+<td>integrated</td>
+<td>Its scores sit beside the champion's in the applications table for the comparison and nothing else.</td>
+</tr>
+<tr>
+<td>monitored</td>
+<td>Rank agreement with the champion and its own stability, monthly, while it remains in shadow.</td>
+</tr>
+<tr>
+<td>documented</td>
+<td>This validation report and docs/models.md.</td>
+</tr>
+<tr>
+<td>bounded</td>
+<td>Not used for any decision while in shadow; cannot produce Regulation B reasons without a separate explanation method.</td>
+</tr>
+<tr>
+<td>validated</td>
+<td>This report, rendered from the manifest.</td>
+</tr>
+<tr>
+<td>explainable</td>
+<td>Monotone constraints keep each characteristic's effect in the scorecard's direction; feature contributions are published, but adverse action reasons still come from the champion.</td>
+</tr>
+</tbody>
+</table>

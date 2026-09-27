@@ -144,6 +144,15 @@ def _manifest(p: Paths, args: argparse.Namespace) -> int:
     return 0
 
 
+@command("site-data", "export the bundle the static site reads into web/public/data")
+def _site_data(p: Paths, args: argparse.Namespace) -> int:
+    from ledger_functions.site_data import main
+
+    written = main(p)
+    print(json.dumps({"files": len(written)}))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ledger", description=__doc__)
     parser.add_argument("--root", type=Path, default=None, help="repository root (default: discovered)")

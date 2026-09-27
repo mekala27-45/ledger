@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+/* Every color is a token, defined for the dark operations theme (the default) and the
+   light report theme, generated from src/theme/palette.json, which
+   scripts/validate_palette.js checks in both modes. Series never borrow the status colors. */
+/* Generated from src/theme/palette.json by scripts/prepare-assets.mjs. */
+@import "./tokens.css";
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-hairline: var(--hairline);
+  --color-ink: var(--ink);
+  --color-ink2: var(--ink2);
+  --color-control: var(--control);
+  --color-accent: var(--cat-1);
+  --color-good: var(--good);
+  --color-critical: var(--critical);
+  --color-warning: var(--warning);
+  --color-serious: var(--serious);
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-serif: var(--font-instrument), Georgia, serif;
+  --font-mono: var(--font-martian), ui-monospace, monospace;
+}
+
+html {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+/* Figures in columns align on the right; a figure standing alone keeps its container's alignment. */
+td.num,
+th.num,
+dd.num {
+  text-align: right;
+}
+
+/* Text keeps a readable measure; tables in a document may use the full width. */
+.prose-ledger > p,
+.prose-ledger > ul,
+.prose-ledger > ol,
+.prose-ledger > blockquote,
+.prose-ledger > h1,
+.prose-ledger > h2,
+.prose-ledger > h3,
+.prose-ledger > pre {
+  max-width: 70ch;
+}
+.prose-ledger h1,
+.prose-ledger h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+}
+.prose-ledger h1 {
+  font-size: 2.25rem;
+  line-height: 1.1;
+  margin: 0 0 1rem;
+}
+.prose-ledger h2 {
+  font-size: 1.6rem;
+  margin: 2.25rem 0 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--hairline);
+}
+.prose-ledger p,
+.prose-ledger li {
+  color: var(--ink);
+  margin: 0.6rem 0;
+}
+.prose-ledger ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.prose-ledger blockquote {
+  border-left: 3px solid var(--cat-1);
+  padding: 0.5rem 0.9rem;
+  color: var(--ink2);
+  font-size: 0.875rem;
+  background: var(--raised);
+}
+.prose-ledger code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+/* A long path or identifier in running text breaks rather than pushing the page sideways. */
+.prose-ledger :not(pre) > code,
+.prose-ledger p,
+.prose-ledger li {
+  overflow-wrap: anywhere;
+}
+.prose-ledger table,
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  margin: 0.75rem 0;
+}
+.prose-ledger th,
+.prose-ledger td,
+.data-table th,
+.data-table td {
+  padding: 0.4rem 0.55rem;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+}
+.prose-ledger th,
+.data-table th {
+  color: var(--ink2);
+  font-weight: 600;
+  text-align: left;
+}
+/* Report tables align from the markdown itself: numeric columns are marked ---: there. */
+.prose-ledger td[style*="right"],
+.prose-ledger th[style*="right"] {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.report-sheet {
+  box-shadow: 0 0 0 1px var(--hairline);
+}
+@media print {
+  .report-sheet {
+    box-shadow: none;
+    padding: 0 !important;
+    max-width: none;
+  }
+}
+.prose-ledger pre {
+  overflow-x: auto;
+  background: var(--raised);
+  padding: 0.75rem;
+  border: 1px solid var(--hairline);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--raised), var(--hairline), var(--raised));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--cat-1);
+  outline-offset: 2px;
+}
+
+@media print {
+  nav,
+  .no-print {
+    display: none !important;
+  }
+}
+
+.prose-ledger table {
+  display: block;
+  overflow-x: auto;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff;
+    color: #000;
+  }
+}
+
+.data-table th.num,
+.data-table td.num {
+  text-align: right;
+}
