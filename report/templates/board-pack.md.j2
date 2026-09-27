@@ -79,6 +79,27 @@ decisions were still unlabelled, and precision over the labelled ones was
 declines as mistakes would have shown {{ v('models.fraud_card.naive_precision_as_of') }}. We never
 publish that number.
 
+## Fair lending
+
+Our mortgage applications are generated data with no real HMDA filing behind them, so the team
+runs our fair lending method on New Jersey's public register, the data an examiner would start
+from. Across {{ v('f03.applications') }} decided mortgage applications in {{ v('f03.years') }},
+Black applicants were denied at {{ v('f03.black_rate') }} against {{ v('f03.white_rate') }} for
+white non Hispanic applicants. With income, loan size, loan to value, debt to income, the
+product, the underwriting system and the lender held fixed, the odds ratio is
+{{ v('f03.black_or') }} ({{ v('f03.black_or_low') }} to {{ v('f03.black_or_high') }}). The public
+file has no credit scores, so this is not a finding about any lender; it is the gap a lender's
+own file review would have to explain, and the one I would expect an examiner to ask us about
+first.
+
+{{ table('f03.adjusted') }}
+
+{{ label('f03.adjusted') }}
+
+Our own scorecard uses none of the {{ v('f03.proxy_entries') }} protected attributes and proxies
+on our list, every model's features are tested against that list, and every decline carries its
+principal reasons.
+
 ## Model risk
 
 We use {{ v('f10.models') }} models in this pack. Each has an SR 11-7 style validation report,

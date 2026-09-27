@@ -270,3 +270,23 @@ JSON file, sixteen or seventeen digits that happened to pass the Luhn check. The
 now ignores a digit run that follows a decimal point, a test pins that a float's
 fraction is not a card while a card number at the end of a sentence still is, and the
 planted card number test still fails the scan as it should.
+
+## 2026-09-27: The fair lending model would not converge until two levels were folded
+
+The first adjusted fit on the New Jersey register ran its hundred Newton iterations
+without converging, and the odds ratios it printed looked reasonable, which is the
+dangerous case. Five applications carried HMDA's exempt code for the underwriting
+system, all approved, so that level's coefficient was heading to minus infinity. A
+few mid sized lenders had denied nobody, with the same effect on their fixed effects.
+Exempt and other rare underwriting codes now join HMDA's own "other" code, a lender
+gets its own fixed effect only with at least ten of each outcome, and the fit refuses
+to publish anything unless the optimiser reports convergence.
+
+## 2026-09-27: A rate ratio is not an odds ratio
+
+The first draft of the fair lending callout said Black applicants were denied at 2.24
+times the rate of white non Hispanic applicants and that adjustment brought the gap
+down to 1.76. The first number is a ratio of rates and the second a ratio of odds,
+and with denial rates this high the two scales differ: the unadjusted odds ratio is
+2.63. The callout, the board pack and the chart now compare odds ratio with odds
+ratio, and the unadjusted rate ratio is kept only in the table where it is labelled.

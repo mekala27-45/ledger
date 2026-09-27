@@ -109,6 +109,36 @@ decisions were still unlabelled, and precision over the labelled ones was
 declines as mistakes would have shown 27.0%. We never
 publish that number.
 
+## Fair lending
+
+Our mortgage applications are generated data with no real HMDA filing behind them, so the team
+runs our fair lending method on New Jersey's public register, the data an examiner would start
+from. Across 215,881 decided mortgage applications in 2024 and 2025,
+Black applicants were denied at 24.0% against 10.7% for
+white non Hispanic applicants. With income, loan size, loan to value, debt to income, the
+product, the underwriting system and the lender held fixed, the odds ratio is
+1.76 (1.67 to 1.85). The public
+file has no credit scores, so this is not a finding about any lender; it is the gap a lender's
+own file review would have to explain, and the one I would expect an examiner to ask us about
+first.
+
+| Dimension | Group | Odds ratio | 95% low | 95% high | BH q value | Finding at q < 0.05 |
+|---|---|---:|---:|---:|---:|---|
+| race and ethnicity | Black | 1.76 | 1.67 | 1.85 | 0.0000 | higher odds of denial |
+| race and ethnicity | Hispanic or Latino | 1.42 | 1.36 | 1.49 | 0.0000 | higher odds of denial |
+| race and ethnicity | Asian | 1.42 | 1.34 | 1.49 | 0.0000 | higher odds of denial |
+| race and ethnicity | Not provided | 1.40 | 1.33 | 1.47 | 0.0000 | higher odds of denial |
+| race and ethnicity | Other or joint | 1.09 | 1.00 | 1.19 | 0.0539 | not distinguishable from the reference |
+| sex | Not provided | 0.91 | 0.85 | 0.98 | 0.0136 | lower odds of denial |
+| sex | Female | 0.88 | 0.84 | 0.91 | 0.0000 | lower odds of denial |
+| sex | Joint | 0.76 | 0.73 | 0.79 | 0.0000 | lower odds of denial |
+
+Source: real:hmda, New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision, as of 2026-08-31.
+
+Our own scorecard uses none of the 31 protected attributes and proxies
+on our list, every model's features are tested against that list, and every decline carries its
+principal reasons.
+
 ## Model risk
 
 We use 3 models in this pack. Each has an SR 11-7 style validation report,
@@ -178,6 +208,9 @@ with where its data lives:
 | Monthly transitions between delinquency buckets | `results/f02/roll_rates.parquet` | generated, warehouse marts |
 | Share of loans not yet defaulted, by score band at application | `results/f02/survival_curves.parquet` | generated, lifelines |
 | Cumulative default rate by months on book, one line per origination quarter | `results/f02/vintages.parquet` | generated, warehouse marts |
+| Denial disparities against the reference group, before and after adjustment | `results/f03/adjusted.parquet` | real:hmda, mart_hmda_applications |
+| Denial rate by county, unadjusted and adjusted for the application mix | `results/f03/county.parquet` | real:hmda, mart_hmda_applications |
+| The first reason lenders gave for a denial | `results/f03/denial_reasons.parquet` | real:hmda, mart_hmda_applications |
 | Expected cost of fraud by decline threshold, test months | `results/f04/cost_curve.parquet` | replayed, fraud_card scored stream |
 | What the desk could know, day by day | `results/f04/label_lag.parquet` | replayed, fraud_card scored stream |
 | Precision and recall across thresholds, test months | `results/f04/pr_curve.parquet` | replayed, fraud_card scored stream |

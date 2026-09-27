@@ -1,0 +1,59 @@
+# Fair lending: method, the proxy list, and what the numbers can say
+
+{{ statements() }}
+
+This is the method behind the fair lending function, f03, and the `/fair-lending` page. It is written the way a bank's fair lending policy would state its own analysis, with every figure rendered from the manifest.
+
+## The population
+
+The Home Mortgage Disclosure Act loan application register for New Jersey, {{ v('f03.applications') }} applications from the {{ v('f03.lenders') }} lenders that reported there in {{ v('f03.years') }}. The analysis keeps first lien, closed end, owner occupied home purchase and refinance applications on site built one to four unit homes that reached a credit decision: originated, approved but not accepted, or denied. Withdrawn and incomplete files never reached a decision and are left out, as an examiner would leave them out. {{ v('f03.denials') }} of them were denied, {{ v('f03.denial_rate') }}.
+
+Race, ethnicity and sex are HMDA's derived fields, as the applicant reported them. "Not provided" is its own group and is never folded into another.
+
+## Unadjusted disparities
+
+For each group, the denial rate divided by the reference group's: white non Hispanic applicants for race and ethnicity, male applicants for sex. The interval is the log method for a ratio of two proportions. Every comparison in the family is corrected with Benjamini and Hochberg's procedure before it is called a finding; {{ v('f03.significant_unadjusted') }} of {{ v('f03.comparisons') }} unadjusted comparisons survive it.
+
+{{ table('f03.unadjusted') }}
+
+{{ label('f03.unadjusted') }}
+
+## Adjusted disparities
+
+A logistic regression of the denial on indicators for each group and the controls the public file allows: the logarithm of income with a flag where income is missing, the logarithm of the loan amount, loan to value in bands, debt to income in HMDA's bands, loan type, loan purpose, the automated underwriting system used, the year, and a fixed effect for each of the {{ v('f03.lenders_with_fixed_effect') }} lenders with enough applications of both outcomes to estimate one ({{ v('f03.fixed_effect_share') }} of applications), the rest sharing one. The fixed effect means a group is compared with the reference group at the same lender. Missing values are encoded as their own level, never dropped, because dropping them would drop a different share of each group.
+
+{{ table('f03.adjusted') }}
+
+{{ label('f03.adjusted') }}
+
+### What adjustment can and cannot tell you
+
+An unadjusted gap is what an applicant experiences and what a journalist will print; an adjusted gap is what remains after the file is taken into account. Examiners look at both. Here the unadjusted odds ratio for Black applicants is {{ v('f03.black_or_raw') }} and the adjusted one {{ v('f03.black_or') }}: the controls explain part of the gap and not all of it.
+
+The public file leaves out the two variables a lender's own analysis would control for first: the applicant's credit score and the automated underwriting system's result. Credit history is the first denial reason on {{ v('f03.credit_history_black') }} of denials to Black applicants and {{ v('f03.credit_history_white') }} to white non Hispanic applicants. An adjusted gap in this data is therefore a question to ask of a lender's data, not a finding about any lender, and the page says so beside the table.
+
+Adjustment can also widen a gap. Asian applicants are denied about as often as white non Hispanic applicants before adjustment (a rate ratio of {{ v('f03.asian_ratio') }}) but carry an adjusted odds ratio of {{ v('f03.asian_or') }}: on the controls, their files are stronger, so equal files are denied more often.
+
+## The map
+
+Denial rates by county, unadjusted, and adjusted as observed denials over the denials a model of the controls alone predicts for that county's applications, scaled to the state rate. County is on the proxy list: it is used to draw the map and never enters a model.
+
+{{ table('f03.county_table') }}
+
+## Adverse action reasons
+
+When the bank's own scorecard declines an application, Regulation B requires the specific principal reasons. They are computed the way lenders compute them: for each characteristic, the points the applicant would have earned at that characteristic's best bin less the points they did earn, largest first, at most four, each mapped to a plain language reason in `rules/reason_codes.yaml`. An approved applicant gets none. The engine refuses to explain with any entry on the proxy list, and a test holds it to that.
+
+## The proxy list
+
+`rules/proxies.yaml` lists {{ v('f03.proxy_entries') }} protected attributes and proxies that no credit or fraud model may use. The reasoning, entry by entry:
+
+- **Race, ethnicity, sex, marital status, religion, national origin, age, receipt of public assistance.** The prohibited bases under the Equal Credit Opportunity Act and Regulation B, in every spelling the data here uses.
+- **ZIP code, census tract, county, and latitude and longitude.** Fine resolution geography reproduces a neighbourhood's racial composition closely enough that a model using it can rebuild the prohibited basis. County is kept for the map only.
+- **Names.** A name carries sex, and often ethnicity and national origin.
+- **Education.** It tracks race and national origin closely enough in public data that keeping it out is the defensible choice.
+- **The population of the applicant's city.** A location proxy at a coarser grain.
+
+Every published model's feature list is checked against the list, in the pipeline and in `tests/models/test_proxy_list.py`: {{ v('f03.models_checked') }} models checked, {{ v('f03.models_with_proxies') }} using any entry.
+
+{{ table('f03.proxy_check') }}

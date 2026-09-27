@@ -1,0 +1,1080 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f03.fig_disparity": {
+   "callout": "Black applicants were denied at 24.0% against 10.7% for white non Hispanic applicants, a ratio of 2.24, or an odds ratio of 2.63. With income, loan size, loan to value, debt to income, loan type and purpose, the underwriting system and the lender held fixed, the odds ratio is 1.76 (1.67 to 1.85). Adjustment narrows the gap and does not close it; the public file has no credit score or underwriting result, so what remains is a question for a lender's own data, not a finding.",
+   "data": "f03/adjusted.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "title": "Denial disparities against the reference group, before and after adjustment"
+  },
+  "f03.fig_map": {
+   "callout": "Unadjusted, Essex County denies the most (18.5%) and Hunterdon the least (10.2%) against 14.4% for the state. Adjusted for each county's applications and lenders, Hudson still denies 1.31 times the denials its mix predicts. County is a map, never a model input: it is on the proxy list.",
+   "data": "f03/county.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "title": "Denial rate by county, unadjusted and adjusted for the application mix"
+  },
+  "f03.fig_reasons": {
+   "callout": "Debt to income ratio is the most common first reason, on 31.6% of denials. Credit history comes first on 21.0% of denials to Black applicants against 18.3% for white non Hispanic applicants, and credit history is exactly what the public file leaves out.",
+   "data": "f03/denial_reasons.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "title": "The first reason lenders gave for a denial"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f03.adjusted": {
+   "columns": [
+    "Dimension",
+    "Group",
+    "Odds ratio",
+    "95% low",
+    "95% high",
+    "BH q value",
+    "Finding at q < 0.05"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float2",
+    "float2",
+    "float2",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "logistic regression with lender fixed effects on mart_hmda_applications"
+   },
+   "rows": [
+    [
+     "race and ethnicity",
+     "Black",
+     1.760419509,
+     1.673195456,
+     1.852190572,
+     1.401384137e-104,
+     "higher odds of denial"
+    ],
+    [
+     "race and ethnicity",
+     "Hispanic or Latino",
+     1.424223122,
+     1.35823406,
+     1.493418226,
+     9.759515749e-48,
+     "higher odds of denial"
+    ],
+    [
+     "race and ethnicity",
+     "Asian",
+     1.415892521,
+     1.342364747,
+     1.493447766,
+     4.165951411e-37,
+     "higher odds of denial"
+    ],
+    [
+     "race and ethnicity",
+     "Not provided",
+     1.397000642,
+     1.326753995,
+     1.470966586,
+     9.346230713e-37,
+     "higher odds of denial"
+    ],
+    [
+     "race and ethnicity",
+     "Other or joint",
+     1.089113426,
+     0.9985812993,
+     1.187853263,
+     0.05386748718,
+     "not distinguishable from the reference"
+    ],
+    [
+     "sex",
+     "Not provided",
+     0.9123821768,
+     0.8494342936,
+     0.9799948539,
+     0.01364247493,
+     "lower odds of denial"
+    ],
+    [
+     "sex",
+     "Female",
+     0.8779345381,
+     0.8427250815,
+     0.9146150625,
+     6.072647692e-10,
+     "lower odds of denial"
+    ],
+    [
+     "sex",
+     "Joint",
+     0.7562739006,
+     0.7280500472,
+     0.7855918902,
+     1.470774882e-46,
+     "lower odds of denial"
+    ]
+   ]
+  },
+  "f03.black_by_year": {
+   "columns": [
+    "Year",
+    "Black applicants",
+    "Denial rate",
+    "Ratio to white non Hispanic",
+    "95% low",
+    "95% high"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1",
+    "float2",
+    "float2",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "rows": [
+    [
+     "2024",
+     9337,
+     0.2401199529,
+     2.271649048,
+     2.171522271,
+     2.376392574
+    ],
+    [
+     "2025",
+     9213,
+     0.2394442635,
+     2.211685975,
+     2.116233448,
+     2.311443881
+    ]
+   ]
+  },
+  "f03.county_table": {
+   "columns": [
+    "County",
+    "Applications",
+    "Denial rate",
+    "Observed over expected",
+    "Adjusted rate"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1",
+    "float2",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "rows": [
+    [
+     "Essex",
+     15023,
+     0.1853824136,
+     1.131913083,
+     0.1628021976
+    ],
+    [
+     "Cumberland",
+     3683,
+     0.1764865599,
+     0.9954571207,
+     0.1431758404
+    ],
+    [
+     "Passaic",
+     8984,
+     0.1651825467,
+     1.052858215,
+     0.1514317961
+    ],
+    [
+     "Hudson",
+     10059,
+     0.1619445273,
+     1.308949315,
+     0.1882651843
+    ],
+    [
+     "Atlantic",
+     6988,
+     0.1618488838,
+     1.02175224,
+     0.1469578473
+    ],
+    [
+     "Salem",
+     2013,
+     0.1614505713,
+     1.027135195,
+     0.1477320737
+    ],
+    [
+     "Union",
+     11099,
+     0.1585728444,
+     1.032026478,
+     0.1484355833
+    ],
+    [
+     "Warren",
+     3544,
+     0.1554740406,
+     0.9654714268,
+     0.1388630208
+    ],
+    [
+     "Camden",
+     14793,
+     0.1545325492,
+     0.9421447579,
+     0.1355079638
+    ],
+    [
+     "Cape May",
+     2102,
+     0.151284491,
+     0.8692516227,
+     0.1250237996
+    ],
+    [
+     "Mercer",
+     8859,
+     0.1484366181,
+     1.016730631,
+     0.1462355932
+    ],
+    [
+     "Middlesex",
+     18327,
+     0.1477601353,
+     1.02209826,
+     0.1470076152
+    ],
+    [
+     "Burlington",
+     15196,
+     0.1425375099,
+     0.9509546564,
+     0.1367750848
+    ],
+    [
+     "Sussex",
+     5463,
+     0.1360058576,
+     0.9245224645,
+     0.1329733627
+    ],
+    [
+     "Bergen",
+     18591,
+     0.135388091,
+     1.052516667,
+     0.1513826716
+    ],
+    [
+     "Gloucester",
+     10036,
+     0.1318254285,
+     0.9083655525,
+     0.1306495264
+    ],
+    [
+     "Ocean",
+     18654,
+     0.1297308888,
+     0.8791369027,
+     0.1264455919
+    ],
+    [
+     "Monmouth",
+     17313,
+     0.1237220586,
+     0.9731714814,
+     0.1399705138
+    ],
+    [
+     "Somerset",
+     8531,
+     0.1146407221,
+     0.9307501749,
+     0.1338690896
+    ],
+    [
+     "Morris",
+     12829,
+     0.1111544158,
+     0.9657719731,
+     0.1389062482
+    ],
+    [
+     "Hunterdon",
+     3532,
+     0.1024915062,
+     0.8863827769,
+     0.1274877605
+    ]
+   ]
+  },
+  "f03.proxy_check": {
+   "columns": [
+    "Model",
+    "Features",
+    "Protected attributes or proxies among them"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "every model's feature list against rules/proxies.yaml",
+    "seed": null,
+    "source": "rules/proxies.yaml"
+   },
+   "rows": [
+    [
+     "fraud_card",
+     18,
+     "none"
+    ],
+    [
+     "pd_challenger",
+     13,
+     "none"
+    ],
+    [
+     "pd_scorecard",
+     8,
+     "none"
+    ]
+   ]
+  },
+  "f03.reasons": {
+   "columns": [
+    "Reason for denial",
+    "Denials",
+    "Share",
+    "Share, White non Hispanic",
+    "Share, Black",
+    "Share, Hispanic or Latino",
+    "Share, Asian"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1",
+    "pct1",
+    "pct1",
+    "pct1",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "rows": [
+    [
+     "Debt to income ratio",
+     9820,
+     0.3162640902,
+     0.3087918543,
+     0.3376798561,
+     0.3678642715,
+     0.3534810127
+    ],
+    [
+     "Credit history",
+     5150,
+     0.1658615137,
+     0.1831799491,
+     0.2097571942,
+     0.1437125749,
+     0.07405063291
+    ],
+    [
+     "Credit application incomplete",
+     4980,
+     0.1603864734,
+     0.1359898179,
+     0.1193794964,
+     0.1119760479,
+     0.135443038
+    ],
+    [
+     "Collateral",
+     4931,
+     0.1588083736,
+     0.1825925201,
+     0.1551258993,
+     0.1518962076,
+     0.1819620253
+    ],
+    [
+     "Other",
+     2530,
+     0.08148148148,
+     0.08312120619,
+     0.07508992806,
+     0.09061876248,
+     0.09651898734
+    ],
+    [
+     "Unverifiable information",
+     1618,
+     0.05210950081,
+     0.04914822792,
+     0.04001798561,
+     0.06107784431,
+     0.06993670886
+    ],
+    [
+     "Insufficient cash",
+     1577,
+     0.05078904992,
+     0.04395927159,
+     0.04856115108,
+     0.05249500998,
+     0.07183544304
+    ],
+    [
+     "Employment history",
+     429,
+     0.01381642512,
+     0.01292343842,
+     0.01416366906,
+     0.01916167665,
+     0.0164556962
+    ],
+    [
+     "Mortgage insurance denied",
+     15,
+     0.0004830917874,
+     0.0002937145095,
+     0.0002248201439,
+     0.00119760479,
+     0.0003164556962
+    ]
+   ]
+  },
+  "f03.unadjusted": {
+   "columns": [
+    "Dimension",
+    "Group",
+    "Applications",
+    "Denials",
+    "Denial rate",
+    "Ratio to reference",
+    "95% low",
+    "95% high",
+    "BH q value"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "int",
+    "int",
+    "pct1",
+    "float2",
+    "float2",
+    "float2",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "rows": [
+    [
+     "race and ethnicity",
+     "Black",
+     18550,
+     4448,
+     0.2397843666,
+     2.239544666,
+     2.170094055,
+     2.31121794,
+     0.0
+    ],
+    [
+     "race and ethnicity",
+     "Not provided",
+     35183,
+     7267,
+     0.2065486172,
+     1.929128494,
+     1.876834029,
+     1.982880046,
+     0.0
+    ],
+    [
+     "race and ethnicity",
+     "Hispanic or Latino",
+     28971,
+     5010,
+     0.1729315522,
+     1.6151509,
+     1.56562282,
+     1.666245787,
+     9.135408779e-200
+    ],
+    [
+     "race and ethnicity",
+     "Asian",
+     28168,
+     3160,
+     0.1121840386,
+     1.04777959,
+     1.009096504,
+     1.087945569,
+     0.01717185886
+    ],
+    [
+     "race and ethnicity",
+     "White non Hispanic (reference)",
+     95397,
+     10214,
+     0.1070683564,
+     null,
+     null,
+     null,
+     null
+    ],
+    [
+     "race and ethnicity",
+     "Other or joint",
+     9612,
+     951,
+     0.09893882647,
+     0.9240715908,
+     0.8676057967,
+     0.9842123095,
+     0.01717185886
+    ],
+    [
+     "sex",
+     "Not provided",
+     14014,
+     3866,
+     0.2758669902,
+     1.743871748,
+     1.689515002,
+     1.799977312,
+     3.384116139e-259
+    ],
+    [
+     "sex",
+     "Female",
+     45462,
+     7258,
+     0.1596498174,
+     1.009213919,
+     0.982348075,
+     1.036814505,
+     0.5052521935
+    ],
+    [
+     "sex",
+     "Male (reference)",
+     72178,
+     11418,
+     0.1581922469,
+     null,
+     null,
+     null,
+     null
+    ],
+    [
+     "sex",
+     "Joint",
+     84227,
+     8508,
+     0.1010127394,
+     0.6385441849,
+     0.621999807,
+     0.6555286215,
+     1.312164951e-245
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f03.adjusted_comparisons": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 8
+  },
+  "f03.applications": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 215881
+  },
+  "f03.asian_or": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 1.415892521
+  },
+  "f03.asian_ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 1.04777959
+  },
+  "f03.black_or": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 1.760419509
+  },
+  "f03.black_or_high": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 1.852190572
+  },
+  "f03.black_or_low": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 1.673195456
+  },
+  "f03.black_or_raw": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 2.6305172
+  },
+  "f03.black_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.2397843666
+  },
+  "f03.black_ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 2.239544666
+  },
+  "f03.comparisons": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 8
+  },
+  "f03.counties": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 21
+  },
+  "f03.county_high": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": "Essex"
+  },
+  "f03.county_high_adjusted": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": "Hudson"
+  },
+  "f03.county_high_oe": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 1.308949315
+  },
+  "f03.county_high_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.1853824136
+  },
+  "f03.county_low": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": "Hunterdon"
+  },
+  "f03.county_low_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.1024915062
+  },
+  "f03.credit_history_black": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.2097571942
+  },
+  "f03.credit_history_white": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.1831799491
+  },
+  "f03.denial_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.1438292393
+  },
+  "f03.denials": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 31050
+  },
+  "f03.fixed_effect_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.9199420051
+  },
+  "f03.hispanic_or": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 1.424223122
+  },
+  "f03.hispanic_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.1729315522
+  },
+  "f03.hispanic_ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 1.6151509
+  },
+  "f03.lenders": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 646
+  },
+  "f03.lenders_with_fixed_effect": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 143
+  },
+  "f03.models_checked": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "every model's feature list against rules/proxies.yaml",
+    "seed": null,
+    "source": "rules/proxies.yaml"
+   },
+   "value": 3
+  },
+  "f03.models_with_proxies": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "every model's feature list against rules/proxies.yaml",
+    "seed": null,
+    "source": "rules/proxies.yaml"
+   },
+   "value": 0
+  },
+  "f03.proxy_entries": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "every model's feature list against rules/proxies.yaml",
+    "seed": null,
+    "source": "rules/proxies.yaml"
+   },
+   "value": 31
+  },
+  "f03.proxy_list": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "every model's feature list against rules/proxies.yaml",
+    "seed": null,
+    "source": "rules/proxies.yaml"
+   },
+   "value": "age, applicant_age, applicant_zip5, birth_year, census_tract, city_pop, county_fips, customer_age, customer_lat, customer_long, derived_ethnicity, derived_race, derived_sex, education, ethnicity, first_name, gender, last_name, lat, long, marital_status, marriage, name, name_email_similarity, national_origin, public_assistance_income, race, religion, sex, zip5, zip_code"
+  },
+  "f03.pseudo_r2": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.3397981169
+  },
+  "f03.significant_adjusted": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 7
+  },
+  "f03.significant_unadjusted": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 7
+  },
+  "f03.top_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": "debt to income ratio"
+  },
+  "f03.top_reason_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.3162640902
+  },
+  "f03.white_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": 0.1070683564
+  },
+  "f03.years": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:hmda",
+    "population": "New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision",
+    "seed": null,
+    "source": "mart_hmda_applications"
+   },
+   "value": "2024 and 2025"
+  }
+ }
+}

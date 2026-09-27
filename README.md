@@ -29,13 +29,14 @@ The bank is Harborline Bank, and it does not exist: its name was checked against
 | Challenger | AUROC 0.005 better, not promoted | Monotone gradient boosting, shadow scored; below its promotion gate |
 | Known risk structure recovered | 8 of 8 generator parameters within tolerance | Before any credit number was trusted |
 | Against real peers | Net interest margin 5.60%, above 99% of 191 FDIC insured banks its size in its region | FDIC financial data, 2026Q2 |
+| Fair lending on real HMDA data | Black applicants' odds of denial 1.76 times white non Hispanic applicants' after adjustment (2.63 before) | 215,881 New Jersey applications, lender fixed effects, Benjamini and Hochberg across 8 comparisons |
 | Warehouse | 210 of 210 tests pass over 62 models | dbt on DuckDB |
 
 ## The fraud desk
 
 The API replays the scored test stream in time order on a simulated clock and pushes each decision to the browser over server sent events. It is a replay worker inside the API process, not a message bus. When the API is asleep, the page plays the same stream from a recorded file and says so on screen.
 
-Every card transaction is scored at the moment it happens, from features computed only from earlier transactions; a test recomputes 200 sampled rows from scratch to prove it. The decline threshold is where the expected cost of false declines and missed fraud is lowest on the validation months, at $12.00 per false decline and each missed fraud's amount plus $35.00. Accuracy would have chosen 0.6376 and cost $89,153.
+Every card transaction is scored at the moment it happens, from features computed only from earlier transactions; a test recomputes 200 sampled rows from scratch and requires the same values. The decline threshold is where the expected cost of false declines and missed fraud is lowest on the validation months, at $12.00 per false decline and each missed fraud's amount plus $35.00. Accuracy would have chosen 0.6376 and cost $89,153.
 
 Fraud labels arrive when chargebacks do. On the as of date, 66.1% of the test stream's decisions were still inside the chargeback window, so the desk reports precision only over decisions old enough to be labelled and shows how many it cannot yet judge. A precision figure that ignores that window is not a number a fraud operations manager can use.
 
@@ -47,6 +48,7 @@ The model's AUROC of 1.000 is a property of the Sparkov generator, whose fraud b
 | --- | --- | --- | --- | --- | --- | --- |
 | f01 | The bank at a glance | How is the bank doing, and against whom? | Net interest margin 5.60%, efficiency 50.9% | FDIC financial data for real peers | | [/](https://mekala27-45.github.io/ledger/) |
 | f02 | Consumer lending | Is the installment book performing as priced, and what will it lose? | Expected loss $8,409,265 | CECL, illustrated and labelled simplified | `pd_scorecard`, `pd_challenger` | [/lending](https://mekala27-45.github.io/ledger/lending/) |
+| f03 | Fair lending | Are some applicants denied more often than comparable applicants? | Adjusted odds ratio for Black applicants 1.76 | HMDA, ECOA and Regulation B | | [/fair-lending](https://mekala27-45.github.io/ledger/fair-lending/) |
 | f04 | The fraud desk | At what score should the desk decline, and what can it say about its precision? | Cost $24,927 at the operating point | The card networks' chargeback window | `fraud_card` | [/desk](https://mekala27-45.github.io/ledger/desk/) |
 | f10 | Model risk management | Has every model earned the decisions it makes? | 3 models, each with a validation report | SR 11-7 | | [/models](https://mekala27-45.github.io/ledger/models/) |
 | f11 | Controls and data | Can every other number be trusted? | 786 of 792 account months tied | Ledger to sub ledger, to the cent | | [/controls](https://mekala27-45.github.io/ledger/controls/) |
@@ -67,6 +69,7 @@ The scorecard studio at [/studio](https://mekala27-45.github.io/ledger/studio/) 
 | Fraud detection with a cost based operating point | f04, `packages/desk`, [/desk](https://mekala27-45.github.io/ledger/desk/) |
 | Streaming and real time scoring | `packages/desk`, `packages/api`, the SSE stream |
 | Late labels and censoring | `ledger_core.calendar`, the desk's labelled panel |
+| Fair lending, HMDA and Regulation B | f03, `packages/fairness`, [/fair-lending](https://mekala27-45.github.io/ledger/fair-lending/), `docs/fair-lending.md` |
 | Adverse action reason codes | `packages/scorecard`, the studio |
 | Fairness in fraud and credit | subgroup audits in every validation report |
 | Model risk management, SR 11-7 | f10, `report/validation`, [/models](https://mekala27-45.github.io/ledger/models/) |

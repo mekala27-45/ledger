@@ -27,6 +27,7 @@ The bank is {{ v('policy.bank_name') }}, and it does not exist: its name was che
 | Challenger | AUROC {{ v('models.pd_challenger.improvement') }} better, not promoted | Monotone gradient boosting, shadow scored; below its promotion gate |
 | Known risk structure recovered | {{ manifest.tables['models.pd_scorecard.known_parameters'].rows | selectattr(6, 'equalto', 'true') | list | length }} of {{ manifest.tables['models.pd_scorecard.known_parameters'].rows | length }} generator parameters within tolerance | Before any credit number was trusted |
 | Against real peers | Net interest margin {{ v('f01.nim_q') }}, above {{ v('f01.peer_nim_percentile') }} of {{ v('f01.peer_count') }} FDIC insured banks its size in its region | FDIC financial data, {{ v('f01.peer_quarter') }} |
+| Fair lending on real HMDA data | Black applicants' odds of denial {{ v('f03.black_or') }} times white non Hispanic applicants' after adjustment ({{ v('f03.black_or_raw') }} before) | {{ v('f03.applications') }} New Jersey applications, lender fixed effects, Benjamini and Hochberg across {{ v('f03.adjusted_comparisons') }} comparisons |
 | Warehouse | {{ v('f11.dbt_tests_passed') }} of {{ v('f11.dbt_tests') }} tests pass over {{ v('f11.dbt_models') }} models | dbt on DuckDB |
 
 ## The fraud desk
@@ -45,6 +46,7 @@ The model's AUROC of {{ v('models.fraud_card.test.auroc') }} is a property of th
 | --- | --- | --- | --- | --- | --- | --- |
 | f01 | The bank at a glance | How is the bank doing, and against whom? | Net interest margin {{ v('f01.nim_q') }}, efficiency {{ v('f01.efficiency_ratio_q') }} | FDIC financial data for real peers | | [/](https://mekala27-45.github.io/ledger/) |
 | f02 | Consumer lending | Is the installment book performing as priced, and what will it lose? | Expected loss {{ v('f02.el_total') }} | CECL, illustrated and labelled simplified | `pd_scorecard`, `pd_challenger` | [/lending](https://mekala27-45.github.io/ledger/lending/) |
+| f03 | Fair lending | Are some applicants denied more often than comparable applicants? | Adjusted odds ratio for Black applicants {{ v('f03.black_or') }} | HMDA, ECOA and Regulation B | | [/fair-lending](https://mekala27-45.github.io/ledger/fair-lending/) |
 | f04 | The fraud desk | At what score should the desk decline, and what can it say about its precision? | Cost {{ v('models.fraud_card.cost_op') }} at the operating point | The card networks' chargeback window | `fraud_card` | [/desk](https://mekala27-45.github.io/ledger/desk/) |
 | f10 | Model risk management | Has every model earned the decisions it makes? | {{ v('f10.models') }} models, each with a validation report | SR 11-7 | | [/models](https://mekala27-45.github.io/ledger/models/) |
 | f11 | Controls and data | Can every other number be trusted? | {{ v('f11.account_months_tied') }} of {{ v('f11.account_months') }} account months tied | Ledger to sub ledger, to the cent | | [/controls](https://mekala27-45.github.io/ledger/controls/) |
@@ -65,6 +67,7 @@ The scorecard studio at [/studio](https://mekala27-45.github.io/ledger/studio/) 
 | Fraud detection with a cost based operating point | f04, `packages/desk`, [/desk](https://mekala27-45.github.io/ledger/desk/) |
 | Streaming and real time scoring | `packages/desk`, `packages/api`, the SSE stream |
 | Late labels and censoring | `ledger_core.calendar`, the desk's labelled panel |
+| Fair lending, HMDA and Regulation B | f03, `packages/fairness`, [/fair-lending](https://mekala27-45.github.io/ledger/fair-lending/), `docs/fair-lending.md` |
 | Adverse action reason codes | `packages/scorecard`, the studio |
 | Fairness in fraud and credit | subgroup audits in every validation report |
 | Model risk management, SR 11-7 | f10, `report/validation`, [/models](https://mekala27-45.github.io/ledger/models/) |

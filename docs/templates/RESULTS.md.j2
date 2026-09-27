@@ -100,6 +100,30 @@ Loans at risk by months since origination:
 
 {{ table('f02.at_risk') }}
 
+## Fair lending
+
+On the real New Jersey HMDA register, {{ v('f03.years') }}: {{ v('f03.applications') }} decided applications, {{ v('f03.denial_rate') }} denied. The method, the controls and what the numbers can and cannot say are in `docs/fair-lending.md`.
+
+{{ table('f03.unadjusted') }}
+
+{{ label('f03.unadjusted') }}
+
+{{ table('f03.adjusted') }}
+
+{{ label('f03.adjusted') }}
+
+{{ figure('f03.fig_map').callout }}
+
+{{ table('f03.county_table') }}
+
+{{ figure('f03.fig_reasons').callout }}
+
+{{ table('f03.reasons') }}
+
+Every published model's features against the proxy list:
+
+{{ table('f03.proxy_check') }}
+
 ## The fraud desk
 
 {{ figure('f04.fig_cost').callout }}

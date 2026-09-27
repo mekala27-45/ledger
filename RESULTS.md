@@ -253,6 +253,86 @@ Loans at risk by months since origination:
 | 600 to 639 | 8,782 | 6,464 | 4,368 | 2,793 | 1,616 |
 | 640 and over | 2,216 | 1,656 | 1,174 | 756 | 446 |
 
+## Fair lending
+
+On the real New Jersey HMDA register, 2024 and 2025: 215,881 decided applications, 14.4% denied. The method, the controls and what the numbers can and cannot say are in `docs/fair-lending.md`.
+
+| Dimension | Group | Applications | Denials | Denial rate | Ratio to reference | 95% low | 95% high | BH q value |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| race and ethnicity | Black | 18,550 | 4,448 | 24.0% | 2.24 | 2.17 | 2.31 | 0.0000 |
+| race and ethnicity | Not provided | 35,183 | 7,267 | 20.7% | 1.93 | 1.88 | 1.98 | 0.0000 |
+| race and ethnicity | Hispanic or Latino | 28,971 | 5,010 | 17.3% | 1.62 | 1.57 | 1.67 | 0.0000 |
+| race and ethnicity | Asian | 28,168 | 3,160 | 11.2% | 1.05 | 1.01 | 1.09 | 0.0172 |
+| race and ethnicity | White non Hispanic (reference) | 95,397 | 10,214 | 10.7% | not applicable | not applicable | not applicable | not applicable |
+| race and ethnicity | Other or joint | 9,612 | 951 | 9.9% | 0.92 | 0.87 | 0.98 | 0.0172 |
+| sex | Not provided | 14,014 | 3,866 | 27.6% | 1.74 | 1.69 | 1.80 | 0.0000 |
+| sex | Female | 45,462 | 7,258 | 16.0% | 1.01 | 0.98 | 1.04 | 0.5053 |
+| sex | Male (reference) | 72,178 | 11,418 | 15.8% | not applicable | not applicable | not applicable | not applicable |
+| sex | Joint | 84,227 | 8,508 | 10.1% | 0.64 | 0.62 | 0.66 | 0.0000 |
+
+Source: real:hmda, New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision, as of 2026-08-31.
+
+| Dimension | Group | Odds ratio | 95% low | 95% high | BH q value | Finding at q < 0.05 |
+|---|---|---:|---:|---:|---:|---|
+| race and ethnicity | Black | 1.76 | 1.67 | 1.85 | 0.0000 | higher odds of denial |
+| race and ethnicity | Hispanic or Latino | 1.42 | 1.36 | 1.49 | 0.0000 | higher odds of denial |
+| race and ethnicity | Asian | 1.42 | 1.34 | 1.49 | 0.0000 | higher odds of denial |
+| race and ethnicity | Not provided | 1.40 | 1.33 | 1.47 | 0.0000 | higher odds of denial |
+| race and ethnicity | Other or joint | 1.09 | 1.00 | 1.19 | 0.0539 | not distinguishable from the reference |
+| sex | Not provided | 0.91 | 0.85 | 0.98 | 0.0136 | lower odds of denial |
+| sex | Female | 0.88 | 0.84 | 0.91 | 0.0000 | lower odds of denial |
+| sex | Joint | 0.76 | 0.73 | 0.79 | 0.0000 | lower odds of denial |
+
+Source: real:hmda, New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision, as of 2026-08-31.
+
+Unadjusted, Essex County denies the most (18.5%) and Hunterdon the least (10.2%) against 14.4% for the state. Adjusted for each county's applications and lenders, Hudson still denies 1.31 times the denials its mix predicts. County is a map, never a model input: it is on the proxy list.
+
+| County | Applications | Denial rate | Observed over expected | Adjusted rate |
+|---|---:|---:|---:|---:|
+| Essex | 15,023 | 18.5% | 1.13 | 16.3% |
+| Cumberland | 3,683 | 17.6% | 1.00 | 14.3% |
+| Passaic | 8,984 | 16.5% | 1.05 | 15.1% |
+| Hudson | 10,059 | 16.2% | 1.31 | 18.8% |
+| Atlantic | 6,988 | 16.2% | 1.02 | 14.7% |
+| Salem | 2,013 | 16.1% | 1.03 | 14.8% |
+| Union | 11,099 | 15.9% | 1.03 | 14.8% |
+| Warren | 3,544 | 15.5% | 0.97 | 13.9% |
+| Camden | 14,793 | 15.5% | 0.94 | 13.6% |
+| Cape May | 2,102 | 15.1% | 0.87 | 12.5% |
+| Mercer | 8,859 | 14.8% | 1.02 | 14.6% |
+| Middlesex | 18,327 | 14.8% | 1.02 | 14.7% |
+| Burlington | 15,196 | 14.3% | 0.95 | 13.7% |
+| Sussex | 5,463 | 13.6% | 0.92 | 13.3% |
+| Bergen | 18,591 | 13.5% | 1.05 | 15.1% |
+| Gloucester | 10,036 | 13.2% | 0.91 | 13.1% |
+| Ocean | 18,654 | 13.0% | 0.88 | 12.6% |
+| Monmouth | 17,313 | 12.4% | 0.97 | 14.0% |
+| Somerset | 8,531 | 11.5% | 0.93 | 13.4% |
+| Morris | 12,829 | 11.1% | 0.97 | 13.9% |
+| Hunterdon | 3,532 | 10.2% | 0.89 | 12.7% |
+
+Debt to income ratio is the most common first reason, on 31.6% of denials. Credit history comes first on 21.0% of denials to Black applicants against 18.3% for white non Hispanic applicants, and credit history is exactly what the public file leaves out.
+
+| Reason for denial | Denials | Share | Share, White non Hispanic | Share, Black | Share, Hispanic or Latino | Share, Asian |
+|---|---:|---:|---:|---:|---:|---:|
+| Debt to income ratio | 9,820 | 31.6% | 30.9% | 33.8% | 36.8% | 35.3% |
+| Credit history | 5,150 | 16.6% | 18.3% | 21.0% | 14.4% | 7.4% |
+| Credit application incomplete | 4,980 | 16.0% | 13.6% | 11.9% | 11.2% | 13.5% |
+| Collateral | 4,931 | 15.9% | 18.3% | 15.5% | 15.2% | 18.2% |
+| Other | 2,530 | 8.1% | 8.3% | 7.5% | 9.1% | 9.7% |
+| Unverifiable information | 1,618 | 5.2% | 4.9% | 4.0% | 6.1% | 7.0% |
+| Insufficient cash | 1,577 | 5.1% | 4.4% | 4.9% | 5.2% | 7.2% |
+| Employment history | 429 | 1.4% | 1.3% | 1.4% | 1.9% | 1.6% |
+| Mortgage insurance denied | 15 | 0.0% | 0.0% | 0.0% | 0.1% | 0.0% |
+
+Every published model's features against the proxy list:
+
+| Model | Features | Protected attributes or proxies among them |
+|---|---:|---|
+| fraud_card | 18 | none |
+| pd_challenger | 13 | none |
+| pd_scorecard | 8 | none |
+
 ## The fraud desk
 
 False declines cost $12.00 each and missed fraud costs its amount plus $35.00. The threshold that minimised the sum on the validation months, 0.0503, costs $24,927 on the test months against $1,573,327 for approving everything. Accuracy would have chosen 0.6376 and cost $89,153.
