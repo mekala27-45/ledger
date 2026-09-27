@@ -77,7 +77,7 @@ def balance_roll_check(balances: pl.DataFrame, entries: pl.DataFrame) -> pl.Data
     ).with_columns(balance_rolls=(pl.col("closing_balance") - pl.col("closing_from_entries")).abs() < 0.005)
 
 
-def run_contracts(p: Paths, *, include_real: bool = True) -> dict[str, object]:
+def run_contracts(p: Paths, *, include_real: bool = True, include_cards: bool = True) -> dict[str, object]:
     staged_gen = p.staged / "generated"
     staged_gen.mkdir(parents=True, exist_ok=True)
     p.quarantine.mkdir(parents=True, exist_ok=True)
@@ -136,20 +136,21 @@ def run_contracts(p: Paths, *, include_real: bool = True) -> dict[str, object]:
         del frame, kept, quarantined
         gc.collect()
 
-    cards = _utf8(pl.read_parquet(p.sparkov / "card_transactions.parquet"))
-    validate(cards, SPARKOV)
-    kept, quarantined, table_hits = apply_rules(cards, "card_transactions")
-    hits += table_hits
-    findings += scan_frame(kept.drop("merchant_name"), "card_transactions", names)
-    (p.staged / "sparkov").mkdir(parents=True, exist_ok=True)
-    kept.write_parquet(p.staged / "sparkov" / "card_transactions.parquet", compression="zstd")
-    counts["card_transactions"] = {
-        "rows_in": cards.height,
-        "rows_kept": kept.height,
-        "rows_quarantined": quarantined.height,
-    }
-    del cards, kept, quarantined
-    gc.collect()
+    if include_cards:
+        cards = _utf8(pl.read_parquet(p.sparkov / "card_transactions.parquet"))
+        validate(cards, SPARKOV)
+        kept, quarantined, table_hits = apply_rules(cards, "card_transactions")
+        hits += table_hits
+        findings += scan_frame(kept.drop("merchant_name"), "card_transactions", names)
+        (p.staged / "sparkov").mkdir(parents=True, exist_ok=True)
+        kept.write_parquet(p.staged / "sparkov" / "card_transactions.parquet", compression="zstd")
+        counts["card_transactions"] = {
+            "rows_in": cards.height,
+            "rows_kept": kept.height,
+            "rows_quarantined": quarantined.height,
+        }
+        del cards, kept, quarantined
+        gc.collect()
 
     if include_real:
         for staged in stage_all(p):

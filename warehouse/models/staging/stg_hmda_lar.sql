@@ -1,0 +1,33 @@
+{{ config(tags=['real']) }}
+-- Every field is kept in the staged parquet; this view names the ones the analysis reads.
+select
+    activity_year,
+    lei,
+    county_code as county_fips,
+    census_tract,
+    derived_race,
+    derived_ethnicity,
+    derived_sex,
+    "applicant_age" as applicant_age_band,
+    action_taken,
+    denied,
+    loan_type,
+    loan_purpose,
+    lien_status,
+    occupancy_type,
+    derived_dwelling_category,
+    "open-end_line_of_credit" as open_end_line,
+    "business_or_commercial_purpose" as business_purpose,
+    loan_amount,
+    loan_to_value_ratio,
+    income,
+    dti_band,
+    "aus-1" as aus_1,
+    "denial_reason-1" as denial_reason_1,
+    "denial_reason-2" as denial_reason_2,
+    interest_rate,
+    property_value,
+    loan_amount_exempt,
+    loan_to_value_ratio_exempt,
+    income_exempt
+from {{ source('real', 'hmda_lar') }}

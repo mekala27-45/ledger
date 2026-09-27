@@ -48,3 +48,4 @@ web/tsconfig.tsbuildinfo
 .env
 *.log
 .DS_Store
+warehouse/.user.yml

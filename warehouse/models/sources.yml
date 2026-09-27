@@ -1,0 +1,52 @@
+version: 2
+
+# Every source is a staged parquet file written by `ledger contracts`, never a raw file.
+
+sources:
+  - name: generated
+    description: Harborline Bank's core systems, from the seeded generator, after contracts and quarantine.
+    meta:
+      external_location: "{{ env_var('LEDGER_STAGED', '../data/staged') }}/generated/{name}.parquet"
+    tables:
+      - name: customers
+      - name: deposit_accounts
+      - name: deposit_entries
+      - name: deposit_balances
+      - name: deposit_rates
+      - name: loan_applications
+      - name: loans
+      - name: loan_performance
+      - name: loan_events
+      - name: gl_chart
+      - name: gl_postings
+      - name: gl_journals
+      - name: gl_reported_balances
+      - name: hmda_style_applications
+      - name: macro_path
+
+  - name: sparkov
+    description: The card transaction stream from the seeded Sparkov run, identities removed.
+    meta:
+      external_location: "{{ env_var('LEDGER_STAGED', '../data/staged') }}/sparkov/{name}.parquet"
+    tables:
+      - name: card_transactions
+
+  - name: real
+    description: Real public datasets, typed at ingest. See data/PROVENANCE.md.
+    meta:
+      external_location: "{{ env_var('LEDGER_STAGED', '../data/staged') }}/real/{name}.parquet"
+    tables:
+      - name: hmda_lar
+      - name: cfpb_volume_by_product
+      - name: cfpb_volume_by_issue
+      - name: cfpb_companies
+      - name: cfpb_archive_counts
+      - name: cfpb_narratives
+      - name: fdic_institutions
+      - name: fdic_financials
+      - name: uci_default
+      - name: baf
+      - name: macro_monthly
+      - name: fhfa_hpi_nj_quarterly
+      - name: frb_charge_off_delinquency
+      - name: frb_scenarios

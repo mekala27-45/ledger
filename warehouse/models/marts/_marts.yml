@@ -1,0 +1,289 @@
+version: 2
+
+models:
+  - name: dim_month
+    description: The thirty six months of the window, September 2023 to August 2026.
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+      - name: month_index
+        data_tests: [unique, not_null]
+      - name: quarter
+        data_tests: [not_null]
+
+  - name: dim_customer
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: age_band
+        data_tests:
+          - not_null
+          - accepted_values: {arguments: {values: ["18 to 24", "25 to 34", "35 to 49", "50 to 64", "65 and over"]}}
+      - name: tenure_months
+        data_tests: [not_null]
+      - name: product_types_held
+        data_tests: [not_null]
+
+  - name: dim_deposit_account
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+      - name: gl_account
+        data_tests:
+          - not_null
+          - accepted_values: {arguments: {values: ["2000", "2010", "2020"]}}
+
+  - name: dim_loan
+    columns:
+      - name: loan_id
+        data_tests: [unique, not_null]
+      - name: gl_account
+        data_tests:
+          - accepted_values: {arguments: {values: ["1200", "1210", "1220"]}}
+      - name: back_book
+        data_tests: [not_null]
+
+  - name: dim_gl_account
+    columns:
+      - name: gl_account
+        data_tests: [unique, not_null]
+      - name: statement
+        data_tests:
+          - accepted_values: {arguments: {values: ["balance_sheet", "income_statement"]}}
+
+  - name: fct_card_transaction
+    columns:
+      - name: txn_id
+        data_tests: [unique, not_null]
+      - name: distance_km
+        data_tests: [not_null]
+      - name: label_observable_at
+        data_tests: [not_null]
+      - name: hour
+        data_tests: [not_null]
+
+  - name: fct_deposit_entry
+    columns:
+      - name: entry_id
+        data_tests: [not_null]
+      - name: customer_id
+        data_tests: [not_null]
+
+  - name: mart_gl_account_month
+    description: Activity, running balance and reported balance by ledger account and month.
+    columns:
+      - name: gl_account
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_gl_account'), field: gl_account}}
+      - name: month
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_month'), field: month}}
+      - name: balance_from_postings
+        data_tests: [not_null]
+      - name: reported_balance
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["gl_account", "month"]}}
+
+  - name: mart_balance_sheet_monthly
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+      - name: total_assets
+        data_tests: [not_null]
+      - name: total_liabilities
+        data_tests: [not_null]
+      - name: total_equity
+        data_tests: [not_null]
+
+  - name: mart_income_statement_monthly
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+      - name: net_income
+        data_tests: [not_null]
+
+  - name: mart_subledger_month
+    columns:
+      - name: gl_account
+        data_tests:
+          - accepted_values: {arguments: {values: ["1200", "1210", "1220", "2000", "2010", "2020"]}}
+      - name: subledger_debit_balance
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["gl_account", "month"]}}
+
+  - name: fct_loan_month
+    columns:
+      - name: loan_id
+        data_tests: [not_null]
+      - name: bucket
+        data_tests: [not_null]
+      - name: months_on_book
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["loan_id", "month"]}}
+
+  - name: mart_loan_outcomes
+    description: Twelve month default outcome per installment loan, null where the window has not elapsed.
+    columns:
+      - name: loan_id
+        data_tests: [unique, not_null]
+      - name: outcome_observed
+        data_tests: [not_null]
+      - name: default_12m
+        data_tests:
+          - accepted_values: {arguments: {values: [0, 1]}}
+
+  - name: mart_vintage_curves
+    columns:
+      - name: vintage
+        data_tests: [not_null]
+      - name: cumulative_default_rate
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["vintage", "months_on_book"]}}
+
+  - name: mart_roll_rates
+    columns:
+      - name: from_bucket
+        data_tests:
+          - accepted_values: {arguments: {values: ["current", "30", "60", "90+"]}}
+      - name: to_bucket
+        data_tests:
+          - accepted_values: {arguments: {values: ["current", "30", "60", "90+", "charged_off", "paid_off"]}}
+      - name: rate
+        data_tests: [not_null]
+
+  - name: mart_roll_rates_pooled
+    columns:
+      - name: from_order
+        data_tests: [not_null]
+      - name: to_order
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["from_bucket", "to_bucket"]}}
+
+  - name: mart_recoveries
+    columns:
+      - name: product
+        data_tests: [not_null]
+      - name: recovery_rate
+        data_tests: [not_null]
+
+  - name: mart_portfolio_monthly
+    columns:
+      - name: product
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["product", "month"]}}
+
+  - name: mart_deposits_monthly
+    columns:
+      - name: product
+        data_tests:
+          - accepted_values: {arguments: {values: ["checking", "savings", "time"]}}
+      - name: balance
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["product", "month"]}}
+
+  - name: mart_customer_month
+    description: Customer month ends for the attrition model, with a censored twelve month outcome.
+    columns:
+      - name: customer_id
+        data_tests: [not_null]
+      - name: closes_within_12m
+        data_tests:
+          - accepted_values: {arguments: {values: [0, 1]}}
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["customer_id", "month"]}}
+
+  - name: mart_cash_activity_daily
+    columns:
+      - name: account_id
+        data_tests: [not_null]
+      - name: cash_amount
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["account_id", "posted_date"]}}
+
+  - name: mart_transfer_edges
+    columns:
+      - name: entry_id
+        data_tests: [unique, not_null]
+      - name: source_party
+        data_tests: [not_null]
+      - name: target_party
+        data_tests: [not_null]
+
+  - name: mart_hmda_applications
+    description: The fair lending analysis population. See the model's header for the filters.
+    columns:
+      - name: race_ethnicity_group
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Hispanic or Latino", "Black", "Asian", "White non Hispanic", "Not provided", "Other or joint"]
+      - name: denied
+        data_tests: [not_null]
+      - name: action_taken
+        data_tests:
+          - accepted_values: {arguments: {values: [1, 2, 3]}}
+
+  - name: mart_hmda_denial_by_group
+    columns:
+      - name: denial_rate
+        data_tests: [not_null]
+      - name: applications
+        data_tests: [not_null]
+
+  - name: mart_hmda_county
+    columns:
+      - name: county_fips
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["activity_year", "county_fips"]}}
+
+  - name: mart_hmda_denial_reasons
+    columns:
+      - name: reason
+        data_tests: [not_null]
+
+  - name: mart_cfpb_monthly
+    columns:
+      - name: month
+        data_tests: [not_null]
+      - name: complaints
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["month", "product"]}}
+
+  - name: mart_cfpb_companies
+    columns:
+      - name: company
+        data_tests: [unique, not_null]
+
+  - name: mart_fdic_peer_quarter
+    columns:
+      - name: cert
+        data_tests: [not_null]
+      - name: quarter
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["cert", "quarter"]}}
+
+  - name: mart_macro_monthly
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+
+  - name: mart_scenarios
+    columns:
+      - name: scenario
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["scenario", "quarter"]}}

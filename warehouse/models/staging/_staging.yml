@@ -1,0 +1,242 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Customers, one row each.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: open_date
+        data_tests: [not_null]
+      - name: state
+        data_tests:
+          - accepted_values: {arguments: {values: ["NJ", "NY", "PA"]}}
+      - name: segment
+        data_tests:
+          - accepted_values: {arguments: {values: ["mass", "affluent", "emerging"]}}
+      - name: annual_income
+        data_tests: [not_null]
+
+  - name: stg_deposit_accounts
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('stg_customers'), field: customer_id}}
+      - name: product
+        data_tests:
+          - accepted_values: {arguments: {values: ["checking", "savings", "time"]}}
+
+  - name: stg_deposit_entries
+    columns:
+      - name: entry_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('stg_deposit_accounts'), field: account_id}}
+      - name: amount
+        data_tests: [not_null]
+      - name: txn_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["PAYROLL_IN", "BILL_PAY", "CARD_SPEND", "ATM_WITHDRAWAL", "CASH_DEPOSIT", "P2P_OUT",
+                         "P2P_IN", "INTERNAL_TRANSFER", "WIRE_IN", "WIRE_OUT", "LOAN_PAYMENT", "FEE_MAINTENANCE",
+                         "FEE_OVERDRAFT", "INTEREST_CREDIT", "ACCOUNT_FUNDING", "CD_PAYOUT", "ACH_IN",
+                         "LOAN_DISBURSEMENT", "ACH_OUT", "OVERDRAFT_CHARGE_OFF"]
+      - name: month
+        data_tests: [not_null]
+
+  - name: stg_deposit_balances
+    columns:
+      - name: account_id
+        data_tests: [not_null]
+      - name: month
+        data_tests: [not_null]
+      - name: closing_balance
+        data_tests: [not_null]
+      - name: balance_rolls
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["account_id", "month"]}}
+
+  - name: stg_loan_applications
+    columns:
+      - name: application_id
+        data_tests: [unique, not_null]
+      - name: decision
+        data_tests:
+          - accepted_values: {arguments: {values: ["approved", "declined"]}}
+      - name: bureau_score
+        data_tests: [not_null]
+      - name: channel
+        data_tests:
+          - accepted_values: {arguments: {values: ["branch", "partner", "digital"]}}
+
+  - name: stg_loans
+    columns:
+      - name: loan_id
+        data_tests: [unique, not_null]
+      - name: product
+        data_tests:
+          - accepted_values: {arguments: {values: ["installment", "card", "mortgage"]}}
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('stg_customers'), field: customer_id}}
+      - name: origination_date
+        data_tests: [not_null]
+
+  - name: stg_loan_performance
+    columns:
+      - name: loan_id
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('stg_loans'), field: loan_id}}
+      - name: bucket
+        data_tests:
+          - not_null
+          - accepted_values: {arguments: {values: ["current", "30", "60", "90+", "charged_off", "paid_off"]}}
+      - name: bucket_open
+        data_tests: [not_null]
+      - name: closing_balance
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["loan_id", "month"]}}
+
+  - name: stg_loan_events
+    columns:
+      - name: event_id
+        data_tests: [unique, not_null]
+      - name: event_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["RECOVERY", "PAYMENT_INTEREST", "CARD_PURCHASES", "PAYMENT_PRINCIPAL", "CHARGE_OFF",
+                         "CARD_INTEREST", "DISBURSEMENT"]
+
+  - name: stg_gl_chart
+    columns:
+      - name: gl_account
+        data_tests: [unique, not_null]
+      - name: normal_balance
+        data_tests:
+          - accepted_values: {arguments: {values: ["debit", "credit"]}}
+
+  - name: stg_gl_postings
+    columns:
+      - name: posting_id
+        data_tests: [unique, not_null]
+      - name: gl_account
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('stg_gl_chart'), field: gl_account}}
+      - name: source_type
+        data_tests:
+          - accepted_values: {arguments: {values: ["deposit_entry", "loan_event", "gl_journal"]}}
+      - name: amount
+        data_tests: [not_null]
+
+  - name: stg_gl_journals
+    columns:
+      - name: journal_id
+        data_tests: [not_null]
+      - name: gl_account
+        data_tests:
+          - relationships: {arguments: {to: ref('stg_gl_chart'), field: gl_account}}
+
+  - name: stg_gl_reported_balances
+    columns:
+      - name: gl_account
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('stg_gl_chart'), field: gl_account}}
+      - name: reported_balance
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["gl_account", "month"]}}
+
+  - name: stg_macro_path
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+
+  - name: stg_card_transactions
+    columns:
+      - name: txn_id
+        data_tests: [unique, not_null]
+      - name: card_key
+        data_tests: [not_null]
+      - name: is_fraud
+        data_tests:
+          - accepted_values: {arguments: {values: [0, 1]}}
+      - name: amount
+        data_tests: [not_null]
+
+  - name: stg_hmda_lar
+    columns:
+      - name: activity_year
+        data_tests:
+          - accepted_values: {arguments: {values: [2024, 2025]}}
+      - name: action_taken
+        data_tests:
+          - accepted_values: {arguments: {values: [1, 2, 3, 4, 5]}}
+      - name: lei
+        data_tests: [not_null]
+
+  - name: stg_cfpb_narratives
+    columns:
+      - name: complaint_id
+        data_tests: [unique, not_null]
+      - name: product
+        data_tests: [not_null]
+
+  - name: stg_fdic_financials
+    columns:
+      - name: cert
+        data_tests: [not_null]
+      - name: report_date
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils_unique_combination: {arguments: {columns: ["cert", "report_date"]}}
+
+  - name: stg_fdic_institutions
+    columns:
+      - name: CERT
+        data_tests: [unique, not_null]
+      - name: NAME
+        data_tests: [not_null]
+
+  - name: stg_uci_default
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+      - name: default_next_month
+        data_tests:
+          - accepted_values: {arguments: {values: [0, 1]}}
+
+  - name: stg_baf
+    columns:
+      - name: fraud_bool
+        data_tests:
+          - accepted_values: {arguments: {values: [0, 1]}}
+      - name: variant
+        data_tests:
+          - accepted_values: {arguments: {values: ["base", "variant_ii"]}}
+
+  - name: stg_macro_monthly
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+
+  - name: stg_frb_scenarios
+    columns:
+      - name: scenario
+        data_tests:
+          - accepted_values: {arguments: {values: ["historic", "baseline", "severely_adverse"]}}
+      - name: quarter
+        data_tests: [not_null]

@@ -1,0 +1,95 @@
+version: 2
+
+# Every page of the site that reads a mart, declared so the lineage graph shows who depends on what.
+
+exposures:
+  - name: page_glance
+    label: The bank at a glance (/)
+    type: dashboard
+    maturity: high
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_balance_sheet_monthly')
+      - ref('mart_income_statement_monthly')
+      - ref('mart_fdic_peer_quarter')
+      - ref('mart_portfolio_monthly')
+  - name: page_lending
+    label: Consumer lending (/lending)
+    type: dashboard
+    maturity: high
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_vintage_curves')
+      - ref('mart_roll_rates_pooled')
+      - ref('mart_loan_outcomes')
+      - ref('mart_recoveries')
+      - ref('mart_portfolio_monthly')
+  - name: page_fair_lending
+    label: Fair lending (/fair-lending)
+    type: dashboard
+    maturity: high
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_hmda_applications')
+      - ref('mart_hmda_denial_by_group')
+      - ref('mart_hmda_county')
+      - ref('mart_hmda_denial_reasons')
+  - name: page_desk
+    label: The fraud desk (/desk)
+    type: application
+    maturity: high
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('fct_card_transaction')
+  - name: page_crime
+    label: Financial crime (/crime)
+    type: dashboard
+    maturity: medium
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_cash_activity_daily')
+      - ref('mart_transfer_edges')
+  - name: page_deposits
+    label: Deposits and customers (/deposits)
+    type: dashboard
+    maturity: medium
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_deposits_monthly')
+      - ref('mart_customer_month')
+      - ref('dim_customer')
+  - name: page_complaints
+    label: Complaints and conduct (/complaints)
+    type: dashboard
+    maturity: medium
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_cfpb_monthly')
+      - ref('mart_cfpb_companies')
+  - name: page_treasury
+    label: Treasury and stress (/treasury)
+    type: dashboard
+    maturity: medium
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_balance_sheet_monthly')
+      - ref('mart_scenarios')
+      - ref('mart_macro_monthly')
+      - ref('mart_portfolio_monthly')
+  - name: page_collections
+    label: Collections and recovery (/collections)
+    type: dashboard
+    maturity: medium
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_roll_rates')
+      - ref('mart_recoveries')
+      - ref('fct_loan_month')
+  - name: page_controls
+    label: Controls and data (/controls)
+    type: dashboard
+    maturity: high
+    owner: {name: Ajay Mekala}
+    depends_on:
+      - ref('mart_gl_account_month')
+      - ref('mart_subledger_month')

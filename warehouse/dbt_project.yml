@@ -1,0 +1,38 @@
+name: ledger
+version: "0.1.0"
+config-version: 2
+profile: ledger
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  as_of_month: "2026-08"
+  as_of_date: "2026-08-31"
+  default_window_months: 12
+  default_dpd: 90
+  cure_window_days: 90
+  chargeback_window_days: 60
+
+models:
+  ledger:
+    +materialized: table
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +schema: marts
+      real:
+        +tags: ["real"]
+
+tests:
+  ledger:
+    +severity: error
+
+flags:
+  send_anonymous_usage_stats: false
+  partial_parse: true
