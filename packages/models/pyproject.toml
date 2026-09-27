@@ -12,6 +12,8 @@ dependencies = [
   "lifelines>=0.30",
   "joblib>=1.4",
   "polars>=1.30",
+  "duckdb>=1.3",
+  "pyyaml>=6.0",
   "ledger-core",
   "ledger-scorecard",
   "ledger-fairness",

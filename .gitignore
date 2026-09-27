@@ -32,9 +32,11 @@ warehouse/*.duckdb.wal
 logs/
 
 # Model binaries are rebuilt; the registry metadata is committed
-results/models/*.pkl
-results/models/*.joblib
-results/models/*.txt
+results/models/**/*.pkl
+results/models/**/*.joblib
+results/models/**/*.txt
+# Row level scored outputs are rebuilt by `make models`; aggregates are committed
+results/models/**/applications_scored.parquet
 
 # Web
 web/node_modules/

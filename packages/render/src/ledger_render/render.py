@@ -61,8 +61,13 @@ def _environment(template_roots: Sequence[Path], manifest: Manifest) -> Environm
         demonstration=DEMONSTRATION,
         not_a_decision=NOT_A_DECISION,
         manifest=manifest,
+        missing=_missing,
     )
     return env
+
+
+def _missing(section: str) -> str:
+    raise ClaimGateError(f"a required section was not written: {section}")
 
 
 class Renderer:

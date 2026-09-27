@@ -1,0 +1,86 @@
+{#- The shape of every validation report, in the order SR 11-7 asks for. A model's
+    template sets each section with {% set %} and includes this file; a section left
+    unset stops the render, so a report cannot be published with a section missing. -#}
+{% set k = 'models.' ~ model %}
+# Validation report: {{ v(k ~ '.title') }}
+
+{{ statements() }}
+
+| | |
+|---|---|
+| Model | `{{ model }}` |
+| Purpose | {{ v(k ~ '.purpose') }} |
+| Tier | {{ v(k ~ '.tier') }}: {{ v(k ~ '.tier_reason') }} |
+| Role | {{ v(k ~ '.role') }} |
+| Status | {{ v(k ~ '.status') }} |
+| Owner | {{ v(k ~ '.owner') }} |
+| Prediction time | {{ v(k ~ '.prediction_time') }} |
+| Outcome | {{ v(k ~ '.outcome') }} |
+| Last validated | {{ v(k ~ '.last_validated') }} |
+| Conclusion | **{{ v(k ~ '.conclusion') }}** |
+
+## Purpose and scope
+
+{{ purpose if purpose is defined else missing('purpose') }}
+
+## Conceptual soundness
+
+{{ soundness if soundness is defined else missing('soundness') }}
+
+## Data and assumptions
+
+{{ data if data is defined else missing('data') }}
+
+## Development evidence
+
+{{ development if development is defined else missing('development') }}
+
+## Outcomes analysis on held out data
+
+{{ outcomes if outcomes is defined else missing('outcomes') }}
+
+Calibration on the test sample, ten equal count bins:
+
+{{ table(k ~ '.reliability') }}
+
+{{ label(k ~ '.reliability') }}
+
+## Benchmarking
+
+{{ benchmarking if benchmarking is defined else missing('benchmarking') }}
+
+{{ table(k ~ '.benchmark') }}
+
+{{ label(k ~ '.benchmark') }}
+
+## Limitations
+
+{{ limitations if limitations is defined else missing('limitations') }}
+
+## Ongoing monitoring plan
+
+{{ monitoring if monitoring is defined else missing('monitoring') }}
+
+{{ table(k ~ '.monitoring') }}
+
+## Effective challenge
+
+{{ challenge if challenge is defined else missing('challenge') }}
+
+{{ table(k ~ '.challenges') }}
+
+## Promotion gates
+
+{{ table(k ~ '.gates') }}
+
+## Validation conclusion
+
+{{ conclusion if conclusion is defined else missing('conclusion') }}
+
+**{{ v(k ~ '.conclusion') }}.** Conditions:
+
+{{ table(k ~ '.conditions') }}
+
+## The integration contract
+
+{{ table(k ~ '.contract') }}
