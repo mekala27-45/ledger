@@ -1,0 +1,779 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f01.fig_peers": {
+   "callout": "Harborline's net interest margin sits above 99% of the 191 real peers: 28% of its loans are card and consumer installment lending at double digit rates, where most community banks lend mortgages and business loans. Its efficiency ratio and returns follow from that margin. The comparison is illustrative: the peers are real FDIC insured banks and Harborline is not.",
+   "data": "f01/peer_strips.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "title": "Harborline against real peers"
+  },
+  "f01.fig_ratios": {
+   "callout": "Net interest margin was 5.60% in 2026Q2, up 5 basis points on the quarter, and nonperforming loans fell 15 basis points to 0.49%. The shaded band is each ratio's trailing twelve month mean plus or minus two standard deviations.",
+   "data": "f01/ratios_monthly.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "title": "The ratios every bank reports, monthly"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f01.insights": {
+   "columns": [
+    "Rank",
+    "Insight",
+    "Materiality"
+   ],
+   "formats": [
+    "int",
+    "text",
+    "usd0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "rows": [
+    [
+     1,
+     "Deposits rose $14.1M from 2026Q1 to 2026Q2 (+1.6%).",
+     14119114.09
+    ],
+    [
+     2,
+     "Installment balances rose $8.4M over the last quarter, to $152.1M.",
+     8421145.51
+    ],
+    [
+     3,
+     "Mortgage balances fell $7.1M over the last quarter, to $518.5M.",
+     7071080.99
+    ],
+    [
+     4,
+     "Gross loans rose $2.6M from 2026Q1 to 2026Q2 (+0.4%).",
+     2606213.55
+    ],
+    [
+     5,
+     "Provision expense fell $2.1M from 2026Q1 to 2026Q2 (-41.7%).",
+     2076772.78
+    ],
+    [
+     6,
+     "Net income rose $1.8M from 2026Q1 to 2026Q2 (+72.4%).",
+     1832114.0
+    ],
+    [
+     7,
+     "Net income in 2026-04 was $1.9M against a trailing average of $0.7M, outside two standard deviations.",
+     1224640.632
+    ],
+    [
+     8,
+     "Net income in 2025-05 was -$0.5M against a trailing average of $0.5M, outside two standard deviations.",
+     1077406.522
+    ]
+   ]
+  },
+  "f01.peer_table": {
+   "columns": [
+    "Ratio",
+    "Harborline (fictional)",
+    "Peer 10th",
+    "Peer median",
+    "Peer 90th",
+    "Share of peers below",
+    "Better when"
+   ],
+   "formats": [
+    "text",
+    "pct2",
+    "pct2",
+    "pct2",
+    "pct2",
+    "pct0",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "rows": [
+    [
+     "Net interest margin",
+     0.05602931499,
+     0.02477637003,
+     0.03387871374,
+     0.04325118692,
+     0.9893617021,
+     "higher"
+    ],
+    [
+     "Efficiency ratio",
+     0.5094340454,
+     0.4989413378,
+     0.7091126768,
+     0.9217671648,
+     0.1223404255,
+     "lower"
+    ],
+    [
+     "Return on assets",
+     0.01724480117,
+     0.002008806626,
+     0.008045692912,
+     0.01712587806,
+     0.9057591623,
+     "higher"
+    ],
+    [
+     "Return on equity",
+     0.1779649344,
+     0.02003,
+     0.076,
+     0.15219,
+     0.9574468085,
+     "higher"
+    ],
+    [
+     "Nonperforming loans",
+     0.004904729883,
+     0.0002469494032,
+     0.005213006008,
+     0.01988525159,
+     0.4869109948,
+     "lower"
+    ],
+    [
+     "Allowance to loans",
+     0.01901248092,
+     0.005023427749,
+     0.0093106246,
+     0.01472844233,
+     0.9790575916,
+     "higher"
+    ],
+    [
+     "Capital ratio (simplified)",
+     0.1935154008,
+     0.1257853777,
+     0.1537571807,
+     0.3039192642,
+     0.7380952381,
+     "higher"
+    ],
+    [
+     "Loans to deposits",
+     0.783635085,
+     0.6952377077,
+     0.8906501628,
+     1.070290285,
+     0.2032085561,
+     "higher"
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f01.allowance": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 13735359.36
+  },
+  "f01.allowance_to_loans_change_bps": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": -10.0704454
+  },
+  "f01.allowance_to_loans_prior_q": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.02001952546
+  },
+  "f01.allowance_to_loans_q": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.01901248092
+  },
+  "f01.as_of_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": "2026-08"
+  },
+  "f01.capital_ratio_change_bps": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 54.03249516
+  },
+  "f01.capital_ratio_prior_q": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.1881121513
+  },
+  "f01.capital_ratio_q": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.1935154008
+  },
+  "f01.consumer_loan_share": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.2798324862
+  },
+  "f01.efficiency_ratio_change_bps": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": -34.35866285
+  },
+  "f01.efficiency_ratio_prior_q": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.5128699117
+  },
+  "f01.efficiency_ratio_q": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.5094340454
+  },
+  "f01.loans_to_deposits_change_bps": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": -93.52742975
+  },
+  "f01.loans_to_deposits_prior_q": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.792987828
+  },
+  "f01.loans_to_deposits_q": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.783635085
+  },
+  "f01.net_income_ttm": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 13378629.69
+  },
+  "f01.net_income_window": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 26066362.76
+  },
+  "f01.net_interest_income_ttm": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 54683198.38
+  },
+  "f01.nim_change_bps": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 4.644238865
+  },
+  "f01.nim_prior_q": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.0555648911
+  },
+  "f01.nim_q": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.05602931499
+  },
+  "f01.nonperforming_loans": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 3891506.5
+  },
+  "f01.npl_ratio_change_bps": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": -15.47487511
+  },
+  "f01.npl_ratio_prior_q": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.006452217395
+  },
+  "f01.npl_ratio_q": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.004904729883
+  },
+  "f01.peer_allowance_to_loans_median": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.0093106246
+  },
+  "f01.peer_allowance_to_loans_percentile": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.9790575916
+  },
+  "f01.peer_capital_ratio_median": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.1537571807
+  },
+  "f01.peer_capital_ratio_percentile": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.7380952381
+  },
+  "f01.peer_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 191
+  },
+  "f01.peer_efficiency_ratio_median": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.7091126768
+  },
+  "f01.peer_efficiency_ratio_percentile": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.1223404255
+  },
+  "f01.peer_loans_to_deposits_median": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.8906501628
+  },
+  "f01.peer_loans_to_deposits_percentile": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.2032085561
+  },
+  "f01.peer_nim_median": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.03387871374
+  },
+  "f01.peer_nim_percentile": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.9893617021
+  },
+  "f01.peer_npl_ratio_median": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.005213006008
+  },
+  "f01.peer_npl_ratio_percentile": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.4869109948
+  },
+  "f01.peer_quarter": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": "2026Q2"
+  },
+  "f01.peer_roa_median": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.008045692912
+  },
+  "f01.peer_roa_percentile": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.9057591623
+  },
+  "f01.peer_roe_median": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.076
+  },
+  "f01.peer_roe_percentile": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC insured institutions, $0.5 to $2.5 billion in assets, CT DE MA MD NJ NY PA, 2026Q2",
+    "seed": null,
+    "source": "FDIC BankFind financials"
+   },
+   "value": 0.9574468085
+  },
+  "f01.roa_change_bps": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 70.88309643
+  },
+  "f01.roa_prior_q": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.01015649152
+  },
+  "f01.roa_q": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.01724480117
+  },
+  "f01.roe_change_bps": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 707.1996276
+  },
+  "f01.roe_prior_q": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.1072449716
+  },
+  "f01.roe_q": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 0.1779649344
+  },
+  "f01.total_assets": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 1033614607.0
+  },
+  "f01.total_deposits": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 930628459.8
+  },
+  "f01.total_equity": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 102986147.6
+  },
+  "f01.total_loans": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline Bank general ledger",
+    "seed": 20260831,
+    "source": "metrics/bank.yaml"
+   },
+   "value": 719952199.1
+  }
+ }
+}
