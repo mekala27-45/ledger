@@ -39,7 +39,8 @@ WEIGHTS = {"cash": 0.0, "securities": 0.2, "mortgage": 0.5, "installment": 1.0, 
 
 def _monthly(values: list[float]) -> pl.DataFrame:
     months = [f"{2024 + (i // 12)}-{i % 12 + 1:02d}" for i in range(len(values))]
-    base = {c: [v * (k + 1) for v in values] for k, c in enumerate(COLUMNS)}
+    # Each component moves on its own pattern, so monthly ratios genuinely vary.
+    base = {c: [v * (k + 1) + (i % (k + 2)) for i, v in enumerate(values)] for k, c in enumerate(COLUMNS)}
     frame = pl.DataFrame({"month": months, "month_index": list(range(len(values))), **base})
     frame = frame.with_columns(
         quarter=pl.col("month").str.slice(0, 4)

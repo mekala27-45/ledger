@@ -125,7 +125,7 @@ def reconcile(monthly: pl.DataFrame, spec: MetricSpec, tolerance: float = 0.005)
             elif measure.kind == "balance":
                 worst = abs(float(frame.sort("first_month")[name][-1]) - float(last[name]))
             else:
-                weighted = float((frame[name] * frame["months"]).sum() / frame["months"].sum())
+                weighted = _num((frame[name] * frame["months"]).sum()) / _num(frame["months"].sum())
                 worst = abs(weighted - float(window[name]))
             checks.append(Check(f"{measure.kind}:{name}", grain, worst, worst <= tolerance))
     for grain, frame in frames.items():
@@ -141,7 +141,7 @@ def reconcile(monthly: pl.DataFrame, spec: MetricSpec, tolerance: float = 0.005)
             .abs()
             .max()
         )
-        worst = float(identity) if identity is not None else 0.0
+        worst = _num(identity)
         checks.append(Check("identity:net_income", grain, worst, worst <= tolerance))
         for name, metric in spec.metrics.items():
             denominators = [metric.denominator] if isinstance(metric.denominator, str) else metric.denominator
@@ -149,12 +149,19 @@ def reconcile(monthly: pl.DataFrame, spec: MetricSpec, tolerance: float = 0.005)
             factor = 12.0 / frame["months"] if metric.annualise else 1.0
             recomputed = frame[metric.numerator] * factor / den
             gap = (recomputed - frame[name]).abs().max()
-            worst = float(gap) if gap is not None else 0.0
+            worst = _num(gap)
             checks.append(Check(f"ratio:{name}", grain, worst, worst <= 1e-12))
     failed = [c for c in checks if not c.passed]
     if failed:
         raise MetricReconciliationError(f"{len(failed)} metric checks failed: {failed[:5]}")
     return checks
+
+
+def _num(value: object) -> float:
+    """A polars scalar reduction as a float; an empty reduction is zero."""
+    if value is None:
+        return 0.0
+    return float(value)  # type: ignore[arg-type]
 
 
 def constants_from_config(risk_weights: dict[str, float]) -> dict[str, float]:
