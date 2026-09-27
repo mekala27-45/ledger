@@ -28,8 +28,11 @@ ingest:
 contracts:
 	$(LEDGER) contracts
 
+# Through the CLI, which hands dbt absolute paths to the staged tables. Called bare from the
+# warehouse folder, dbt bakes the relative default into every staging view, and the views
+# break for anything that opens the database from the repository root.
 warehouse:
-	cd warehouse && uv run dbt build --profiles-dir . --target dev
+	$(LEDGER) warehouse
 
 reconcile:
 	$(LEDGER) reconcile

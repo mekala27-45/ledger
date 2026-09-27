@@ -43,3 +43,17 @@ def test_models_run_before_the_functions_that_read_them() -> None:
         < stages.index("manifest")
     )
     assert stages.index("render") < stages.index("site-data")
+
+
+def recipe(target: str) -> list[str]:
+    text = (ROOT / "Makefile").read_text(encoding="utf-8")
+    block = re.search(rf"^{re.escape(target)}:.*\n((?:\t.*\n?)*)", text, flags=re.MULTILINE)
+    assert block, f"the Makefile has no {target} target"
+    return [line.strip() for line in block.group(1).splitlines() if line.strip()]
+
+
+def test_the_warehouse_is_built_through_the_cli() -> None:
+    # dbt called bare from the warehouse folder bakes a relative path to the staged tables
+    # into every staging view, and every stage after it that opens the database from the
+    # repository root then fails. The CLI hands dbt absolute paths.
+    assert recipe("warehouse") == ["$(LEDGER) warehouse"]
