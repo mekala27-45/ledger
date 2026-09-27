@@ -485,8 +485,8 @@ first.</p>
 on our list, every model's features are tested against that list, and every decline carries its
 principal reasons.</p>
 <h2>Model risk</h2>
-<p>We use 6 models in this pack. Each has an SR 11-7 style validation report,
-a tier, an owner and a monitoring plan; 13 challenges were raised and
+<p>We use 7 models in this pack. Each has an SR 11-7 style validation report,
+a tier, an owner and a monitoring plan; 15 challenges were raised and
 answered during development and each is on record.</p>
 <table>
 <thead>
@@ -568,6 +568,17 @@ answered during development and each is on record.</p>
 <td>2026-08-31</td>
 <td>approved</td>
 <td style="text-align:right">0.583</td>
+</tr>
+<tr>
+<td>cure</td>
+<td>Cure within ninety days for delinquent loans</td>
+<td>f09</td>
+<td>2</td>
+<td>sole</td>
+<td>in use</td>
+<td>2026-08-31</td>
+<td>approved</td>
+<td style="text-align:right">0.787</td>
 </tr>
 </tbody>
 </table>
@@ -784,6 +795,26 @@ with where its data lives:</p>
 <td>Unsecured loans rolling into delinquency each quarter, along the 2026 scenarios</td>
 <td><code>results/f08/stress_paths.parquet</code></td>
 <td>real:frb_scenarios, marts.mart_scenarios and ledger_stress.link</td>
+</tr>
+<tr>
+<td>Six month charge offs: forecast against what happened, by origin</td>
+<td><code>results/f09/backtest.parquet</code></td>
+<td>generated, marts.fct_loan_month</td>
+</tr>
+<tr>
+<td>The next six months for the loans open today</td>
+<td><code>results/f09/forecast.parquet</code></td>
+<td>generated, marts.fct_loan_month</td>
+</tr>
+<tr>
+<td>The collections queue: balance at risk times the chance of not curing</td>
+<td><code>results/f09/queue.parquet</code></td>
+<td>generated, marts.fct_loan_month</td>
+</tr>
+<tr>
+<td>Cumulative recoveries after charge off</td>
+<td><code>results/f09/recoveries.parquet</code></td>
+<td>generated, marts.fct_loan_month</td>
 </tr>
 <tr>
 <td>The fraud model's monitoring, week by week</td>

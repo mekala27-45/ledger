@@ -217,7 +217,7 @@
      0.1948028775,
      362450.58,
      70606.41592,
-     "has complained; uses digital banking"
+     "has complained; does not use digital banking"
     ],
     [
      "C041637",
@@ -231,14 +231,14 @@
      0.07488183089,
      777371.27,
      58210.98398,
-     "uses digital banking; savings and time balances"
+     "does not use digital banking; savings and time balances"
     ],
     [
      "C047468",
      0.07889030512,
      709515.81,
      55973.91874,
-     "uses digital banking; savings and time balances"
+     "does not use digital banking; savings and time balances"
     ],
     [
      "C040435",
@@ -252,21 +252,21 @@
      0.09017821087,
      574617.77,
      51818.00243,
-     "uses digital banking; savings and time balances"
+     "does not use digital banking; savings and time balances"
     ],
     [
      "C002484",
      0.08009695939,
      644510.81,
      51623.35617,
-     "uses digital banking; checking balance"
+     "does not use digital banking; checking balance"
     ],
     [
      "C009648",
      0.1833884945,
      279663.47,
      51287.06273,
-     "customer for under a year; uses digital banking"
+     "customer for under a year; does not use digital banking"
     ],
     [
      "C035962",
@@ -280,28 +280,28 @@
      0.09159005083,
      534437.47,
      48949.15504,
-     "uses digital banking; time as a customer"
+     "does not use digital banking; time as a customer"
     ],
     [
      "C019661",
      0.0756382412,
      634302.27,
      47977.50809,
-     "uses digital banking; savings and time balances"
+     "does not use digital banking; savings and time balances"
     ],
     [
      "C040197",
      0.08725062808,
      545562.89,
      47600.70481,
-     "uses digital banking; savings and time balances"
+     "does not use digital banking; savings and time balances"
     ],
     [
      "C002401",
      0.2052570244,
      231661.35,
      47550.11938,
-     "has complained; uses digital banking"
+     "has complained; does not use digital banking"
     ],
     [
      "C011480",

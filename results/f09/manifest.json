@@ -1,0 +1,627 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f09.fig_backtest": {
+   "callout": "Over 19 rolling origins from 2024-08 to 2026-02, the roll rate forecast missed the six month charge off count by 7.1% on average, against 21.5% for repeating the last six months and 46.3% for the same months a year earlier. The seasonal adjustment did not help (6.7% without it): this generator has no calendar season in its delinquency, and two years of history cannot find one.",
+   "data": "f09/backtest.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "title": "Six month charge offs: forecast against what happened, by origin"
+  },
+  "f09.fig_forecast": {
+   "callout": "From the 2026-08 book, the roll rate chain expects about 1,053 charge offs between 2026-09 and 2027-02, with no new loans added and the last six months' transitions held.",
+   "data": "f09/forecast.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "title": "The next six months for the loans open today"
+  },
+  "f09.fig_queue": {
+   "callout": "1,158 loans were past due at the end of 2026-08, holding $10,128,599. The first 300 calls in the queue cover $4,663,027 of the $6,687,255 the bank expects to lose without collection, because the order is by money at risk, not by bucket.",
+   "data": "f09/queue.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline loans past due at the end of 2026-08",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "title": "The collections queue: balance at risk times the chance of not curing"
+  },
+  "f09.fig_recovery": {
+   "callout": "Two years after charge off, installment loans have returned 20.4% of the charged off balance, cards 23.0% and mortgages 72.8%, where the house is collateral. One minus the installment figure is the loss given default that function 2's expected loss uses.",
+   "data": "f09/recoveries.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "title": "Cumulative recoveries after charge off"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f09.backtest_table": {
+   "columns": [
+    "Method",
+    "Mean absolute error, share of actual",
+    "Mean error, share of actual"
+   ],
+   "formats": [
+    "text",
+    "pct1",
+    "spct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "rows": [
+    [
+     "Roll rates with the seasonal adjustment",
+     0.07125304946,
+     -0.06937250619
+    ],
+    [
+     "Roll rates without it",
+     0.06668810167,
+     -0.05534265731
+    ],
+    [
+     "Naive: the last six months again",
+     0.2147938816,
+     -0.1861677583
+    ],
+    [
+     "Seasonal naive: the same months a year earlier",
+     0.4633619546,
+     -0.4633619546
+    ]
+   ]
+  },
+  "f09.cure_rates": {
+   "columns": [
+    "From",
+    "Stated monthly cure for an average loan",
+    "Observed monthly cure"
+   ],
+   "formats": [
+    "text",
+    "pct1",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "rows": [
+    [
+     "30 days",
+     0.42,
+     0.3844824996
+    ],
+    [
+     "60 days",
+     0.22,
+     0.1990413724
+    ],
+    [
+     "90 days and over",
+     0.1,
+     0.05911038865
+    ]
+   ]
+  },
+  "f09.forecast_table": {
+   "columns": [
+    "Month",
+    "Current",
+    "30 days",
+    "60 days",
+    "90 days and over",
+    "Charge offs"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "int",
+    "int",
+    "int",
+    "int"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "rows": [
+    [
+     "2026-09",
+     25788.69476,
+     481.3162372,
+     257.4120417,
+     440.8394512,
+     175.364094
+    ],
+    [
+     "2026-10",
+     25375.28995,
+     474.9397625,
+     284.8503015,
+     428.4439293,
+     175.3002516
+    ],
+    [
+     "2026-11",
+     24975.16158,
+     467.3667116,
+     282.7358927,
+     442.1283078,
+     170.3711598
+    ],
+    [
+     "2026-12",
+     24583.09703,
+     459.9945371,
+     278.3581648,
+     447.9295939,
+     175.8127667
+    ],
+    [
+     "2027-01",
+     24197.99758,
+     452.7723921,
+     273.9718,
+     447.8056303,
+     178.1196539
+    ],
+    [
+     "2027-02",
+     23819.35841,
+     445.679126,
+     269.6694446,
+     444.483974,
+     178.0703597
+    ]
+   ]
+  },
+  "f09.queue_top": {
+   "columns": [
+    "Loan",
+    "Product",
+    "Bucket",
+    "Balance",
+    "Probability of curing",
+    "Balance likely lost without a call",
+    "Why"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "usd0",
+    "pct1",
+    "usd0",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline loans past due at the end of 2026-08",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "rows": [
+    [
+     "M0002403",
+     "mortgage",
+     "90+",
+     388967.31,
+     0.07595459579,
+     359423.4552,
+     "a mortgage; months in a row past due"
+    ],
+    [
+     "M0002578",
+     "mortgage",
+     "60",
+     394692.63,
+     0.2547604177,
+     294140.5707,
+     "a mortgage; balance"
+    ],
+    [
+     "M0003612",
+     "mortgage",
+     "60",
+     369284.98,
+     0.2407002031,
+     280398.0103,
+     "a mortgage; balance"
+    ],
+    [
+     "M0003403",
+     "mortgage",
+     "90+",
+     292104.94,
+     0.06600660376,
+     272824.085,
+     "a mortgage; months in a row past due"
+    ],
+    [
+     "M0002426",
+     "mortgage",
+     "90+",
+     231469.58,
+     0.05002402281,
+     219890.5405,
+     "months in a row past due; a mortgage"
+    ],
+    [
+     "M0000916",
+     "mortgage",
+     "30",
+     363804.42,
+     0.5932846267,
+     147964.8505,
+     "a mortgage; balance"
+    ],
+    [
+     "M0000902",
+     "mortgage",
+     "90+",
+     155855.16,
+     0.06114384251,
+     146325.5766,
+     "months in a row past due; a mortgage"
+    ],
+    [
+     "M0002595",
+     "mortgage",
+     "90+",
+     126786.49,
+     0.03444817287,
+     122418.9271,
+     "months in a row past due; a mortgage"
+    ],
+    [
+     "M0003330",
+     "mortgage",
+     "90+",
+     121826.02,
+     0.07015536129,
+     113279.2716,
+     "a mortgage; months in a row past due"
+    ],
+    [
+     "M0000807",
+     "mortgage",
+     "30",
+     277015.34,
+     0.6084920535,
+     108453.7069,
+     "a mortgage; balance"
+    ],
+    [
+     "M0001061",
+     "mortgage",
+     "90+",
+     79937.61,
+     0.1159898303,
+     70665.66018,
+     "a mortgage; months in a row past due"
+    ],
+    [
+     "M0001179",
+     "mortgage",
+     "30",
+     86148.46,
+     0.6392742101,
+     31075.97128,
+     "a mortgage; balance"
+    ],
+    [
+     "N0015836",
+     "installment",
+     "60",
+     47583.14,
+     0.3774745794,
+     29621.71424,
+     "sixty days past due; balance"
+    ],
+    [
+     "N0014428",
+     "installment",
+     "90+",
+     30659.56,
+     0.1935662391,
+     24724.90428,
+     "months in a row past due; ninety or more days past due"
+    ],
+    [
+     "N0003139",
+     "installment",
+     "90+",
+     21110.71,
+     0.04952318293,
+     20065.24045,
+     "months in a row past due; ninety or more days past due"
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f09.best_method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": "Roll rates without it"
+  },
+  "f09.delinquent_balance": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline loans past due at the end of 2026-08",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 10128598.66
+  },
+  "f09.delinquent_now": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline loans past due at the end of 2026-08",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 1158
+  },
+  "f09.first_origin": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": "2024-08"
+  },
+  "f09.forecast_charge_offs": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 1053.038286
+  },
+  "f09.forecast_first": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": "2026-09"
+  },
+  "f09.forecast_last": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": "2027-02"
+  },
+  "f09.last_origin": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": "2026-02"
+  },
+  "f09.lgd_card": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.7695688856
+  },
+  "f09.lgd_installment": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.7961207535
+  },
+  "f09.lgd_mortgage": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.2719644304
+  },
+  "f09.mape_flat": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.06668810167
+  },
+  "f09.mape_naive": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.2147938816
+  },
+  "f09.mape_roll": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.07125304946
+  },
+  "f09.mape_seasonal_naive": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.4633619546
+  },
+  "f09.origins": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 19
+  },
+  "f09.queue_balance": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline loans past due at the end of 2026-08",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 6623975.81
+  },
+  "f09.queue_exposure": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline loans past due at the end of 2026-08",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 4663027.237
+  },
+  "f09.queue_size": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline loans past due at the end of 2026-08",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 300
+  },
+  "f09.recovery_24_card": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.2304311144
+  },
+  "f09.recovery_24_installment": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.2038792465
+  },
+  "f09.recovery_24_mortgage": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment and card loans, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 0.7280355696
+  },
+  "f09.total_exposure": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline loans past due at the end of 2026-08",
+    "seed": 20260831,
+    "source": "marts.fct_loan_month"
+   },
+   "value": 6687254.963
+  }
+ }
+}

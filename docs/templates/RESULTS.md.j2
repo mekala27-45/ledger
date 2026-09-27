@@ -224,6 +224,24 @@ The macro link, fitted on the generator's thirty six months:
 
 Liquidity coverage, simplified: {{ v('f08.lcr') }}, and {{ v('f08.lcr_concentration') }} if the largest one percent of depositors also leave in full.
 
+## Collections and recovery
+
+{{ figure('f09.fig_backtest').callout }}
+
+{{ table('f09.backtest_table') }}
+
+{{ label('f09.backtest_table') }}
+
+{{ figure('f09.fig_forecast').callout }}
+
+{{ table('f09.forecast_table') }}
+
+{{ figure('f09.fig_queue').callout }} The cure model reaches an AUROC of {{ v('models.cure.test.auroc') }} on the test months, against {{ v('models.cure.rule_auroc') }} for the bucket rule.
+
+{{ table('f09.cure_rates') }}
+
+{{ figure('f09.fig_recovery').callout }}
+
 ## Controls
 
 {{ figure('f11.fig_recon').callout }}

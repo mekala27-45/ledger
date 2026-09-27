@@ -160,8 +160,8 @@ principal reasons.
 
 ## Model risk
 
-We use 6 models in this pack. Each has an SR 11-7 style validation report,
-a tier, an owner and a monitoring plan; 13 challenges were raised and
+We use 7 models in this pack. Each has an SR 11-7 style validation report,
+a tier, an owner and a monitoring plan; 15 challenges were raised and
 answered during development and each is on record.
 
 | Model | Title | Function | Tier | Role | Status | Last validated | Conclusion | Test AUROC |
@@ -172,6 +172,7 @@ answered during development and each is on record.
 | fraud_account | Application fraud on the BAF suite | f04 | 1 | sole | in use | 2026-08-31 | approved with conditions | 0.880 |
 | aml_triage | Alert triage for transaction monitoring | f05 | 2 | sole | in use | 2026-08-31 | approved | 1.000 |
 | attrition | Deposit customer attrition, twelve month horizon | f06 | 2 | sole | in use | 2026-08-31 | approved | 0.583 |
+| cure | Cure within ninety days for delinquent loans | f09 | 2 | sole | in use | 2026-08-31 | approved | 0.787 |
 
 The probability of default scorecard is approved with a condition: its calibration on the
 loosened and recession vintages, which the expected loss overlay covers until it is
@@ -249,6 +250,10 @@ with where its data lives:
 | The capital ratio along each scenario | `results/f08/stress_paths.parquet` | real:frb_scenarios, marts.mart_scenarios and ledger_stress.link |
 | Net interest income over twelve months, parallel rate shocks | `results/f08/nii_shocks.parquet` | generated, marts.mart_balance_sheet_monthly |
 | Unsecured loans rolling into delinquency each quarter, along the 2026 scenarios | `results/f08/stress_paths.parquet` | real:frb_scenarios, marts.mart_scenarios and ledger_stress.link |
+| Six month charge offs: forecast against what happened, by origin | `results/f09/backtest.parquet` | generated, marts.fct_loan_month |
+| The next six months for the loans open today | `results/f09/forecast.parquet` | generated, marts.fct_loan_month |
+| The collections queue: balance at risk times the chance of not curing | `results/f09/queue.parquet` | generated, marts.fct_loan_month |
+| Cumulative recoveries after charge off | `results/f09/recoveries.parquet` | generated, marts.fct_loan_month |
 | The fraud model's monitoring, week by week | `results/f10/fraud_weekly.parquet` | replayed, fraud_card |
 | Score stability by application quarter, against the development quarters | `results/f10/pd_psi_by_quarter.parquet` | generated, pd_scorecard |
 | Reported balance against the sum of postings, by account and month | `results/f11/reconciliation.parquet` | generated, f11 reconciliation |

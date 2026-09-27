@@ -1,0 +1,494 @@
+<h1>Validation report: Cure within ninety days for delinquent loans</h1>
+<blockquote>
+<p>Harborline Bank is fictional. This is a demonstration on generated data and public datasets; no real customer, account or transaction of any real institution appears here.</p>
+<p>Nothing here is a credit decision, a fraud determination, a suspicious activity finding or investment advice.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>cure</code></td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Order the collections queue by the balance likely to be lost without a call: balance times the probability the loan does not cure</td>
+</tr>
+<tr>
+<td>Tier</td>
+<td>2: Informs a decision a person makes; moderate materiality</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>sole</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>in use</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Head of analytics</td>
+</tr>
+<tr>
+<td>Prediction time</td>
+<td>Each month end, for loans thirty or more days past due; features use that month and earlier</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>The loan is current, or paid off, at one of the next three month ends</td>
+</tr>
+<tr>
+<td>Last validated</td>
+<td>2026-08-31</td>
+</tr>
+<tr>
+<td>Conclusion</td>
+<td><strong>approved</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Purpose and scope</h2>
+<p>Order the collections queue by the balance the bank is likely to lose without a call:
+each past due loan's balance times the probability it does not return to current within
+ninety days. The model informs whom a collector calls first; it never changes terms or
+charges anything off, so it is tier two.</p>
+<p>Out of scope: hardship programmes, settlement offers, and the decision to charge off.</p>
+<h2>Conceptual soundness</h2>
+<p>Whether a delinquent loan cures depends on how late it is, how long it has been late,
+whether the borrower paid anything last month, and the loan itself. Two candidates were
+fitted on the same features, a gradient boosted classifier and a logistic regression; the
+champion was chosen on held out loans in the validation months, and the boosted model had
+to beat the logistic by 0.005 of AUROC to earn its complexity. The model is
+the logistic regression (0.760 for LightGBM against
+0.762 for the logistic regression on held out loans).</p>
+<p>The benchmark that matters is the rule collectors use today, the bucket: each bucket's
+training cure rate used as a score.</p>
+<h2>Data and assumptions</h2>
+<p>Every loan thirty or more days past due at a month end. The outcome is whether it is
+current or paid off at one of the next three month ends, so it is known three months
+later, and the split respects that: training on month ends September 2023 to June 2025, validation on
+month ends July to September 2025, test on month ends December 2025 to May 2026 (8,104
+delinquent loan months, 2,663 of them cured).</p>
+<p>A leakage test recomputed the run of late months, the earlier delinquency episodes and
+last month's payment for 200 sampled loan months from the loan's
+own history and matched every one. No demographic attribute is a feature.</p>
+<h2>Development evidence</h2>
+<p>Development AUROC 0.784, validation 0.777.
+What moves the score most (standardised coefficients for a logistic regression, share of
+gain for a boosted model):</p>
+<table>
+<thead>
+<tr>
+<th>feature</th>
+<th style="text-align:right">weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>months in a row past due</td>
+<td style="text-align:right">-0.98</td>
+</tr>
+<tr>
+<td>interest rate</td>
+<td style="text-align:right">-0.61</td>
+</tr>
+<tr>
+<td>a card account</td>
+<td style="text-align:right">0.29</td>
+</tr>
+<tr>
+<td>ninety or more days past due</td>
+<td style="text-align:right">-0.24</td>
+</tr>
+<tr>
+<td>a mortgage</td>
+<td style="text-align:right">-0.13</td>
+</tr>
+<tr>
+<td>sixty days past due</td>
+<td style="text-align:right">-0.09</td>
+</tr>
+<tr>
+<td>earlier delinquencies</td>
+<td style="text-align:right">-0.08</td>
+</tr>
+<tr>
+<td>card utilisation</td>
+<td style="text-align:right">0.06</td>
+</tr>
+<tr>
+<td>share of the payment made last month</td>
+<td style="text-align:right">0.06</td>
+</tr>
+<tr>
+<td>made a payment last month</td>
+<td style="text-align:right">0.06</td>
+</tr>
+<tr>
+<td>balance</td>
+<td style="text-align:right">-0.05</td>
+</tr>
+<tr>
+<td>age of the loan</td>
+<td style="text-align:right">0.04</td>
+</tr>
+<tr>
+<td>unemployment</td>
+<td style="text-align:right">0.01</td>
+</tr>
+</tbody>
+</table>
+<h2>Outcomes analysis on held out data</h2>
+<p>On the test months the model reaches an AUROC of 0.787, against
+0.761 for the bucket rule and 0.785 for the
+LightGBM.</p>
+<p>By bucket, on the test months:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th style="text-align:right">N</th>
+<th style="text-align:right">Event rate</th>
+<th style="text-align:right">Mean score</th>
+<th style="text-align:right">Calibration gap</th>
+<th style="text-align:right">Auroc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30</td>
+<td style="text-align:right">3,069</td>
+<td style="text-align:right">58.52%</td>
+<td style="text-align:right">57.40%</td>
+<td style="text-align:right">-1.1%</td>
+<td style="text-align:right">0.598</td>
+</tr>
+<tr>
+<td>60</td>
+<td style="text-align:right">1,845</td>
+<td style="text-align:right">30.08%</td>
+<td style="text-align:right">32.38%</td>
+<td style="text-align:right">+2.3%</td>
+<td style="text-align:right">0.545</td>
+</tr>
+<tr>
+<td>90+</td>
+<td style="text-align:right">3,190</td>
+<td style="text-align:right">9.78%</td>
+<td style="text-align:right">10.40%</td>
+<td style="text-align:right">+0.6%</td>
+<td style="text-align:right">0.638</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
+<p>Calibration on the test sample, ten equal count bins:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Bin</th>
+<th style="text-align:right">Accounts</th>
+<th style="text-align:right">Predicted</th>
+<th style="text-align:right">Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">811</td>
+<td style="text-align:right">3.42%</td>
+<td style="text-align:right">4.07%</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">811</td>
+<td style="text-align:right">6.99%</td>
+<td style="text-align:right">8.63%</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">811</td>
+<td style="text-align:right">12.22%</td>
+<td style="text-align:right">11.84%</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">811</td>
+<td style="text-align:right">18.36%</td>
+<td style="text-align:right">16.28%</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">810</td>
+<td style="text-align:right">27.17%</td>
+<td style="text-align:right">26.79%</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">810</td>
+<td style="text-align:right">35.84%</td>
+<td style="text-align:right">32.35%</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">810</td>
+<td style="text-align:right">45.46%</td>
+<td style="text-align:right">45.31%</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">810</td>
+<td style="text-align:right">54.33%</td>
+<td style="text-align:right">53.95%</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">810</td>
+<td style="text-align:right">60.44%</td>
+<td style="text-align:right">60.25%</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">810</td>
+<td style="text-align:right">67.90%</td>
+<td style="text-align:right">69.26%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
+<h2>Benchmarking</h2>
+<p>Against the base rate, the bucket rule and the candidate that was not chosen, on the test months:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align:right">AUROC</th>
+<th style="text-align:right">Gini</th>
+<th style="text-align:right">Brier</th>
+<th style="text-align:right">ECE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This model</td>
+<td style="text-align:right">0.787</td>
+<td style="text-align:right">0.573</td>
+<td style="text-align:right">0.1718</td>
+<td style="text-align:right">0.0107</td>
+</tr>
+<tr>
+<td>Base rate</td>
+<td style="text-align:right">0.500</td>
+<td style="text-align:right">0.000</td>
+<td style="text-align:right">0.2209</td>
+<td style="text-align:right">0.0266</td>
+</tr>
+<tr>
+<td>The bucket rule</td>
+<td style="text-align:right">0.761</td>
+<td style="text-align:right">0.523</td>
+<td style="text-align:right">0.1753</td>
+<td style="text-align:right">0.0217</td>
+</tr>
+<tr>
+<td>LightGBM on the same features</td>
+<td style="text-align:right">0.785</td>
+<td style="text-align:right">0.569</td>
+<td style="text-align:right">0.1723</td>
+<td style="text-align:right">0.0137</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
+<h2>Limitations</h2>
+<ul>
+<li>The generator decides cures from a stated process with the loan's latent risk in it.
+Real cures depend on things no loan file holds: a new job, a family emergency, a
+collector's tone.</li>
+<li>A call changes the outcome it predicts. Once the queue is worked in this order, the
+realised cure rates are no longer a clean measure of the model.</li>
+<li>Paid off counts as cured. It is rare from delinquency here, and a real bank might
+treat a payoff through refinancing elsewhere differently.</li>
+</ul>
+<h2>Ongoing monitoring plan</h2>
+<p>Monthly:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Trigger</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Realised cure rate by queue decile, monthly</td>
+<td>the top decile cures more often than the bottom</td>
+<td>Refit</td>
+</tr>
+<tr>
+<td>Score PSI, monthly against validation</td>
+<td>above 0.25</td>
+<td>Revalidate</td>
+</tr>
+<tr>
+<td>The bucket rule's AUROC beside the model's</td>
+<td>the margin falls below the gate for a quarter</td>
+<td>Revalidate</td>
+</tr>
+</tbody>
+</table>
+<h2>Effective challenge</h2>
+<p>From <code>DECISIONS.md</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Challenge</th>
+<th>Response</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-27</td>
+<td>A loan thirty days past due cures far more often than one ninety days past due. A model that only learned the bucket would beat the base rate comfortably and add nothing a collections supervisor does not already do by working the thirty day list first.</td>
+<td>The base rate is the wrong benchmark for this model. The benchmark is the rule in use: each bucket's cure rate from the training months, applied as a score.</td>
+<td>The bucket rule is a benchmark in the report, and a critical gate requires the model's test AUROC to beat the rule's by two hundredths. Cure rates by bucket are published beside the model's so the rule's strength is visible.</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>A loan that is past due in June and July 2025 appears in the last training month and the first validation month, with nearly the same features and the same outcome. Early stopping and the choice between the two candidates were being made on loans the fit had already seen.</td>
+<td>The attrition model memorised customers for the same reason. Month ends are not independent draws when the unit is a loan that stays delinquent for months.</td>
+<td>One loan in five is held out of the fit by a hash of its identifier, and early stopping and the choice of champion use only held out loans in the validation months. The test months begin three months after validation ends, so every outcome used to fit or choose the model was known before the first test month end, and a check in the trainer refuses to run otherwise.</td>
+</tr>
+</tbody>
+</table>
+<h2>Promotion gates</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Threshold</th>
+<th style="text-align:right">Measured</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test AUROC above the bucket rule the collections team uses today</td>
+<td>at least 0.02</td>
+<td style="text-align:right">0.0251</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test AUROC against the other candidate's (the choice on validation must not cost more than a hundredth)</td>
+<td>at least -0.01</td>
+<td style="text-align:right">0.0019</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test AUROC at or above the floor</td>
+<td>at least 0.7</td>
+<td style="text-align:right">0.7866</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Point in time recompute of sampled delinquent loan months</td>
+<td>at least 200</td>
+<td style="text-align:right">200.0000</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Expected calibration error on test</td>
+<td>at most 0.05</td>
+<td style="text-align:right">0.0107</td>
+<td>pass</td>
+</tr>
+</tbody>
+</table>
+<h2>Validation conclusion</h2>
+<p>The model orders the queue the way its purpose asks and beats the rule in use on months
+it never saw. It is approved for ordering the collections queue.</p>
+<p><strong>approved.</strong> Conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h2>The integration contract</h2>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>What this model does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trained</td>
+<td>On month ends September 2023 to June 2025, whose three month outcomes had all closed before the test months began.</td>
+</tr>
+<tr>
+<td>timed</td>
+<td>Every feature comes from the month end or earlier; a leakage test recomputes the run length, earlier episodes and last payment for 200 sampled loan months.</td>
+</tr>
+<tr>
+<td>calibrated</td>
+<td>Reliability on the test months is published; the queue multiplies the balance by one minus the probability, so calibration matters.</td>
+</tr>
+<tr>
+<td>useful</td>
+<td>Beats the base rate, the bucket rule collectors use today, and the other candidate on months it never saw.</td>
+</tr>
+<tr>
+<td>fair</td>
+<td>No demographic enters; the features describe the loan and its payments. Cure rates by bucket are published beside the model's.</td>
+</tr>
+<tr>
+<td>gated</td>
+<td>Every gate in this report, including the margin over the bucket rule.</td>
+</tr>
+<tr>
+<td>served</td>
+<td>Scored monthly in the pipeline; the queue is published with the collections page.</td>
+</tr>
+<tr>
+<td>integrated</td>
+<td>Orders the collections queue by balance at risk times the probability of not curing.</td>
+</tr>
+<tr>
+<td>monitored</td>
+<td>Monthly: realised cure rate by queue decile, score PSI, and the rule's AUROC beside the model's.</td>
+</tr>
+<tr>
+<td>documented</td>
+<td>This validation report and the collections page.</td>
+</tr>
+<tr>
+<td>bounded</td>
+<td>Orders calls. Never changes terms, never charges off a loan, and never goes to a borrower as a score.</td>
+</tr>
+<tr>
+<td>validated</td>
+<td>This report, rendered from the manifest before the queue uses the order.</td>
+</tr>
+<tr>
+<td>explainable</td>
+<td>Each queued loan shows the two features that lowered its chance of curing most, in plain words.</td>
+</tr>
+</tbody>
+</table>

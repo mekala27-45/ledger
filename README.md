@@ -36,6 +36,8 @@ The bank is Harborline Bank, and it does not exist: its name was checked against
 | Deposit attrition | AUROC 0.583 against a ceiling of 0.588 from the generator's own hazards | The logistic regression beat LightGBM on held out customers, so it is the model |
 | Supervisory stress, the Fed's 2026 scenarios | Nine quarter losses $59.8M under severely adverse ($55.9M to $63.9M), $27.2M under baseline | A macro link that recovers the generator's sensitivity (0.215 against 0.30) before any path is projected |
 | Rate sensitivity | Net interest income changes by -$6,981 after a two point rise and -$175,123 after a two point fall, over twelve months | Repricing gaps with the recovered deposit betas; the balance sheet is close to neutral |
+| Charge off forecast | Six month charge offs missed by 6.7% on average over 19 rolling origins, against 21.5% for the naive benchmark | A roll rate chain over the delinquency buckets; the seasonal adjustment was tested and did not help |
+| Collections queue | Cure model AUROC 0.787 against 0.761 for the bucket rule collectors use | The first 300 calls cover $4,663,027 of $6,687,255 likely to be lost |
 | Warehouse | 210 of 210 tests pass over 62 models | dbt on DuckDB |
 
 ## The fraud desk
@@ -59,7 +61,8 @@ The model's AUROC of 1.000 is a property of the Sparkov generator, whose fraud b
 | f05 | Financial crime | Do the rules find the planted typologies at a workable volume, and in what order? | 362 of 422 planted episodes found, 7.9 alerts per hundred thousand entries | BSA and the reporting threshold | `aml_triage` | [/crime](https://mekala27-45.github.io/ledger/crime/) |
 | f06 | Deposits and customers | Where are the deposits, how much of a rate move reaches customers, and whom should the bank call? | The largest one percent of depositors hold 12.6% | Deposit betas against the generator's | `attrition` | [/deposits](https://mekala27-45.github.io/ledger/deposits/) |
 | f08 | Treasury and stress testing | What does a rate move do to earnings, and a severe recession to losses and capital? | Severely adverse losses $59.8M over nine quarters | The Federal Reserve's 2026 scenarios | | [/treasury](https://mekala27-45.github.io/ledger/treasury/) |
-| f10 | Model risk management | Has every model earned the decisions it makes? | 6 models, each with a validation report | SR 11-7 | | [/models](https://mekala27-45.github.io/ledger/models/) |
+| f09 | Collections and recovery | How many loans will charge off, whom should a collector call first, and how much comes back? | 1,053 charge offs expected in six months | Loss given default from observed recoveries | `cure` | [/collections](https://mekala27-45.github.io/ledger/collections/) |
+| f10 | Model risk management | Has every model earned the decisions it makes? | 7 models, each with a validation report | SR 11-7 | | [/models](https://mekala27-45.github.io/ledger/models/) |
 | f11 | Controls and data | Can every other number be trusted? | 786 of 792 account months tied | Ledger to sub ledger, to the cent | | [/controls](https://mekala27-45.github.io/ledger/controls/) |
 | f12 | The board pack | What should the board decide? | Installment cutoff held at 580 | | | [/report](https://mekala27-45.github.io/ledger/report/) |
 
@@ -85,6 +88,7 @@ The scorecard studio at [/studio](https://mekala27-45.github.io/ledger/studio/) 
 | Fairness in fraud and credit | subgroup audits in every validation report; the BAF protocol and a less discriminatory alternative search in `report/validation/fraud_account.md` |
 | Deposit betas and customer attrition | f06, [/deposits](https://mekala27-45.github.io/ledger/deposits/) |
 | Interest rate risk, stress testing and liquidity | f08, `packages/stress`, [/treasury](https://mekala27-45.github.io/ledger/treasury/) |
+| Roll rate forecasting, cure modelling and recoveries | f09, [/collections](https://mekala27-45.github.io/ledger/collections/) |
 | Model risk management, SR 11-7 | f10, `report/validation`, [/models](https://mekala27-45.github.io/ledger/models/) |
 | Model monitoring, PSI and CSI | f10, the monitoring charts |
 | Ledger reconciliation and controls | f11, [/controls](https://mekala27-45.github.io/ledger/controls/) |

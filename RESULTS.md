@@ -483,19 +483,19 @@ The 500 customers at the top of the list hold $114,622,517 and carry $9,442,588 
 | Customer | Probability of leaving within a year | Balances | Expected balance at risk | Why |
 |---|---:|---:|---:|---|
 | C037083 | 6.7% | $1,463,425 | $98,069 | checking balance; savings and time balances |
-| C029680 | 19.5% | $362,451 | $70,606 | has complained; uses digital banking |
+| C029680 | 19.5% | $362,451 | $70,606 | has complained; does not use digital banking |
 | C041637 | 5.5% | $1,271,418 | $70,198 | checking balance; savings and time balances |
-| C044343 | 7.5% | $777,371 | $58,211 | uses digital banking; savings and time balances |
-| C047468 | 7.9% | $709,516 | $55,974 | uses digital banking; savings and time balances |
+| C044343 | 7.5% | $777,371 | $58,211 | does not use digital banking; savings and time balances |
+| C047468 | 7.9% | $709,516 | $55,974 | does not use digital banking; savings and time balances |
 | C040435 | 6.9% | $788,264 | $54,449 | checking balance; savings and time balances |
-| C034336 | 9.0% | $574,618 | $51,818 | uses digital banking; savings and time balances |
-| C002484 | 8.0% | $644,511 | $51,623 | uses digital banking; checking balance |
-| C009648 | 18.3% | $279,663 | $51,287 | customer for under a year; uses digital banking |
+| C034336 | 9.0% | $574,618 | $51,818 | does not use digital banking; savings and time balances |
+| C002484 | 8.0% | $644,511 | $51,623 | does not use digital banking; checking balance |
+| C009648 | 18.3% | $279,663 | $51,287 | customer for under a year; does not use digital banking |
 | C035962 | 5.8% | $868,795 | $49,987 | checking balance; savings and time balances |
-| C019831 | 9.2% | $534,437 | $48,949 | uses digital banking; time as a customer |
-| C019661 | 7.6% | $634,302 | $47,978 | uses digital banking; savings and time balances |
-| C040197 | 8.7% | $545,563 | $47,601 | uses digital banking; savings and time balances |
-| C002401 | 20.5% | $231,661 | $47,550 | has complained; uses digital banking |
+| C019831 | 9.2% | $534,437 | $48,949 | does not use digital banking; time as a customer |
+| C019661 | 7.6% | $634,302 | $47,978 | does not use digital banking; savings and time balances |
+| C040197 | 8.7% | $545,563 | $47,601 | does not use digital banking; savings and time balances |
+| C002401 | 20.5% | $231,661 | $47,550 | has complained; does not use digital banking |
 | C011480 | 37.3% | $121,097 | $45,227 | has complained; customer for under a year |
 
 Source: generated, Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
@@ -538,6 +538,40 @@ Source: real:frb_scenarios, The Federal Reserve Board's 2026 supervisory scenari
 The ratio starts at 19.8%. Severely adverse losses peak at $8.6M a quarter, while pre provision revenue, held at its last twelve months of $8.2M a quarter and moved by the scenario's short rate, falls no lower than $7.7M, so the ratio ends the 9 quarters at 21.7% and never falls below where it started. No tax, dividends or balance sheet growth; illustrative projections on a fictional bank in the shape of the supervisory exercise, not the exercise.
 
 Liquidity coverage, simplified: 378%, and 180% if the largest one percent of depositors also leave in full.
+
+## Collections and recovery
+
+Over 19 rolling origins from 2024-08 to 2026-02, the roll rate forecast missed the six month charge off count by 7.1% on average, against 21.5% for repeating the last six months and 46.3% for the same months a year earlier. The seasonal adjustment did not help (6.7% without it): this generator has no calendar season in its delinquency, and two years of history cannot find one.
+
+| Method | Mean absolute error, share of actual | Mean error, share of actual |
+|---|---:|---:|
+| Roll rates with the seasonal adjustment | 7.1% | -6.9% |
+| Roll rates without it | 6.7% | -5.5% |
+| Naive: the last six months again | 21.5% | -18.6% |
+| Seasonal naive: the same months a year earlier | 46.3% | -46.3% |
+
+Source: generated, Harborline installment and card loans, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
+
+From the 2026-08 book, the roll rate chain expects about 1,053 charge offs between 2026-09 and 2027-02, with no new loans added and the last six months' transitions held.
+
+| Month | Current | 30 days | 60 days | 90 days and over | Charge offs |
+|---|---:|---:|---:|---:|---:|
+| 2026-09 | 25,789 | 481 | 257 | 441 | 175 |
+| 2026-10 | 25,375 | 475 | 285 | 428 | 175 |
+| 2026-11 | 24,975 | 467 | 283 | 442 | 170 |
+| 2026-12 | 24,583 | 460 | 278 | 448 | 176 |
+| 2027-01 | 24,198 | 453 | 274 | 448 | 178 |
+| 2027-02 | 23,819 | 446 | 270 | 444 | 178 |
+
+1,158 loans were past due at the end of 2026-08, holding $10,128,599. The first 300 calls in the queue cover $4,663,027 of the $6,687,255 the bank expects to lose without collection, because the order is by money at risk, not by bucket. The cure model reaches an AUROC of 0.787 on the test months, against 0.761 for the bucket rule.
+
+| From | Stated monthly cure for an average loan | Observed monthly cure |
+|---|---:|---:|
+| 30 days | 42.0% | 38.4% |
+| 60 days | 22.0% | 19.9% |
+| 90 days and over | 10.0% | 5.9% |
+
+Two years after charge off, installment loans have returned 20.4% of the charged off balance, cards 23.0% and mortgages 72.8%, where the house is collateral. One minus the installment figure is the loss given default that function 2's expected loss uses.
 
 ## Controls
 
@@ -584,6 +618,7 @@ The warehouse passed 210 of 210 dbt tests over 62 models. The identifier scan fo
 | fraud_account | Application fraud on the BAF suite | f04 | 1 | sole | in use | 2026-08-31 | approved with conditions | 0.880 |
 | aml_triage | Alert triage for transaction monitoring | f05 | 2 | sole | in use | 2026-08-31 | approved | 1.000 |
 | attrition | Deposit customer attrition, twelve month horizon | f06 | 2 | sole | in use | 2026-08-31 | approved | 0.583 |
+| cure | Cure within ninety days for delinquent loans | f09 | 2 | sole | in use | 2026-08-31 | approved | 0.787 |
 
 Source: mixed, the model inventory, as of 2026-08-31.
 
@@ -608,6 +643,8 @@ The effective challenge log:
 | 2026-09-27 | fraud_account | Recall at a five percent false positive rate sets the threshold on the same months it reports. A bank has to fix its threshold before the applications arrive, and the false positive rate it then gets is whatever the new months give it. | The report and the page publish both: the suite's measure, and the recall, false positive rate and predictive equality on months 6 and 7 at the threshold fixed on month 5. The recall gate uses the fixed threshold, and a gate watches how far the realised false positive rate drifts from its target. |
 | 2026-09-27 | attrition | The first split trained on every month end up to December 2024 and tested on the summer of 2025. A December 2024 label says whether the customer left by December 2025, which the bank could not have known when it scored the summer of 2025. | Training uses month ends September 2023 to February 2024, validation March to May 2024, and test June to August 2025, so every training and validation outcome was known before the first test month end. The gap is stated in the report beside the split. |
 | 2026-09-27 | attrition | Sorted by probability alone, the top of the retention list fills with new customers holding a few hundred dollars. A retention call costs the same whoever answers. | The list is ranked by expected balance at risk. The report publishes, for the top tenth of the test months, the share of closers and the share of their balances found by each ordering, so the trade between the two is visible. |
+| 2026-09-27 | cure | A loan thirty days past due cures far more often than one ninety days past due. A model that only learned the bucket would beat the base rate comfortably and add nothing a collections supervisor does not already do by working the thirty day list first. | The bucket rule is a benchmark in the report, and a critical gate requires the model's test AUROC to beat the rule's by two hundredths. Cure rates by bucket are published beside the model's so the rule's strength is visible. |
+| 2026-09-27 | cure | A loan that is past due in June and July 2025 appears in the last training month and the first validation month, with nearly the same features and the same outcome. Early stopping and the choice between the two candidates were being made on loans the fit had already seen. | One loan in five is held out of the fit by a hash of its identifier, and early stopping and the choice of champion use only held out loans in the validation months. The test months begin three months after validation ends, so every outcome used to fit or choose the model was known before the first test month end, and a check in the trainer refuses to run otherwise. |
 
 ## The board's decision
 

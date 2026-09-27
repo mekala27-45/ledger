@@ -126,6 +126,18 @@
      "attrition",
      "Sorted by probability alone, the top of the retention list fills with new customers holding a few hundred dollars. A retention call costs the same whoever answers.",
      "The list is ranked by expected balance at risk. The report publishes, for the top tenth of the test months, the share of closers and the share of their balances found by each ordering, so the trade between the two is visible."
+    ],
+    [
+     "2026-09-27",
+     "cure",
+     "A loan thirty days past due cures far more often than one ninety days past due. A model that only learned the bucket would beat the base rate comfortably and add nothing a collections supervisor does not already do by working the thirty day list first.",
+     "The bucket rule is a benchmark in the report, and a critical gate requires the model's test AUROC to beat the rule's by two hundredths. Cure rates by bucket are published beside the model's so the rule's strength is visible."
+    ],
+    [
+     "2026-09-27",
+     "cure",
+     "A loan that is past due in June and July 2025 appears in the last training month and the first validation month, with nearly the same features and the same outcome. Early stopping and the choice between the two candidates were being made on loans the fit had already seen.",
+     "One loan in five is held out of the fit by a hash of its identifier, and early stopping and the choice of champion use only held out loans in the validation months. The test months begin three months after validation ends, so every outcome used to fit or choose the model was known before the first test month end, and a check in the trainer refuses to run otherwise."
     ]
    ]
   },
@@ -225,6 +237,17 @@
      "2026-08-31",
      "approved",
      0.583038203
+    ],
+    [
+     "cure",
+     "Cure within ninety days for delinquent loans",
+     "f09",
+     "2",
+     "sole",
+     "in use",
+     "2026-08-31",
+     "approved",
+     0.786574349
     ]
    ]
   },
@@ -290,7 +313,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 3
+   "value": 4
   },
   "f10.challenge_count": {
    "fmt": "int",
@@ -301,7 +324,7 @@
     "seed": null,
     "source": "effective challenge log"
    },
-   "value": 13
+   "value": 15
   },
   "f10.fraud_first_labelled_week": {
    "fmt": "text",
@@ -345,7 +368,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 6
+   "value": 7
   },
   "f10.not_approved": {
    "fmt": "int",
