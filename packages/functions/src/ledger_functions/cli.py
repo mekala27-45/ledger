@@ -87,6 +87,27 @@ def _reconcile(p: Paths, args: argparse.Namespace) -> int:
     return 0
 
 
+@command("functions", "run the function modules f01 to f12 over the warehouse and the model results")
+def _functions(p: Paths, args: argparse.Namespace) -> int:
+    from ledger_core.config import load_config
+
+    from ledger_functions.registry import run_functions
+
+    timings = run_functions(p, load_config(p.config), only=args.only or None)
+    print(json.dumps(timings))
+    return 0
+
+
+@command("manifest", "merge policy, function and model results into results/manifest.json")
+def _manifest(p: Paths, args: argparse.Namespace) -> int:
+    from ledger_core.config import load_config
+
+    from ledger_functions.registry import manifest_summary, merge_manifest
+
+    print(manifest_summary(merge_manifest(p, load_config(p.config))))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ledger", description=__doc__)
     parser.add_argument("--root", type=Path, default=None, help="repository root (default: discovered)")
@@ -97,6 +118,8 @@ def build_parser() -> argparse.ArgumentParser:
             cmd.add_argument("--customers", type=int, default=0, help="scale the bank to this many customers")
         if name == "contracts":
             cmd.add_argument("--generated-only", action="store_true", help="skip the real datasets")
+        if name in {"functions", "models"}:
+            cmd.add_argument("--only", nargs="*", default=[], help="run only these codes")
         if name in EXTRA_ARGS:
             EXTRA_ARGS[name](cmd)
     return parser

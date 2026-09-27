@@ -1,0 +1,142 @@
+# Definitions
+
+> Harborline Bank is fictional. This is a demonstration on generated data and public datasets; no real customer, account or transaction of any real institution appears here.
+>
+> Nothing here is a credit decision, a fraud determination, a suspicious activity finding or investment advice.
+
+This is Harborline Bank's data policy for the terms every report, model and
+page uses. Where a definition is a choice, the choice and the reason are stated. Where
+it is enforced in code, the enforcing query or test is named. A term used anywhere in
+this repository with a meaning other than the one here is a defect.
+
+The window is 2023-09-01 to 2026-08-31. Nothing after the
+as of date exists.
+
+## Customer
+
+A customer is a person who holds at least one deposit, card or loan account with the
+bank, identified by `customer_id`. A person who applied for credit and was declined is
+an applicant, not a customer. The bank holds, for its own analytics, age (as birth
+year), state and county of residence, tenure, segment and product holdings. Race,
+ethnicity and sex are collected only on mortgage applications, because the Home
+Mortgage Disclosure Act requires it, and no table that a model reads can join to them.
+
+```sql
+select customer_id from marts.dim_customer
+```
+
+## Account
+
+An account is a deposit account (checking, savings or time) or a credit account
+(installment loan, card, mortgage). Each account's balance is controlled by exactly one
+general ledger account: checking, savings and time deposits by their liability
+accounts, loans by their asset accounts. An account's month end balance is its opening
+balance plus the entries posted to it in the month, never a figure a system reports
+without the entries behind it.
+
+## Delinquency bucket
+
+A loan's bucket at a month end is its days past due, in the buckets servicing uses:
+current, `30`, `60` and `90+`, plus the two exits, charged off and paid off. A loan
+that matures moves to paid off. Buckets are ordered, and the roll rate matrix is always
+shown in that order.
+
+```sql
+case state
+    when 'current' then 'current'
+    when 'dpd30' then '30'
+    when 'dpd60' then '60'
+    when 'dpd90' then '90+' when 'dpd120' then '90+' when 'dpd150' then '90+'
+    when 'charged_off' then 'charged_off'
+    when 'paid_off' then 'paid_off' when 'matured' then 'paid_off'
+end
+```
+
+## Default
+
+A loan defaults when it first reaches 90 days past due or is
+charged off, whichever comes first. The credit models predict default within
+12 months of origination. This is the definition
+the scorecard, the challenger, the vintage curves and expected loss share, so a
+probability from one can be compared with a rate from another.
+
+**Censoring.** A loan originated fewer than 12 months
+before the as of month has not had the chance to default within the window. Its
+outcome is unknown, not zero, and it is excluded from every model fit and every
+outcome rate. Treating it as a non default would flatter every recent vintage.
+
+```sql
+case
+    when origination_index + 12 > as_of_index then null      -- not yet observable
+    when months_to_default <= 12 then 1
+    else 0
+end as default_12m
+```
+
+Enforced by `warehouse/tests/assert_default_outcome_censored.sql`, and by
+`ledger_core.calendar.CensoringCalendar`, whose property tests prove no window is ever
+marked observed before it has elapsed.
+
+## Index application
+
+For credit models, the index application is the application whose decision starts the
+outcome window: one booked installment application, scored with what the bank knew on
+the application date. Declined applications have no outcome and are scored but never
+used to fit a default model; that gap is named in the scorecard's validation report.
+
+For fair lending, the analysis population is the set of mortgage applications that
+reached a credit decision: first lien, closed end, owner occupied, site built one to
+four unit home purchase or refinance applications that were originated, approved but
+not accepted, or denied. Withdrawn and incomplete files never reached a decision and
+are excluded, as examiners exclude them.
+
+## Fraud loss
+
+A card transaction is fraud when the card network or the customer disputes it and the
+dispute is upheld. That label becomes known only when the chargeback window of
+60 days has passed. A fraud loss is the amount of
+an approved fraudulent transaction plus the cost of handling it
+($35.00 per case, covering investigation and card
+reissue). A declined fraudulent transaction is a prevented loss. A declined genuine
+transaction is a false decline and costs $12.00: the
+interchange the bank does not earn and the call the customer makes.
+
+```sql
+transaction_time + interval 60 days <= as_of as label_observed_by_as_of
+```
+
+Until a label is observed the transaction counts in neither precision nor recall. A
+desk that reports precision over yesterday's decisions is reporting a number the
+chargebacks will change.
+
+## Alert
+
+An alert is a record that a rule or a model flagged something for a person to look at:
+a card transaction the desk declined or sent to review, or an account whose activity
+matched a financial crime rule. An alert is not a finding. Every alert is persisted
+with the rule or model that raised it, in plain words, and the score where there is one.
+
+## Case
+
+A case is an alert, or a group of alerts on the same party, that an investigator has
+opened. It has a status, an assignee, notes, and a disposition: closed with no action,
+escalated for a suspicious activity report, or kept open. No report is filed anywhere
+from this repository; escalation is a status and nothing else. Every case action is
+audited, and the audit row is written before the action's result is returned.
+
+## Break
+
+A break is a difference, to the cent, between two figures that must agree: a ledger
+account's reported balance and the running sum of its postings, or a control account's
+balance and the total of its sub ledger. A break is located at the account and month
+where it first appears; a break that carries forward unchanged into later months is one
+break, not several. A posting with no sub ledger transaction behind it is also a break.
+
+```sql
+select gl_account, month, reported_balance - balance_from_postings as difference
+from marts.mart_gl_account_month
+where reported_balance <> balance_from_postings
+```
+
+Money is carried as `decimal(18, 2)` from staging onward, so a tie is an equality, not
+a tolerance.

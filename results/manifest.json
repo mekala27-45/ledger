@@ -1,0 +1,558 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {},
+ "seed": 20260831,
+ "tables": {},
+ "values": {
+  "policy.approval_cutoff": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 580
+  },
+  "policy.as_of": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": "2026-08-31"
+  },
+  "policy.bank_name": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": "Harborline Bank"
+  },
+  "policy.base_odds": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 30.0
+  },
+  "policy.base_score": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 600
+  },
+  "policy.branches": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 18
+  },
+  "policy.chargeback_window_days": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 60
+  },
+  "policy.correlation_ceiling": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.7
+  },
+  "policy.cost_false_decline": {
+   "fmt": "usd2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 12.0
+  },
+  "policy.cost_missed_fraud_handling": {
+   "fmt": "usd2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 35.0
+  },
+  "policy.cure_window_days": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 90
+  },
+  "policy.customers": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 50000
+  },
+  "policy.cycle_max_length": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 5
+  },
+  "policy.cycle_window_days": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 14
+  },
+  "policy.default_dpd": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 90
+  },
+  "policy.default_window_months": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 12
+  },
+  "policy.home_state": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": "NJ"
+  },
+  "policy.iv_floor": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.02
+  },
+  "policy.ledger_break_account": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": "2010"
+  },
+  "policy.ledger_break_amount": {
+   "fmt": "usd2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 4217.36
+  },
+  "policy.ledger_break_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": "2026-03"
+  },
+  "policy.max_fine_bins": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 20
+  },
+  "policy.min_bin_share": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.05
+  },
+  "policy.months": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 36
+  },
+  "policy.mule_fan_in": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 8
+  },
+  "policy.mule_window_days": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 14
+  },
+  "policy.outflow_rate_checking": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.1
+  },
+  "policy.outflow_rate_savings": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.1
+  },
+  "policy.outflow_rate_time": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.05
+  },
+  "policy.pdo": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 20.0
+  },
+  "policy.psi_breach": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.25
+  },
+  "policy.psi_warning": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.1
+  },
+  "policy.queue_precision_floor": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.5
+  },
+  "policy.rapid_movement_hours": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 24
+  },
+  "policy.reason_codes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 4
+  },
+  "policy.recession_first": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": "2025-03"
+  },
+  "policy.recession_last": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": "2025-05"
+  },
+  "policy.replay_seconds_per_hour": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 1.0
+  },
+  "policy.reporting_threshold": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 10000.0
+  },
+  "policy.risk_weight_card": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 1.0
+  },
+  "policy.risk_weight_cash": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.0
+  },
+  "policy.risk_weight_installment": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 1.0
+  },
+  "policy.risk_weight_mortgage": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.5
+  },
+  "policy.risk_weight_other_assets": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 1.0
+  },
+  "policy.risk_weight_securities": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 0.2
+  },
+  "policy.seed": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 20260831
+  },
+  "policy.structuring_floor": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 8000.0
+  },
+  "policy.structuring_window_days": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 10
+  },
+  "policy.treasury_horizon_months": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": 12
+  },
+  "policy.window_start": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "static",
+    "population": "config/ledger.yaml",
+    "seed": null,
+    "source": "config"
+   },
+   "value": "2023-09-01"
+  }
+ }
+}

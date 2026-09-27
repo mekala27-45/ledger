@@ -1,0 +1,42 @@
+# Identifiers and names that contain digits but are not claims. Anything else numeric
+# in a template must come from the manifest.
+SR 11-7
+Regulation B
+Basel Committee
+BCBS 239
+dpd120
+dpd150
+dpd30
+dpd60
+dpd90
+decimal(18, 2)
+f01
+f02
+f03
+f04
+f05
+f06
+f07
+f08
+f09
+f10
+f11
+f12
+v0.1.0
+Apache 2.0
+CC BY-NC-SA 4.0
+CC BY 4.0
+CC0
+Next.js 15
+Python 3.12
+Postgres 16
+NeurIPS 2022
+Yeh and Lien (2009)
+401(k)
+current, `30`, `60` and `90+`
+'30'
+'60'
+'90+'
+default_12m
+then 1
+else 0
