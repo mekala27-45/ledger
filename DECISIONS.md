@@ -498,3 +498,36 @@ what individual consumers wrote. Grouping narratives by their normalised opening
 counted once and then scored over every narrative, and each topic reports its share of
 form letters. With that change all four themes a reader expects in bank complaints
 emerged as topics; before it, two did.
+
+## 2026-09-27: The rederive after the release found five things a green CI could not
+
+Run after v0.1.0 was pushed, `make rederive` stopped at its third stage. Fixing that let it
+reach the end, where it reported results that had moved with nothing changed.
+
+- `make warehouse` called dbt from the warehouse folder, which bakes the relative default
+  path to the staged tables into every staging view, so reconciliation, run from the
+  repository root, found no files. Every earlier build had gone through `ledger warehouse`,
+  which passes absolute paths, so the Makefile target had never actually been run. It now
+  calls the CLI, and a test holds it there.
+- The warehouse fixtures in the test suite built small warehouses in temporary folders but
+  let dbt write its run record into the real `warehouse/target`, which is where the controls
+  function reads the model and test counts it publishes. A test build now keeps its record
+  beside its own database, and the function refuses a record from a partial build.
+- The proxy audit listed five models. Function 3 was last run before the attrition, cure and
+  relief models existed, and the claim gate cannot see that: it checks documents against the
+  manifest, not the manifest against the models on disk. Rerun, it lists eight, none using a
+  protected attribute or a proxy.
+- The known parameter recovery fits its hazard model on a seeded sample of loan months, but
+  the months came from the warehouse in no fixed order, so the same seed drew a different
+  sample on each run: the latent risk coefficient read 0.913 in the release and 0.955 on the
+  next run. The months are now sorted before sampling. The estimates are 0.940, 0.305 and
+  0.470 against stated values of 0.95, 0.30 and 0.45, all inside tolerance as before, and the
+  simplified CECL illustration, which uses the macro estimate, moved from $19,055,866 to
+  $19,170,851.
+- Louvain's communities depend on the order edges are added in as well as on its seed. The
+  published communities did not change, but the transfer graph is now built in a fixed order
+  so that they cannot.
+
+Floats that DuckDB and Polars sum in parallel also moved in their last bits between runs. The
+rederive now compares data files by content, allowing one part in a billion, and still
+requires every document to match byte for byte.

@@ -47,9 +47,9 @@ The generator states the loan book's risk structure; the pipeline has to recover
 | parameter | stated | estimate | interval_low | interval_high | tolerance | within |
 |---|---:|---:|---:|---:|---:|---|
 | Latent risk rank order (Spearman; perfect ordering is 1) | 1.000 | 0.775 | 0.775 | 0.775 | 0.600 | true |
-| Latent risk coefficient | 0.950 | 0.913 | 0.863 | 0.963 | 0.150 | true |
-| Macro sensitivity per point of unemployment | 0.300 | 0.322 | 0.271 | 0.373 | 0.100 | true |
-| Loose vintage effect | 0.450 | 0.459 | 0.387 | 0.532 | 0.150 | true |
+| Latent risk coefficient | 0.950 | 0.940 | 0.890 | 0.991 | 0.150 | true |
+| Macro sensitivity per point of unemployment | 0.300 | 0.305 | 0.254 | 0.356 | 0.100 | true |
+| Loose vintage effect | 0.450 | 0.470 | 0.397 | 0.543 | 0.150 | true |
 | Deposit beta, checking | 0.020 | 0.020 | 0.020 | 0.020 | 0.010 | true |
 | Deposit beta, savings | 0.380 | 0.380 | 0.380 | 0.380 | 0.030 | true |
 | Deposit beta, time | 0.720 | 0.720 | 0.720 | 0.720 | 0.030 | true |
@@ -203,23 +203,23 @@ Expected loss on the open installment book, $8,409,265 on $152.1M of exposure (5
 
 Source: generated, Harborline installment loans, seed 20260831, as of 2026-08-31.
 
-A CECL style lifetime illustration, simplified: $19,055,866 on the open book.
+A CECL style lifetime illustration, simplified: $19,170,851 on the open book.
 
 | Vintage | Exposure | 12 month PD | Lifetime PD | Macro factor | Lifetime loss |
 |---|---:|---:|---:|---:|---:|
-| 2023Q3 | $0.8M | 4.24% | 11.46% | 0.89 | $63,901 |
-| 2023Q4 | $2.9M | 3.33% | 9.01% | 0.89 | $185,780 |
-| 2024Q1 | $4.2M | 2.95% | 7.98% | 0.89 | $240,331 |
-| 2024Q2 | $5.2M | 3.51% | 9.49% | 0.89 | $348,967 |
-| 2024Q3 | $6.7M | 4.83% | 13.07% | 0.89 | $622,187 |
-| 2024Q4 | $8.8M | 9.07% | 24.55% | 0.89 | $1,541,971 |
-| 2025Q1 | $11.0M | 10.04% | 27.17% | 0.89 | $2,119,799 |
-| 2025Q2 | $12.5M | 6.39% | 17.28% | 0.89 | $1,534,273 |
-| 2025Q3 | $15.4M | 4.47% | 12.10% | 0.89 | $1,327,532 |
-| 2025Q4 | $18.8M | 6.56% | 17.74% | 0.89 | $2,369,630 |
-| 2026Q1 | $21.2M | 6.86% | 18.56% | 0.89 | $2,791,305 |
-| 2026Q2 | $25.6M | 6.92% | 18.72% | 0.89 | $3,409,377 |
-| 2026Q3 | $19.0M | 6.85% | 18.54% | 0.89 | $2,500,814 |
+| 2023Q3 | $0.8M | 4.24% | 11.46% | 0.90 | $64,287 |
+| 2023Q4 | $2.9M | 3.33% | 9.01% | 0.90 | $186,901 |
+| 2024Q1 | $4.2M | 2.95% | 7.98% | 0.90 | $241,781 |
+| 2024Q2 | $5.2M | 3.51% | 9.49% | 0.90 | $351,072 |
+| 2024Q3 | $6.7M | 4.83% | 13.07% | 0.90 | $625,941 |
+| 2024Q4 | $8.8M | 9.07% | 24.55% | 0.90 | $1,551,275 |
+| 2025Q1 | $11.0M | 10.04% | 27.17% | 0.90 | $2,132,590 |
+| 2025Q2 | $12.5M | 6.39% | 17.28% | 0.90 | $1,543,531 |
+| 2025Q3 | $15.4M | 4.47% | 12.10% | 0.90 | $1,335,543 |
+| 2025Q4 | $18.8M | 6.56% | 17.74% | 0.90 | $2,383,928 |
+| 2026Q1 | $21.2M | 6.86% | 18.56% | 0.90 | $2,808,148 |
+| 2026Q2 | $25.6M | 6.92% | 18.72% | 0.90 | $3,429,950 |
+| 2026Q3 | $19.0M | 6.85% | 18.54% | 0.90 | $2,515,904 |
 
 Source: generated, Harborline installment loans, seed 20260831, as of 2026-08-31.
 
@@ -330,10 +330,13 @@ Every published model's features against the proxy list:
 | Model | Features | Protected attributes or proxies among them |
 |---|---:|---|
 | aml_triage | 13 | none |
+| attrition | 18 | none |
+| cure | 13 | none |
 | fraud_account | 27 | none |
 | fraud_card | 18 | none |
 | pd_challenger | 13 | none |
 | pd_scorecard | 8 | none |
+| relief | 5 | none |
 
 ## The fraud desk
 

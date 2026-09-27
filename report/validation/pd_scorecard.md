@@ -91,9 +91,9 @@ parameters:
 | parameter | stated | estimate | interval_low | interval_high | tolerance | within |
 |---|---:|---:|---:|---:|---:|---|
 | Latent risk rank order (Spearman; perfect ordering is 1) | 1.000 | 0.775 | 0.775 | 0.775 | 0.600 | true |
-| Latent risk coefficient | 0.950 | 0.913 | 0.863 | 0.963 | 0.150 | true |
-| Macro sensitivity per point of unemployment | 0.300 | 0.322 | 0.271 | 0.373 | 0.100 | true |
-| Loose vintage effect | 0.450 | 0.459 | 0.387 | 0.532 | 0.150 | true |
+| Latent risk coefficient | 0.950 | 0.940 | 0.890 | 0.991 | 0.150 | true |
+| Macro sensitivity per point of unemployment | 0.300 | 0.305 | 0.254 | 0.356 | 0.100 | true |
+| Loose vintage effect | 0.450 | 0.470 | 0.397 | 0.543 | 0.150 | true |
 | Deposit beta, checking | 0.020 | 0.020 | 0.020 | 0.020 | 0.010 | true |
 | Deposit beta, savings | 0.380 | 0.380 | 0.380 | 0.380 | 0.030 | true |
 | Deposit beta, time | 0.720 | 0.720 | 0.720 | 0.720 | 0.030 | true |

@@ -79,7 +79,7 @@ Source: generated, Harborline installment loans, seed 20260831, as of 2026-08-31
 
 A simplified lifetime view in the shape of CECL, using our vintage curves and the Federal
 Reserve's supervisory baseline for unemployment, puts lifetime losses on the open book at
-$19,055,866. It is an illustration of the method, not an audited estimate.
+$19,170,851. It is an illustration of the method, not an audited estimate.
 
 Our portfolio limits all held:
 

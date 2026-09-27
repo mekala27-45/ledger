@@ -381,6 +381,16 @@
      "none"
     ],
     [
+     "attrition",
+     18,
+     "none"
+    ],
+    [
+     "cure",
+     13,
+     "none"
+    ],
+    [
      "fraud_account",
      27,
      "none"
@@ -398,6 +408,11 @@
     [
      "pd_scorecard",
      8,
+     "none"
+    ],
+    [
+     "relief",
+     5,
      "none"
     ]
    ]
@@ -974,7 +989,7 @@
     "seed": null,
     "source": "rules/proxies.yaml"
    },
-   "value": 5
+   "value": 8
   },
   "f03.models_with_proxies": {
    "fmt": "int",
