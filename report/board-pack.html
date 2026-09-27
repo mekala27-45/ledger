@@ -481,7 +481,7 @@ first.</p>
 </tbody>
 </table>
 <p>Source: real:hmda, New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision, as of 2026-08-31.</p>
-<p>Our own scorecard uses none of the 31 protected attributes and proxies
+<p>Our own scorecard uses none of the 32 protected attributes and proxies
 on our list, every model's features are tested against that list, and every decline carries its
 principal reasons.</p>
 <h2>Model risk</h2>
@@ -671,6 +671,21 @@ with where its data lives:</p>
 <td>The first reason lenders gave for a denial</td>
 <td><code>results/f03/denial_reasons.parquet</code></td>
 <td>real:hmda, mart_hmda_applications</td>
+</tr>
+<tr>
+<td>What parity costs: the search for a less discriminatory alternative</td>
+<td><code>results/None</code></td>
+<td>real:baf, fraud_account validation report</td>
+</tr>
+<tr>
+<td>Application fraud under the BAF suite's fairness protocol</td>
+<td><code>results/None</code></td>
+<td>real:baf, fraud_account validation report</td>
+</tr>
+<tr>
+<td>Who the card model declines wrongly, by age band and gender</td>
+<td><code>results/None</code></td>
+<td>replayed, fraud_card validation report</td>
 </tr>
 <tr>
 <td>Expected cost of fraud by decline threshold, test months</td>

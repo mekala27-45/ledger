@@ -136,6 +136,75 @@ def run(ctx: Context) -> None:
         "int",
         **replayed,
     )
+    fairness(ctx, fraud)
+
+
+def fairness(ctx: Context, card: Manifest) -> None:
+    """The fairness audit beside the desk: the card model's, and application fraud under the BAF protocol."""
+    m = ctx.manifest
+    audit: dict[str, Any] = {
+        "backend": "replayed",
+        "population": "Sparkov card transactions, June to August 2026",
+        "source": "fraud_card validation report",
+    }
+    rows = card.tables["models.fraud_card.subgroups"]
+    col = {c: i for i, c in enumerate(rows.columns)}
+    ages = [r for r in rows.rows if r[col["Group"]] not in ("F", "M")]
+    high = max(ages, key=lambda r: float(r[col["Fpr"]] or 0))
+    low = min(ages, key=lambda r: float(r[col["Fpr"]] or 0))
+    m.put("f04.card_fpr_ratio_age", card.raw("models.fraud_card.fpr_ratio_age"), "float2", **audit)
+    m.put_figure(
+        "f04.fig_card_fairness",
+        "Who the card model declines wrongly, by age band and gender",
+        f"At the operating point, genuine transactions of cardholders {high[col['Group']]} are declined at "
+        f"{format_value(high[col['Fpr']], 'pct2')} and those of cardholders {low[col['Group']]} at "
+        f"{format_value(low[col['Fpr']], 'pct2')}, a ratio of "
+        f"{format_value(card.raw('models.fraud_card.fpr_ratio_age'), 'float2')}. Sparkov generates age and gender, so "
+        "they can be measured here; the model never sees either.",
+        **audit,
+    )
+
+    account = Manifest.load(ctx.paths.models_dir / "fraud_account" / "manifest.json")
+    k = "models.fraud_account"
+    baf: dict[str, Any] = {
+        "backend": "real:baf",
+        "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+        "source": "fraud_account validation report",
+    }
+    for key in (
+        "recall_suite",
+        "ratio",
+        "fpr_older",
+        "fpr_younger",
+        "ii_recall_suite",
+        "ii_ratio",
+        "age_auc",
+    ):
+        entry = account.values[f"{k}.{key}"]
+        m.put(f"f04.baf_{key}", entry.value, entry.fmt, **baf)
+    m.put_figure(
+        "f04.fig_baf",
+        "Application fraud under the BAF suite's fairness protocol",
+        f"At a {account.text(k + '.target_fpr')} false positive rate the model finds {account.text(k + '.recall_suite')} "
+        f"of fraudulent applications in the base variant and {account.text(k + '.ii_recall_suite')} in variant II. "
+        f"Genuine applicants aged {account.text(k + '.older_age')} and over are flagged at {account.text(k + '.fpr_older')} "
+        f"against {account.text(k + '.fpr_younger')} for the rest, a predictive equality of {account.text(k + '.ratio')} "
+        f"({account.text(k + '.ii_ratio')} in variant II), though the model never sees age.",
+        **baf,
+    )
+    alternatives = account.tables[f"{k}.alternatives"]
+    base_rows = [r for r in alternatives.rows if r[0] == "Base"]
+    first, last = base_rows[0], base_rows[-1]
+    m.put_figure(
+        "f04.fig_alternatives",
+        "What parity costs: the search for a less discriminatory alternative",
+        f"The model's own features predict whether an applicant is {account.text(k + '.older_age')} or over with an "
+        f"AUROC of {account.text(k + '.age_auc')}. Removing the strongest carriers of age one at a time moves the base "
+        f"variant's predictive equality from {format_value(first[6], 'float2')} to {format_value(last[6], 'float2')} "
+        f"and its recall from {format_value(first[3], 'pct1')} to {format_value(last[3], 'pct1')}. The model is kept "
+        "and bounded to asking for documents, never to declining.",
+        **baf,
+    )
 
 
 SPEC = FunctionSpec(

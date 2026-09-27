@@ -154,7 +154,7 @@ first.
 
 Source: real:hmda, New Jersey HMDA 2024 and 2025, first lien owner occupied home purchase and refinance applications on 1 to 4 unit homes that reached a decision, as of 2026-08-31.
 
-Our own scorecard uses none of the 31 protected attributes and proxies
+Our own scorecard uses none of the 32 protected attributes and proxies
 on our list, every model's features are tested against that list, and every decline carries its
 principal reasons.
 
@@ -230,6 +230,9 @@ with where its data lives:
 | Denial disparities against the reference group, before and after adjustment | `results/f03/adjusted.parquet` | real:hmda, mart_hmda_applications |
 | Denial rate by county, unadjusted and adjusted for the application mix | `results/f03/county.parquet` | real:hmda, mart_hmda_applications |
 | The first reason lenders gave for a denial | `results/f03/denial_reasons.parquet` | real:hmda, mart_hmda_applications |
+| What parity costs: the search for a less discriminatory alternative | `results/None` | real:baf, fraud_account validation report |
+| Application fraud under the BAF suite's fairness protocol | `results/None` | real:baf, fraud_account validation report |
+| Who the card model declines wrongly, by age band and gender | `results/None` | replayed, fraud_card validation report |
 | Expected cost of fraud by decline threshold, test months | `results/f04/cost_curve.parquet` | replayed, fraud_card scored stream |
 | What the desk could know, day by day | `results/f04/label_lag.parquet` | replayed, fraud_card scored stream |
 | Precision and recall across thresholds, test months | `results/f04/pr_curve.parquet` | replayed, fraud_card scored stream |

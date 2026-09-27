@@ -1,0 +1,669 @@
+<h1>Validation report: Application fraud on the BAF suite</h1>
+<blockquote>
+<p>Harborline Bank is fictional. This is a demonstration on generated data and public datasets; no real customer, account or transaction of any real institution appears here.</p>
+<p>Nothing here is a credit decision, a fraud determination, a suspicious activity finding or investment advice.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>fraud_account</code></td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Score a bank account application for fraud when it is submitted, so that the riskiest ask for documents before the account opens</td>
+</tr>
+<tr>
+<td>Tier</td>
+<td>1: Informs a decision a person makes, with a method whose behaviour is hard to inspect</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>sole</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>in use</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Head of analytics</td>
+</tr>
+<tr>
+<td>Prediction time</td>
+<td>When the application is submitted; the suite's features describe the application and the activity before it</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>The application was fraudulent, as the suite labels it</td>
+</tr>
+<tr>
+<td>Last validated</td>
+<td>2026-08-31</td>
+</tr>
+<tr>
+<td>Conclusion</td>
+<td><strong>approved with conditions</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Purpose and scope</h2>
+<p>Score a bank account application for fraud when it is submitted, so that the riskiest
+applications ask for documents before the account opens. The model informs a check a
+person completes; it never declines an application. It is tier one because a gradient
+boosted model's behaviour is hard to inspect, and because its errors fall unevenly by age.</p>
+<p>In scope: the Bank Account Fraud suite (Jesus et al., NeurIPS 2022), a set of synthetic
+account applications generated from a real fraud dataset and published with the
+protected attributes kept so fairness can be measured. This report reproduces the
+suite's evaluation protocol on two of its variants. Out of scope: card fraud, which is
+<code>fraud_card</code>, and any decision to refuse an account.</p>
+<h2>Conceptual soundness</h2>
+<p>Application fraud is rare and the features are a mix of counts, durations, flags and
+categories with missing values marked by negative numbers, which gradient boosted trees
+handle without imputation. The suite's own measures are used as the suite defines them:
+recall at a 5% false positive rate, and predictive equality, the
+lower of the two age groups' false positive rates over the higher at that threshold,
+with the groups split at 50. Parity is one.</p>
+<p>Age is measured and never used. <code>customer_age</code> is a protected attribute on the proxy
+list, as is <code>name_email_similarity</code>, which is computed from the applicant's name, and
+the feature list is checked against that list before training.</p>
+<h2>Data and assumptions</h2>
+<p>A 300,000 application sample of the suite's base variant, and a sample of
+the same size of variant II beside it. The suite trains on months 0 to 5
+and tests on months 6 and 7. Here the model trains on months 0 to 4,
+month 5 chooses the tree count and the threshold a bank could deploy,
+and the test is the suite's, so every figure below comes from months the model and its
+threshold never saw. The trade is one month of training data, recorded in <code>DECISIONS.md</code>.</p>
+<p>The suite computes its features at application time and ships no raw history, so there
+is nothing to recompute a feature from. The leakage check is a screen instead: a feature
+known only after the outcome would predict it almost alone, and the strongest single
+feature here, <code>housing_status</code>, reaches a test AUROC of 0.724.</p>
+<h2>Development evidence</h2>
+<p>Development AUROC 0.950, validation 0.882,
+early stopped at 143 trees.</p>
+<h2>Outcomes analysis on held out data</h2>
+<p>On the test months the model reaches an AUROC of 0.880. At the suite's
+threshold it finds 49.0% of fraudulent applications. Applicants aged
+50 and over who are not fraudsters are flagged at 9.19%,
+against 4.19% for the rest, 2.2 times as often: a
+predictive equality of 0.46.</p>
+<p>With the threshold fixed on month 5 instead, as a bank would have to
+fix it, the test months give a recall of 53.8% at a false positive
+rate of 5.94% and a predictive equality of 0.47.</p>
+<p>The two variants side by side. Variant II's age groups are about the same size
+(50.5% of its applicants are 50 or over, against
+18.3% in the base), and its older applicants' fraud rate is
+4.7 times the younger group's, against 2.9
+times in the base:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Base</th>
+<th>Variant II</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Applications in the sample</td>
+<td>300,000</td>
+<td>300,000</td>
+</tr>
+<tr>
+<td>Share aged fifty and over</td>
+<td>18.3%</td>
+<td>50.5%</td>
+</tr>
+<tr>
+<td>Fraud rate, aged fifty and over</td>
+<td>2.34%</td>
+<td>1.82%</td>
+</tr>
+<tr>
+<td>Fraud rate, under fifty</td>
+<td>0.81%</td>
+<td>0.38%</td>
+</tr>
+<tr>
+<td>Test AUROC</td>
+<td>0.880</td>
+<td>0.882</td>
+</tr>
+<tr>
+<td>Recall at a five percent false positive rate (the suite's measure)</td>
+<td>49.0%</td>
+<td>49.3%</td>
+</tr>
+<tr>
+<td>False positive rate, aged fifty and over</td>
+<td>9.19%</td>
+<td>6.96%</td>
+</tr>
+<tr>
+<td>False positive rate, under fifty</td>
+<td>4.19%</td>
+<td>3.04%</td>
+</tr>
+<tr>
+<td>Predictive equality (lower rate over higher)</td>
+<td>0.46</td>
+<td>0.44</td>
+</tr>
+<tr>
+<td>Logistic benchmark: recall at the same rate</td>
+<td>47.2%</td>
+<td>47.7%</td>
+</tr>
+<tr>
+<td>Threshold fixed on month five: recall on the test months</td>
+<td>53.8%</td>
+<td>52.9%</td>
+</tr>
+<tr>
+<td>Threshold fixed on month five: false positive rate on the test months</td>
+<td>5.94%</td>
+<td>6.07%</td>
+</tr>
+<tr>
+<td>Threshold fixed on month five: predictive equality</td>
+<td>0.47</td>
+<td>0.44</td>
+</tr>
+<tr>
+<td>AUROC of the features at predicting age fifty and over</td>
+<td>0.782</td>
+<td>0.788</td>
+</tr>
+</tbody>
+</table>
+<p>Source: real:baf, Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it, as of 2026-08-31.</p>
+<p>By age band, at the suite's threshold on the base variant:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th style="text-align:right">N</th>
+<th style="text-align:right">Event rate</th>
+<th style="text-align:right">Mean score</th>
+<th style="text-align:right">Calibration gap</th>
+<th style="text-align:right">Auroc</th>
+<th style="text-align:right">Flag rate</th>
+<th style="text-align:right">Fpr</th>
+<th style="text-align:right">Recall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>under 30</td>
+<td style="text-align:right">15,411</td>
+<td style="text-align:right">0.66%</td>
+<td style="text-align:right">0.55%</td>
+<td style="text-align:right">-0.1%</td>
+<td style="text-align:right">0.883</td>
+<td style="text-align:right">2.42%</td>
+<td style="text-align:right">2.19%</td>
+<td style="text-align:right">36.6%</td>
+</tr>
+<tr>
+<td>30 to 39</td>
+<td style="text-align:right">18,963</td>
+<td style="text-align:right">1.19%</td>
+<td style="text-align:right">0.82%</td>
+<td style="text-align:right">-0.4%</td>
+<td style="text-align:right">0.858</td>
+<td style="text-align:right">4.38%</td>
+<td style="text-align:right">3.91%</td>
+<td style="text-align:right">43.8%</td>
+</tr>
+<tr>
+<td>40 to 49</td>
+<td style="text-align:right">16,755</td>
+<td style="text-align:right">1.42%</td>
+<td style="text-align:right">1.13%</td>
+<td style="text-align:right">-0.3%</td>
+<td style="text-align:right">0.874</td>
+<td style="text-align:right">6.97%</td>
+<td style="text-align:right">6.36%</td>
+<td style="text-align:right">49.2%</td>
+</tr>
+<tr>
+<td>50 to 59</td>
+<td style="text-align:right">7,622</td>
+<td style="text-align:right">2.45%</td>
+<td style="text-align:right">1.56%</td>
+<td style="text-align:right">-0.9%</td>
+<td style="text-align:right">0.876</td>
+<td style="text-align:right">10.43%</td>
+<td style="text-align:right">9.21%</td>
+<td style="text-align:right">58.8%</td>
+</tr>
+<tr>
+<td>60 and over</td>
+<td style="text-align:right">2,434</td>
+<td style="text-align:right">4.15%</td>
+<td style="text-align:right">1.66%</td>
+<td style="text-align:right">-2.5%</td>
+<td style="text-align:right">0.860</td>
+<td style="text-align:right">11.01%</td>
+<td style="text-align:right">9.13%</td>
+<td style="text-align:right">54.5%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: real:baf, Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it, as of 2026-08-31.</p>
+<p>Calibration on the test sample, ten equal count bins:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Bin</th>
+<th style="text-align:right">Accounts</th>
+<th style="text-align:right">Predicted</th>
+<th style="text-align:right">Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">6,119</td>
+<td style="text-align:right">0.06%</td>
+<td style="text-align:right">0.02%</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">6,119</td>
+<td style="text-align:right">0.09%</td>
+<td style="text-align:right">0.10%</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">6,119</td>
+<td style="text-align:right">0.13%</td>
+<td style="text-align:right">0.15%</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">6,119</td>
+<td style="text-align:right">0.17%</td>
+<td style="text-align:right">0.21%</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">6,119</td>
+<td style="text-align:right">0.22%</td>
+<td style="text-align:right">0.33%</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">6,118</td>
+<td style="text-align:right">0.30%</td>
+<td style="text-align:right">0.44%</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">6,118</td>
+<td style="text-align:right">0.41%</td>
+<td style="text-align:right">0.47%</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">6,118</td>
+<td style="text-align:right">0.63%</td>
+<td style="text-align:right">1.03%</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">6,118</td>
+<td style="text-align:right">1.18%</td>
+<td style="text-align:right">2.16%</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">6,118</td>
+<td style="text-align:right">6.44%</td>
+<td style="text-align:right">9.04%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: real:baf, Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it, as of 2026-08-31.</p>
+<h2>Benchmarking</h2>
+<p>Against the base rate and a logistic regression on the same features, with a flag for
+each missing marker and the categories one hot encoded. At the suite's measure the
+logistic model's recall is 47.2%.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align:right">AUROC</th>
+<th style="text-align:right">Gini</th>
+<th style="text-align:right">Brier</th>
+<th style="text-align:right">ECE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This model</td>
+<td style="text-align:right">0.880</td>
+<td style="text-align:right">0.760</td>
+<td style="text-align:right">0.0126</td>
+<td style="text-align:right">0.0044</td>
+</tr>
+<tr>
+<td>Base rate</td>
+<td style="text-align:right">0.500</td>
+<td style="text-align:right">0.000</td>
+<td style="text-align:right">0.0138</td>
+<td style="text-align:right">0.0042</td>
+</tr>
+<tr>
+<td>Logistic on the same features</td>
+<td style="text-align:right">0.875</td>
+<td style="text-align:right">0.750</td>
+<td style="text-align:right">0.0129</td>
+<td style="text-align:right">0.0069</td>
+</tr>
+</tbody>
+</table>
+<p>Source: real:baf, Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it, as of 2026-08-31.</p>
+<h2>Limitations</h2>
+<p>The age gap does not close by leaving age out. The model's features predict whether an
+applicant is 50 or over with an AUROC of 0.782; the
+strongest carriers after the date of birth count left the feature list are
+employment_status, housing_status, current_address_months_count. Removing them one at a time is the search for a less
+discriminatory alternative:</p>
+<table>
+<thead>
+<tr>
+<th>variant</th>
+<th>removed</th>
+<th style="text-align:right">auroc</th>
+<th style="text-align:right">recall</th>
+<th style="text-align:right">fpr_older</th>
+<th style="text-align:right">fpr_younger</th>
+<th style="text-align:right">ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base</td>
+<td>Nothing (the model)</td>
+<td style="text-align:right">0.880</td>
+<td style="text-align:right">49.0%</td>
+<td style="text-align:right">9.19%</td>
+<td style="text-align:right">4.19%</td>
+<td style="text-align:right">0.46</td>
+</tr>
+<tr>
+<td>Base</td>
+<td>employment_status</td>
+<td style="text-align:right">0.877</td>
+<td style="text-align:right">48.3%</td>
+<td style="text-align:right">8.93%</td>
+<td style="text-align:right">4.24%</td>
+<td style="text-align:right">0.48</td>
+</tr>
+<tr>
+<td>Base</td>
+<td>employment_status, housing_status</td>
+<td style="text-align:right">0.859</td>
+<td style="text-align:right">44.8%</td>
+<td style="text-align:right">7.89%</td>
+<td style="text-align:right">4.44%</td>
+<td style="text-align:right">0.56</td>
+</tr>
+<tr>
+<td>Base</td>
+<td>employment_status, housing_status, current_address_months_count</td>
+<td style="text-align:right">0.854</td>
+<td style="text-align:right">44.2%</td>
+<td style="text-align:right">7.80%</td>
+<td style="text-align:right">4.46%</td>
+<td style="text-align:right">0.57</td>
+</tr>
+<tr>
+<td>Variant II</td>
+<td>Nothing (the model)</td>
+<td style="text-align:right">0.882</td>
+<td style="text-align:right">49.3%</td>
+<td style="text-align:right">6.96%</td>
+<td style="text-align:right">3.04%</td>
+<td style="text-align:right">0.44</td>
+</tr>
+<tr>
+<td>Variant II</td>
+<td>employment_status</td>
+<td style="text-align:right">0.879</td>
+<td style="text-align:right">49.5%</td>
+<td style="text-align:right">6.71%</td>
+<td style="text-align:right">3.29%</td>
+<td style="text-align:right">0.49</td>
+</tr>
+<tr>
+<td>Variant II</td>
+<td>employment_status, housing_status</td>
+<td style="text-align:right">0.860</td>
+<td style="text-align:right">44.3%</td>
+<td style="text-align:right">6.62%</td>
+<td style="text-align:right">3.38%</td>
+<td style="text-align:right">0.51</td>
+</tr>
+<tr>
+<td>Variant II</td>
+<td>employment_status, housing_status, current_address_months_count</td>
+<td style="text-align:right">0.855</td>
+<td style="text-align:right">43.4%</td>
+<td style="text-align:right">6.45%</td>
+<td style="text-align:right">3.55%</td>
+<td style="text-align:right">0.55</td>
+</tr>
+</tbody>
+</table>
+<p>Source: real:baf, Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it, as of 2026-08-31.</p>
+<p>Parity is bought with recall: removing all three moves the base variant's predictive
+equality to 0.57 at a recall of 44.2%. The
+model is kept, and bounded to asking for documents, because a false flag then costs an
+applicant a delay, not an account. The choice is recorded in <code>DECISIONS.md</code> and the
+search is rerun at every revalidation.</p>
+<ul>
+<li>The suite is synthetic. Its features are generated to match a real dataset's joint
+distribution, not produced by a real application flow, so a real bank's separability
+and drift will differ.</li>
+<li>The suite's labels are final; a real application fraud label arrives weeks later, when
+the account is used.</li>
+</ul>
+<h2>Ongoing monitoring plan</h2>
+<p>Monthly, once labels arrive:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Trigger</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>False positive rate at the threshold, monthly, by age group</td>
+<td>overall above 7.5% or the ratio below its validated value</td>
+<td>Reset the threshold on the latest labelled month</td>
+</tr>
+<tr>
+<td>Recall on labelled applications, monthly</td>
+<td>below the validated recall for two months</td>
+<td>Revalidate</td>
+</tr>
+<tr>
+<td>Score PSI, monthly against month five</td>
+<td>above 0.25</td>
+<td>Revalidate</td>
+</tr>
+</tbody>
+</table>
+<h2>Effective challenge</h2>
+<p>From <code>DECISIONS.md</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Challenge</th>
+<th>Response</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-27</td>
+<td>customer_age is on the proxy list and never a feature, yet at the suite's threshold older applicants who are not fraudsters are flagged far more often than younger ones. If the model cannot see age, where does the gap come from?</td>
+<td>From the other features. A model trained to predict fifty and over from the fraud model's own features separates the two groups well, and the strongest single carrier was date_of_birth_distinct_emails_4w: a count taken by grouping applications on the applicant's date of birth, so its value depends on how common the applicant's birth year is among applicants. Employment status, housing status and time at the current address come next, and each is also a legitimate fraud signal.</td>
+<td>The date of birth count is on the proxy list now, with its reason, so no model may use it. The report publishes a search for a less discriminatory alternative: the next strongest age carriers removed one at a time, with the recall each step costs and the parity it buys, on both variants. The model's use is bounded to asking for documents before an account opens, never to declining one, because a false flag then costs an applicant a delay rather than an account.</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>Recall at a five percent false positive rate sets the threshold on the same months it reports. A bank has to fix its threshold before the applications arrive, and the false positive rate it then gets is whatever the new months give it.</td>
+<td>The suite's measure is right for comparing models with each other and with the published results, and wrong as a statement of what the bank would see.</td>
+<td>The report and the page publish both: the suite's measure, and the recall, false positive rate and predictive equality on months 6 and 7 at the threshold fixed on month 5. The recall gate uses the fixed threshold, and a gate watches how far the realised false positive rate drifts from its target.</td>
+</tr>
+</tbody>
+</table>
+<h2>Promotion gates</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Threshold</th>
+<th style="text-align:right">Measured</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test AUROC at or above the floor</td>
+<td>at least 0.8</td>
+<td style="text-align:right">0.8801</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test recall at the threshold fixed on month five</td>
+<td>at least 0.4</td>
+<td style="text-align:right">0.5381</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Recall at a five percent false positive rate above the logistic benchmark</td>
+<td>at least 0</td>
+<td style="text-align:right">0.0176</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test false positive rate at the threshold fixed on month five</td>
+<td>at most 0.075</td>
+<td style="text-align:right">0.0594</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Strongest single feature's test AUROC (a feature known after the outcome would stand alone)</td>
+<td>at most 0.8</td>
+<td style="text-align:right">0.7235</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Predictive equality between the age groups at the suite's threshold</td>
+<td>at least 0.8</td>
+<td style="text-align:right">0.4558</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>Expected calibration error on test</td>
+<td>at most 0.01</td>
+<td style="text-align:right">0.0044</td>
+<td>pass</td>
+</tr>
+</tbody>
+</table>
+<h2>Validation conclusion</h2>
+<p>The model does the job its purpose states and passes every critical gate on months it
+never saw, at a threshold fixed before them. It does not reach predictive equality
+between the age groups on either variant, which is why it is approved with that
+condition, bounded to routing applications to document checks, and published with the
+alternatives that would trade recall for parity.</p>
+<p><strong>approved with conditions.</strong> Conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Remediate before the next validation: Predictive equality between the age groups at the suite's threshold (measured 0.4558)</td>
+</tr>
+</tbody>
+</table>
+<h2>The integration contract</h2>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>What this model does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trained</td>
+<td>On months 0 to 4 of the base variant; month 5 chooses the tree count and the deployable threshold.</td>
+</tr>
+<tr>
+<td>timed</td>
+<td>The suite computes its features at application time and ships no raw history to recompute them from, so the split is temporal and a single feature screen looks for anything known only after the outcome.</td>
+</tr>
+<tr>
+<td>calibrated</td>
+<td>Reliability on the test months is published; the threshold is set by false positive rate, so the score is used as a rank.</td>
+</tr>
+<tr>
+<td>useful</td>
+<td>Beats the base rate and a logistic model on the same features at the suite's own measure, recall at a five percent false positive rate.</td>
+</tr>
+<tr>
+<td>fair</td>
+<td>Predictive equality between applicants aged fifty and over and the rest, on both variants, with a search for a less discriminatory alternative published beside it.</td>
+</tr>
+<tr>
+<td>gated</td>
+<td>Every gate in this report, including the recall at a threshold fixed before the test months.</td>
+</tr>
+<tr>
+<td>served</td>
+<td>Scored in the pipeline; not served by the API, because no live application stream exists here.</td>
+</tr>
+<tr>
+<td>integrated</td>
+<td>An application at or above the threshold asks for documents before the account opens. The model never declines one.</td>
+</tr>
+<tr>
+<td>monitored</td>
+<td>Monthly false positive rate against the threshold, by age group; recall on labelled applications; score PSI.</td>
+</tr>
+<tr>
+<td>documented</td>
+<td>This validation report and the desk page's fairness audit.</td>
+</tr>
+<tr>
+<td>bounded</td>
+<td>Routes applications to document checks only; never declines, never prices, and never sees age.</td>
+</tr>
+<tr>
+<td>validated</td>
+<td>This report, rendered from the manifest before the threshold is used.</td>
+</tr>
+<tr>
+<td>explainable</td>
+<td>A routed application shows the features that moved its score most, in the suite's own terms.</td>
+</tr>
+</tbody>
+</table>

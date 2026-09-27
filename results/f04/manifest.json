@@ -1,6 +1,42 @@
 {
  "as_of": "2026-08-31",
  "figures": {
+  "f04.fig_alternatives": {
+   "callout": "The model's own features predict whether an applicant is 50 or over with an AUROC of 0.782. Removing the strongest carriers of age one at a time moves the base variant's predictive equality from 0.46 to 0.57 and its recall from 49.0% to 44.2%. The model is kept and bounded to asking for documents, never to declining.",
+   "data": null,
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "title": "What parity costs: the search for a less discriminatory alternative"
+  },
+  "f04.fig_baf": {
+   "callout": "At a 5% false positive rate the model finds 49.0% of fraudulent applications in the base variant and 49.3% in variant II. Genuine applicants aged 50 and over are flagged at 9.19% against 4.19% for the rest, a predictive equality of 0.46 (0.44 in variant II), though the model never sees age.",
+   "data": null,
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "title": "Application fraud under the BAF suite's fairness protocol"
+  },
+  "f04.fig_card_fairness": {
+   "callout": "At the operating point, genuine transactions of cardholders 60 and over are declined at 0.34% and those of cardholders under 25 at 0.20%, a ratio of 0.60. Sparkov generates age and gender, so they can be measured here; the model never sees either.",
+   "data": null,
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card validation report"
+   },
+   "title": "Who the card model declines wrongly, by age band and gender"
+  },
   "f04.fig_cost": {
    "callout": "False declines cost $12.00 each and missed fraud costs its amount plus $35.00. The threshold that minimised the sum on the validation months, 0.0503, costs $24,927 on the test months against $1,573,327 for approving everything. Accuracy would have chosen 0.6376 and cost $89,153.",
    "data": "f04/cost_curve.parquet",
@@ -41,6 +77,94 @@
  "seed": 20260831,
  "tables": {},
  "values": {
+  "f04.baf_age_auc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "value": 0.7823779162
+  },
+  "f04.baf_fpr_older": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "value": 0.09193284193
+  },
+  "f04.baf_fpr_younger": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "value": 0.04190728582
+  },
+  "f04.baf_ii_ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "value": 0.4371065583
+  },
+  "f04.baf_ii_recall_suite": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "value": 0.4925544101
+  },
+  "f04.baf_ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "value": 0.4558467348
+  },
+  "f04.baf_recall_suite": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite, base and variant II, 300,000 each",
+    "seed": null,
+    "source": "fraud_account validation report"
+   },
+   "value": 0.49003517
+  },
+  "f04.card_fpr_ratio_age": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card validation report"
+   },
+   "value": 0.602043392
+  },
   "f04.decisions_on_as_of": {
    "fmt": "int",
    "provenance": {

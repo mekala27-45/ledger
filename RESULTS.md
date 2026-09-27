@@ -329,6 +329,8 @@ Every published model's features against the proxy list:
 
 | Model | Features | Protected attributes or proxies among them |
 |---|---:|---|
+| aml_triage | 13 | none |
+| fraud_account | 27 | none |
 | fraud_card | 18 | none |
 | pd_challenger | 13 | none |
 | pd_scorecard | 8 | none |
@@ -378,6 +380,44 @@ The desk's rules, on the labelled test months:
 | First purchase over $500 in a category this card has never used | 88 | 100.0% | 3.1% |
 | Three or more purchases on this card within 10 minutes | 272 | 12.1% | 1.2% |
 | Merchant more than 220 km from this card's previous merchant within the hour | 521 | 1.7% | 0.3% |
+
+### Application fraud on the BAF suite
+
+At a 5% false positive rate the model finds 49.0% of fraudulent applications in the base variant and 49.3% in variant II. Genuine applicants aged 50 and over are flagged at 9.19% against 4.19% for the rest, a predictive equality of 0.46 (0.44 in variant II), though the model never sees age.
+
+| Measure | Base | Variant II |
+|---|---|---|
+| Applications in the sample | 300,000 | 300,000 |
+| Share aged fifty and over | 18.3% | 50.5% |
+| Fraud rate, aged fifty and over | 2.34% | 1.82% |
+| Fraud rate, under fifty | 0.81% | 0.38% |
+| Test AUROC | 0.880 | 0.882 |
+| Recall at a five percent false positive rate (the suite's measure) | 49.0% | 49.3% |
+| False positive rate, aged fifty and over | 9.19% | 6.96% |
+| False positive rate, under fifty | 4.19% | 3.04% |
+| Predictive equality (lower rate over higher) | 0.46 | 0.44 |
+| Logistic benchmark: recall at the same rate | 47.2% | 47.7% |
+| Threshold fixed on month five: recall on the test months | 53.8% | 52.9% |
+| Threshold fixed on month five: false positive rate on the test months | 5.94% | 6.07% |
+| Threshold fixed on month five: predictive equality | 0.47 | 0.44 |
+| AUROC of the features at predicting age fifty and over | 0.782 | 0.788 |
+
+Source: real:baf, Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it, as of 2026-08-31.
+
+The model's own features predict whether an applicant is 50 or over with an AUROC of 0.782. Removing the strongest carriers of age one at a time moves the base variant's predictive equality from 0.46 to 0.57 and its recall from 49.0% to 44.2%. The model is kept and bounded to asking for documents, never to declining.
+
+| variant | removed | auroc | recall | fpr_older | fpr_younger | ratio |
+|---|---|---:|---:|---:|---:|---:|
+| Base | Nothing (the model) | 0.880 | 49.0% | 9.19% | 4.19% | 0.46 |
+| Base | employment_status | 0.877 | 48.3% | 8.93% | 4.24% | 0.48 |
+| Base | employment_status, housing_status | 0.859 | 44.8% | 7.89% | 4.44% | 0.56 |
+| Base | employment_status, housing_status, current_address_months_count | 0.854 | 44.2% | 7.80% | 4.46% | 0.57 |
+| Variant II | Nothing (the model) | 0.882 | 49.3% | 6.96% | 3.04% | 0.44 |
+| Variant II | employment_status | 0.879 | 49.5% | 6.71% | 3.29% | 0.49 |
+| Variant II | employment_status, housing_status | 0.860 | 44.3% | 6.62% | 3.38% | 0.51 |
+| Variant II | employment_status, housing_status, current_address_months_count | 0.855 | 43.4% | 6.45% | 3.55% | 0.55 |
+
+Source: real:baf, Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it, as of 2026-08-31.
 
 ## Financial crime
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Bars } from "@/components/charts/Bars";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { LineChart } from "@/components/charts/LineChart";
 import { Examiner, Grid, Kpi, Limitations, PageHeader } from "@/components/Section";
@@ -26,6 +27,15 @@ export default function Desk() {
   const costAtOp = nearest(cost, op);
   // Scores pile up near zero, so thresholds are drawn on a log scale.
   const lg = (v: unknown) => Math.log10(Math.max(Number(v), 1e-6));
+  // The card model's audit rows: age bands in order, then gender.
+  const audit = m.table("models.fraud_card.subgroups");
+  const fprAt = audit.columns.indexOf("Fpr");
+  const bandOrder = ["under 25", "25 to 39", "40 to 59", "60 and over", "F", "M"];
+  const genderWords: Record<string, string> = { F: "Female", M: "Male" };
+  const cardGroups = [...audit.rows]
+    .sort((a, b) => bandOrder.indexOf(String(a[0])) - bandOrder.indexOf(String(b[0])))
+    .map((r) => ({ label: genderWords[String(r[0])] ?? `Aged ${String(r[0])}`, fpr: Number(r[fprAt]) }));
+  const alternatives = m.table("models.fraud_account.alternatives").rows;
   return (
     <>
       <PageHeader
@@ -135,6 +145,66 @@ export default function Desk() {
           />
         </ChartFrame>
       </Grid>
+
+      <section aria-label="The fairness audit" className="mt-10">
+        <h2 className="font-serif text-2xl mb-1">The fairness audit</h2>
+        <p className="text-sm text-ink2 mb-4 max-w-3xl">
+          The card model&apos;s errors by age band and gender, beside application fraud on the BAF suite, which was published
+          with its protected attributes kept so this question can be asked. Neither model sees age; both are measured on it.
+        </p>
+        <Grid>
+          <ChartFrame
+            title={m.figure("f04.fig_card_fairness").title}
+            callout={m.figure("f04.fig_card_fairness").callout}
+            label={m.label("f04.fig_card_fairness")}
+            table={m.table("models.fraud_card.subgroups")}
+          >
+            <Bars
+              ordinal={false}
+              fmt="pct2"
+              items={cardGroups.map((g) => ({ label: g.label, value: g.fpr, note: "False positive rate at the operating point" }))}
+            />
+          </ChartFrame>
+          <ChartFrame
+            title={m.figure("f04.fig_baf").title}
+            callout={m.figure("f04.fig_baf").callout}
+            label={m.label("f04.fig_baf")}
+            table={m.table("models.fraud_account.variants")}
+          >
+            <Bars
+              ordinal={false}
+              fmt="pct2"
+              items={[
+                { label: "Base, 50 and over", value: m.num("models.fraud_account.fpr_older") },
+                { label: "Base, under 50", value: m.num("models.fraud_account.fpr_younger") },
+                { label: "Variant II, 50 and over", value: m.num("models.fraud_account.ii_fpr_older") },
+                { label: "Variant II, under 50", value: m.num("models.fraud_account.ii_fpr_younger") },
+              ].map((d) => ({ ...d, note: "False positive rate at the suite's threshold" }))}
+            />
+          </ChartFrame>
+          <ChartFrame
+            title={m.figure("f04.fig_alternatives").title}
+            callout={m.figure("f04.fig_alternatives").callout}
+            label={m.label("f04.fig_alternatives")}
+            table={m.table("models.fraud_account.alternatives")}
+            wide
+          >
+            <LineChart
+              series={["Base", "Variant II"].map((variant, i) => ({
+                name: variant,
+                emphasis: i === 0,
+                points: alternatives.filter((r) => r[0] === variant).map((r) => ({ x: Number(r[3]), y: Number(r[6]) })),
+              }))}
+              points
+              yDomain={[0, 1]}
+              xFormat="pct0"
+              yFormat="float2"
+              xLabel="Recall at a five percent false positive rate"
+              yLabel="Predictive equality (one is parity)"
+            />
+          </ChartFrame>
+        </Grid>
+      </section>
 
       <Limitations
         items={[
