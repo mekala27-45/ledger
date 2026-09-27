@@ -248,17 +248,21 @@ def build_ledger(
     def journal(month_idx: int, description: str, lines: list[tuple[str, float]], day: int = 27) -> None:
         nonlocal jid
         jid += 1
-        total = round(sum(a for _, a in lines), 2)
-        if abs(total) > 0.005:
-            raise ValueError(f"journal {description} does not balance: {total}")
+        # Work in whole cents. Rounding each line can leave a cent of residue; it goes to
+        # the last line, which is the balancing line in every journal written here.
+        cents = [int(round(a * 100)) for _, a in lines]
+        residual = sum(cents)
+        if abs(residual) > len(lines):
+            raise ValueError(f"journal {description} does not balance: {residual / 100:.2f}")
+        cents[-1] -= residual
         when = month_start[month_idx] + timedelta(days=day, hours=23, minutes=50)
-        for gl, amount in lines:
+        for (gl, _), cent in zip(lines, cents, strict=True):
             journal_rows.append(
                 {
                     "journal_id": jid,
                     "description": description,
                     "gl_account": gl,
-                    "amount": round(amount, 2),
+                    "amount": cent / 100,
                     "posted_at": when,
                     "month": timeline.labels[month_idx],
                 }

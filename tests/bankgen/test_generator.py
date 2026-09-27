@@ -21,9 +21,9 @@ def _con(raw: Path) -> duckdb.DuckDBPyConnection:
 def test_every_month_of_postings_balances(clean_bank: tuple[Path, Path, GeneratorParams]) -> None:
     con = _con(clean_bank[0])
     worst = con.execute(
-        "select max(abs(s)) from (select month, sum(amount) s from gl_postings group by month)"
+        "select max(abs(s)) from (select month, sum(amount::decimal(18, 2)) s from gl_postings group by month)"
     ).fetchone()[0]
-    assert worst < 0.01
+    assert worst == 0
 
 
 def test_every_journal_balances(clean_bank: tuple[Path, Path, GeneratorParams]) -> None:
@@ -31,7 +31,7 @@ def test_every_journal_balances(clean_bank: tuple[Path, Path, GeneratorParams]) 
     worst = con.execute(
         "select max(abs(s)) from (select journal_id, sum(amount) s from gl_journals group by 1)"
     ).fetchone()[0]
-    assert worst < 0.01
+    assert worst < 0.005
 
 
 def test_deposit_sub_ledger_ties_to_the_ledger_when_clean(
