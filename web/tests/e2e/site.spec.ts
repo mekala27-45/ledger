@@ -130,3 +130,12 @@ test("the fair lending map toggles between unadjusted and adjusted rates", async
   await expect.poll(fills).not.toBe(before);
   await expect(map.locator("path")).toHaveCount(21);
 });
+
+test("the investigator graph lists an account's transfers on click", async ({ page }) => {
+  await page.goto("/crime/");
+  const graph = page.getByTestId("network");
+  await expect(graph).toBeVisible();
+  await graph.getByRole("button", { name: /alerted/ }).first().click();
+  await expect(page.getByTestId("node-panel").locator("tbody tr").first()).toBeVisible();
+  await expect(page.getByTestId("case-queue").locator("tbody tr").first()).toBeVisible();
+});

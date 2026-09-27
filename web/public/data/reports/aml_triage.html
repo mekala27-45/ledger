@@ -1,0 +1,466 @@
+<h1>Validation report: Alert triage for transaction monitoring</h1>
+<blockquote>
+<p>Harborline Bank is fictional. This is a demonstration on generated data and public datasets; no real customer, account or transaction of any real institution appears here.</p>
+<p>Nothing here is a credit decision, a fraud determination, a suspicious activity finding or investment advice.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>aml_triage</code></td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Rank the transaction monitoring rules' alerts so an investigator opens the likeliest real typology first</td>
+</tr>
+<tr>
+<td>Tier</td>
+<td>2: Informs a decision a person makes; moderate materiality</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>sole</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>in use</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Head of analytics</td>
+</tr>
+<tr>
+<td>Prediction time</td>
+<td>When the alert fires; history features use only the account's entries before the alert window opened</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>The alert overlaps an injected typology episode of the same kind on the same account</td>
+</tr>
+<tr>
+<td>Last validated</td>
+<td>2026-08-31</td>
+</tr>
+<tr>
+<td>Conclusion</td>
+<td><strong>approved</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Purpose and scope</h2>
+<p>The transaction monitoring rules fire alerts; investigators work them in the order the
+queue presents them. This model sets that order: the alert most likely to be a real
+typology comes first. It informs which alert a person opens, never whether an alert is
+closed or reported, so it is tier two.</p>
+<p>Out of scope: deciding a disposition, filing a suspicious activity report, and any alert
+source other than the four rules in <code>rules/aml_typologies.yaml</code>.</p>
+<h2>Conceptual soundness</h2>
+<p>Triage is a ranking problem over a small, imbalanced set, so the method is a logistic
+regression on standardised features whose coefficients an investigator can read: the
+alert's own size, entry count, counterparties and branches, which rule fired, the
+account's age, its cash deposits and inflow in the ninety days before the alert window
+opened, and how many alerts it had before. The benchmarks are the base rate and the
+order the rules alone imply, each rule ranked by its precision on the development months.</p>
+<h2>Data and assumptions</h2>
+<p>Every alert the rules fired on Harborline Bank's deposit accounts:
+649 alerts, 429 of them overlapping an injected
+typology episode of the same kind on the same account. The label is the generator's truth,
+which a real program would not have; its labels would be investigator dispositions.</p>
+<p>Split by when the alert closed: development September 2023 to August 2025
+(445 alerts), validation September 2025 to February 2026
+(98), test March to August 2026
+(106, 59 true).</p>
+<p>A leakage test recomputed the history features of 200 sampled alerts
+from raw ledger entries strictly before each alert window and matched every one. No
+demographic attribute or proxy is a feature.</p>
+<h2>Development evidence</h2>
+<p>Development AUROC 0.999, validation 1.000.
+The coefficients, standardised, largest first:</p>
+<table>
+<thead>
+<tr>
+<th>feature</th>
+<th style="text-align:right">coefficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>prior_cash_90d</td>
+<td style="text-align:right">-3.32</td>
+</tr>
+<tr>
+<td>branches</td>
+<td style="text-align:right">1.86</td>
+</tr>
+<tr>
+<td>rule_structuring</td>
+<td style="text-align:right">-1.56</td>
+</tr>
+<tr>
+<td>prior_alerts</td>
+<td style="text-align:right">0.94</td>
+</tr>
+<tr>
+<td>rule_round_tripping</td>
+<td style="text-align:right">0.82</td>
+</tr>
+<tr>
+<td>rule_rapid_movement</td>
+<td style="text-align:right">0.81</td>
+</tr>
+<tr>
+<td>counterparties</td>
+<td style="text-align:right">0.60</td>
+</tr>
+<tr>
+<td>rule_mule</td>
+<td style="text-align:right">0.57</td>
+</tr>
+<tr>
+<td>log_amount</td>
+<td style="text-align:right">0.55</td>
+</tr>
+<tr>
+<td>entries</td>
+<td style="text-align:right">0.40</td>
+</tr>
+<tr>
+<td>log_tenure_days</td>
+<td style="text-align:right">-0.23</td>
+</tr>
+<tr>
+<td>log_prior_inflow_90d</td>
+<td style="text-align:right">0.16</td>
+</tr>
+<tr>
+<td>amount_vs_monthly_inflow</td>
+<td style="text-align:right">0.03</td>
+</tr>
+</tbody>
+</table>
+<h2>Outcomes analysis on held out data</h2>
+<p>On the test months the model reaches an AUROC of 1.000 and an average
+precision of 1.000. Within the 72
+structuring alerts, 25 of them true, where the rules alone
+cannot order anything, its AUROC is 1.000.</p>
+<p>These are properties of the generator, not of the method: its legitimate lookalikes and its
+injected typologies do not overlap. Without the cash history and branch count the AUROC is
+0.997; the rules' own order reaches 0.788.</p>
+<p>Calibration on the test sample, ten equal count bins:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Bin</th>
+<th style="text-align:right">Accounts</th>
+<th style="text-align:right">Predicted</th>
+<th style="text-align:right">Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">0.04%</td>
+<td style="text-align:right">0.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">0.27%</td>
+<td style="text-align:right">0.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">0.91%</td>
+<td style="text-align:right">0.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">3.67%</td>
+<td style="text-align:right">0.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">81.86%</td>
+<td style="text-align:right">72.73%</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">99.39%</td>
+<td style="text-align:right">100.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">99.83%</td>
+<td style="text-align:right">100.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">99.92%</td>
+<td style="text-align:right">100.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">99.96%</td>
+<td style="text-align:right">100.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">99.99%</td>
+<td style="text-align:right">100.00%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
+<h2>Benchmarking</h2>
+<p>Against the base rate, the rules' own order, and this model with its two strongest features
+removed, on the test months:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align:right">AUROC</th>
+<th style="text-align:right">Gini</th>
+<th style="text-align:right">Brier</th>
+<th style="text-align:right">ECE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This model</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">0.0071</td>
+<td style="text-align:right">0.0155</td>
+</tr>
+<tr>
+<td>Base rate</td>
+<td style="text-align:right">0.500</td>
+<td style="text-align:right">0.000</td>
+<td style="text-align:right">0.2601</td>
+<td style="text-align:right">0.1489</td>
+</tr>
+<tr>
+<td>The rules' own order</td>
+<td style="text-align:right">0.788</td>
+<td style="text-align:right">0.576</td>
+<td style="text-align:right">0.1576</td>
+<td style="text-align:right">0.1276</td>
+</tr>
+<tr>
+<td>This model without cash history and branches</td>
+<td style="text-align:right">0.997</td>
+<td style="text-align:right">0.994</td>
+<td style="text-align:right">0.0362</td>
+<td style="text-align:right">0.0751</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
+<h2>Limitations</h2>
+<ul>
+<li>The labels are injected truth. An investigator's disposition is noisier, arrives weeks
+later and is shaped by the queue order itself, which this data cannot show.</li>
+<li>The legitimate lookalikes are written to look like the typologies on the rule's terms,
+not on every feature, so the model's separation here overstates what it would do on a
+real portfolio.</li>
+<li>Four rules, four typologies. Anything the rules do not fire on never reaches the queue.</li>
+</ul>
+<h2>Ongoing monitoring plan</h2>
+<p>Monthly, against the queue as investigators work it:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Trigger</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Precision of the queue's first quarter against investigator dispositions</td>
+<td>below the rules' own order for two months</td>
+<td>Refit on dispositions</td>
+</tr>
+<tr>
+<td>Score PSI, monthly against development</td>
+<td>above 0.25</td>
+<td>Revalidate</td>
+</tr>
+<tr>
+<td>Alert mix by rule</td>
+<td>any rule's share moves by half</td>
+<td>Review the rule thresholds before the model</td>
+</tr>
+</tbody>
+</table>
+<h2>Effective challenge</h2>
+<p>From <code>DECISIONS.md</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Challenge</th>
+<th>Response</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-27</td>
+<td>On months it never saw, the triage model put every alert that matched an injected typology ahead of every legitimate lookalike: an AUROC of one.</td>
+<td>The generator writes its lookalikes and its criminals from separate recipes. A cash intensive business deposits cash every week at one branch; a structurer is new to cash and spreads deposits across several branches. Removing the cash history and the branch count still leaves the alert size, its entry count and the account's earlier alerts, and the separation survives, so it is not one leaked column. It is two synthetic populations that do not overlap. A real program's labels are investigator dispositions, which are noisier and arrive late.</td>
+<td>The report publishes the ranking without the two strongest features and the rules' own order as benchmarks, states that the measured quality is a property of the generator, and makes investigator dispositions the monitoring measure the model would be refit on before any real use.</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>The mule, rapid movement and round tripping rules fired no false alerts on this data, so a model that only learned which rule fired would already rank most of the queue correctly.</td>
+<td>Pooled over all four rules, AUROC mostly rewards putting those three rules' alerts first, which each rule's own precision on the development months already does. The only alerts where order is a real question are structuring alerts, where the rule's precision is under half.</td>
+<td>A gate now measures the model within structuring alerts alone, where the rules' order carries no information, and the benchmark table includes ranking by each rule's development precision.</td>
+</tr>
+</tbody>
+</table>
+<h2>Promotion gates</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Threshold</th>
+<th style="text-align:right">Measured</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test AUROC at or above the floor</td>
+<td>at least 0.8</td>
+<td style="text-align:right">1.0000</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test average precision above the rules' own order</td>
+<td>at least 0</td>
+<td style="text-align:right">0.1879</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test AUROC within structuring alerts, where the rules' order says nothing</td>
+<td>at least 0.8</td>
+<td style="text-align:right">1.0000</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Point in time recompute of sampled alerts</td>
+<td>at least 200</td>
+<td style="text-align:right">200.0000</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Expected calibration error on test</td>
+<td>at most 0.1</td>
+<td style="text-align:right">0.0155</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test AUROC without the cash history and branch count features</td>
+<td>at least 0.75</td>
+<td style="text-align:right">0.9968</td>
+<td>pass</td>
+</tr>
+</tbody>
+</table>
+<h2>Validation conclusion</h2>
+<p>The model orders the queue the way its purpose asks and passes every gate on months it
+never saw. Its measured quality is a property of the generator, whose lookalikes and
+typologies do not overlap, so the approval is for ordering this demonstration's queue;
+on a real portfolio it would be refit and re-measured on investigator dispositions first.</p>
+<p><strong>approved.</strong> Conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h2>The integration contract</h2>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>What this model does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trained</td>
+<td>On alerts that closed before September 2025, labelled by the generator's injected truth.</td>
+</tr>
+<tr>
+<td>timed</td>
+<td>History features stop at the alert window's start; a leakage test recomputes 200 sampled alerts from raw entries.</td>
+</tr>
+<tr>
+<td>calibrated</td>
+<td>Reliability on the test months is published; the queue uses the score as a rank.</td>
+</tr>
+<tr>
+<td>useful</td>
+<td>Beats the base rate and the order the rules alone imply, including within structuring alerts, where the rules cannot rank at all.</td>
+</tr>
+<tr>
+<td>fair</td>
+<td>No demographic enters; the features are the alert's facts and the account's own history.</td>
+</tr>
+<tr>
+<td>gated</td>
+<td>Every gate in this report, including an ablation without the two features the generator made most different.</td>
+</tr>
+<tr>
+<td>served</td>
+<td>Scored in the pipeline; the ranked queue is published with the crime page.</td>
+</tr>
+<tr>
+<td>integrated</td>
+<td>Sorts the case queue: an investigator opens alerts in the model's order within each month.</td>
+</tr>
+<tr>
+<td>monitored</td>
+<td>Queue capture against investigator dispositions once they exist; monthly score PSI; alert mix by rule.</td>
+</tr>
+<tr>
+<td>documented</td>
+<td>This validation report and docs/crime.md.</td>
+</tr>
+<tr>
+<td>bounded</td>
+<td>Orders alerts; never closes one, never files anything, and never replaces an investigator's disposition.</td>
+</tr>
+<tr>
+<td>validated</td>
+<td>This report, rendered from the manifest before the queue uses the order.</td>
+</tr>
+<tr>
+<td>explainable</td>
+<td>Each alert shows the rule's statement in plain words and the features that moved its score most.</td>
+</tr>
+</tbody>
+</table>

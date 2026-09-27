@@ -281,6 +281,71 @@ decisions were still unlabelled, and precision over the labelled ones was
 73.4%. A report that counted the unlabelled
 declines as mistakes would have shown 27.0%. We never
 publish that number.</p>
+<h2>Financial crime</h2>
+<p>Our four monitoring rules fired 649 alerts over the three years, about
+18.0 a month, and found 362 of the
+422 complete laundering episodes planted in our data to test them. Structuring
+is where our investigators' time goes: legitimate cash businesses deposit just under the
+reporting threshold, and only 41.5% of structuring alerts are
+real. The queue is ordered by a triage model so the likeliest cases are opened first; it never
+closes an alert on its own. No suspicious activity report is filed from this data.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align:right">Alerts</th>
+<th style="text-align:right">Precision</th>
+<th style="text-align:right">Complete episodes</th>
+<th style="text-align:right">Found</th>
+<th style="text-align:right">Recall</th>
+<th style="text-align:right">Posted in part</th>
+<th style="text-align:right">Alerts per 100k entries</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Structuring</td>
+<td style="text-align:right">376</td>
+<td style="text-align:right">41.5%</td>
+<td style="text-align:right">204</td>
+<td style="text-align:right">156</td>
+<td style="text-align:right">76.5%</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">4.57</td>
+</tr>
+<tr>
+<td>Rapid movement</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">100.0%</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">100.0%</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1.22</td>
+</tr>
+<tr>
+<td>Round tripping</td>
+<td style="text-align:right">90</td>
+<td style="text-align:right">100.0%</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">100.0%</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">1.09</td>
+</tr>
+<tr>
+<td>Mule fan in</td>
+<td style="text-align:right">83</td>
+<td style="text-align:right">100.0%</td>
+<td style="text-align:right">94</td>
+<td style="text-align:right">82</td>
+<td style="text-align:right">87.2%</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1.01</td>
+</tr>
+</tbody>
+</table>
+<p>Source: generated, Harborline deposit accounts and their entries, September 2023 to August 2026, seed 20260831, as of 2026-08-31.</p>
 <h2>Fair lending</h2>
 <p>Our mortgage applications are generated data with no real HMDA filing behind them, so the team
 runs our fair lending method on New Jersey's public register, the data an examiner would start
@@ -585,6 +650,21 @@ with where its data lives:</p>
 <td>Precision and recall across thresholds, test months</td>
 <td><code>results/f04/pr_curve.parquet</code></td>
 <td>replayed, fraud_card scored stream</td>
+</tr>
+<tr>
+<td>The investigator's view: alerted communities in the transfer network</td>
+<td><code>results/f05/network.json</code></td>
+<td>generated, Louvain communities over transfers between customers</td>
+</tr>
+<tr>
+<td>What each rule finds, against the planted truth</td>
+<td><code>results/f05/rule_scorecard.parquet</code></td>
+<td>generated, packages/crime</td>
+</tr>
+<tr>
+<td>Alerts by month and rule</td>
+<td><code>results/f05/alerts_monthly.parquet</code></td>
+<td>generated, packages/crime</td>
 </tr>
 <tr>
 <td>The fraud model's monitoring, week by week</td>
