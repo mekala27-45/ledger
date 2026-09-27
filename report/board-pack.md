@@ -160,8 +160,8 @@ principal reasons.
 
 ## Model risk
 
-We use 7 models in this pack. Each has an SR 11-7 style validation report,
-a tier, an owner and a monitoring plan; 15 challenges were raised and
+We use 8 models in this pack. Each has an SR 11-7 style validation report,
+a tier, an owner and a monitoring plan; 17 challenges were raised and
 answered during development and each is on record.
 
 | Model | Title | Function | Tier | Role | Status | Last validated | Conclusion | Test AUROC |
@@ -172,6 +172,7 @@ answered during development and each is on record.
 | fraud_account | Application fraud on the BAF suite | f04 | 1 | sole | in use | 2026-08-31 | approved with conditions | 0.880 |
 | aml_triage | Alert triage for transaction monitoring | f05 | 2 | sole | in use | 2026-08-31 | approved | 1.000 |
 | attrition | Deposit customer attrition, twelve month horizon | f06 | 2 | sole | in use | 2026-08-31 | approved | 0.583 |
+| relief | Monetary relief on consumer complaints | f07 | 2 | sole | development | 2026-08-31 | not approved | 0.869 |
 | cure | Cure within ninety days for delinquent loans | f09 | 2 | sole | in use | 2026-08-31 | approved | 0.787 |
 
 The probability of default scorecard is approved with a condition: its calibration on the
@@ -247,6 +248,10 @@ with where its data lives:
 | Checking accounts opened and closed each month | `results/f06/deposits_monthly.parquet` | generated, marts.mart_deposits_monthly |
 | The policy rate, and what each product pays | `results/f06/rates.parquet` | generated, marts.mart_deposits_monthly |
 | The retention list: expected balance at risk | `results/f06/retention_list.parquet` | generated, marts.mart_deposits_monthly |
+| The thirty companies with the most complaints | `results/f07/companies.parquet` | real:cfpb, CFPB complaint search API aggregates |
+| The conduct risk view: issues ranked by the relief they are likely to cost | `results/f07/issues.parquet` | real:cfpb, CFPB export archive, sampled by a salted hash of the complaint id |
+| What the narratives are about: topics by month | `results/f07/topic_trend.parquet` | real:cfpb, CFPB export archive, sampled by a salted hash of the complaint id |
+| Complaints to the Bureau by product and month | `results/f07/volume_by_product.parquet` | real:cfpb, CFPB complaint search API aggregates |
 | The capital ratio along each scenario | `results/f08/stress_paths.parquet` | real:frb_scenarios, marts.mart_scenarios and ledger_stress.link |
 | Net interest income over twelve months, parallel rate shocks | `results/f08/nii_shocks.parquet` | generated, marts.mart_balance_sheet_monthly |
 | Unsecured loans rolling into delinquency each quarter, along the 2026 scenarios | `results/f08/stress_paths.parquet` | real:frb_scenarios, marts.mart_scenarios and ledger_stress.link |

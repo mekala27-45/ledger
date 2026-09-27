@@ -500,6 +500,55 @@ The 500 customers at the top of the list hold $114,622,517 and carry $9,442,588 
 
 Source: generated, Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
 
+## Complaints and conduct
+
+Real public data about real companies, exactly as the Consumer Financial Protection Bureau publishes it. The Bureau states its database is "not a statistical sample of consumers' experiences in the marketplace".
+
+11,430,555 complaints in two years, 89.3% of them about credit reporting or other personal consumer reports, and the monthly count went from 264,821 to 653,305. Real public data as the Bureau publishes it, which it states is not a statistical sample of consumers' experiences in the marketplace.
+
+10 topics from non negative matrix factorisation over TF-IDF of 46,083 narratives. 4 of the 4 themes a reader expects emerged as topics of their own. 31.2% of narratives open like at least four others, form letters that were counted once when the topics were fitted. The sample is not a statistical sample of consumers' experiences in the marketplace, like the database it comes from.
+
+| Topic | Top terms | Complaints where it leads | Share | Of which form letters |
+|---:|---|---:|---:|---:|
+| 1 | fcra, reporting, inaccurate, accuracy, act, fair, dispute, disputed | 5,118 | 11.1% | 39% |
+| 2 | money, called, bank, card, sent, received, did, asked | 8,116 | 17.6% | 4% |
+| 3 | theft, identity, fraudulent, victim, ftc, block, result, fraud | 3,584 | 7.8% | 45% |
+| 4 | debt, collection, validation, original, alleged, fdcpa, collect, creditor | 4,581 | 9.9% | 26% |
+| 5 | late, payment, payments, paid, history, loan, reported, time | 4,234 | 9.2% | 32% |
+| 6 | section, consumer, usc, reporting, agency, rights, states, privacy | 4,117 | 8.9% | 66% |
+| 7 | funds, transaction, despite, regarding, complaint, financial, issue, provided | 6,584 | 14.3% | 13% |
+| 8 | inquiries, unauthorized, hard, inquiry, authorize, did, xxxxxx, consent | 2,445 | 5.3% | 37% |
+| 9 | balance, date, opened, number, charged, following, listed, charge | 1,622 | 3.5% | 17% |
+| 10 | accounts, fraudulent, remove, removed, breach, noticed, recently, data | 5,682 | 12.3% | 56% |
+
+Source: real:cfpb, A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026, as of 2026-08-31.
+
+| What a reader expects | Marker words | Emerged as topic |
+|---|---|---|
+| Billing disputes | dispute, charge, charged, refund, billing | 9 |
+| Credit reporting errors | report, reporting, inaccurate, bureau, bureaus | 1 |
+| Debt collection contact | collection, collector, debt, calls, calling | 4 |
+| Fraud on an account | fraud, fraudulent, unauthorized, stolen, scam | 3 |
+
+The three consumer reporting agencies received 86.6% of all complaints and closed almost none with monetary relief, because a credit report is corrected rather than refunded. Among the rest, BANK OF AMERICA, NATIONAL ASSOCIATION closed the largest share with money, 23.4%. Real companies, real public data, exactly as the Bureau publishes it; a count of complaints is not a measure of how a company treats its customers.
+
+On complaints from the test months, problem with a purchase shown on your statement (credit card) is expected to end in relief 126.0 times, and did 118 times. The ranking comes from the model on the form's metadata alone, because the narrative added only 0.014 of AUROC. In a bank this ranking is for routing and root cause, never for deciding whether a consumer gets relief.
+
+| Product | Issue | Complaints, test months | Relief expected | Relief that happened | Expected rate |
+|---|---|---:|---:|---:|---:|
+| Credit card | Problem with a purchase shown on your statement | 444 | 126.0 | 118 | 28.4% |
+| Checking or savings account | Managing an account | 847 | 115.2 | 108 | 13.6% |
+| Checking or savings account | Problem with a lender or other company charging your account | 238 | 47.6 | 28 | 20.0% |
+| Credit card | Fees or interest | 157 | 46.0 | 53 | 29.3% |
+| Checking or savings account | Closing an account | 219 | 31.1 | 36 | 14.2% |
+| Credit card | Other features, terms, or problems | 173 | 20.8 | 27 | 12.0% |
+| Checking or savings account | Problem caused by your funds being low | 87 | 16.1 | 13 | 18.6% |
+| Money transfer, virtual currency, or money service | Fraud or scam | 214 | 14.4 | 11 | 6.7% |
+| Money transfer, virtual currency, or money service | Unauthorized transactions or other transaction problem | 120 | 13.0 | 11 | 10.8% |
+| Credit card | Problem when making payments | 69 | 11.6 | 19 | 16.8% |
+| Credit card | Closing your account | 116 | 11.4 | 8 | 9.8% |
+| Mortgage | Trouble during payment process | 290 | 7.1 | 6 | 2.4% |
+
 ## Treasury and stress testing
 
 Against $54.7M of net interest income over the last twelve months, a 200 basis point rise changes it by -$6,981 and a 200 basis point fall by -$175,123. The balance sheet is close to neutral: what the assets gain from a rise, the deposits give back, because savings pass on a large share of any move and most certificates reprice within the year. The fall costs more than the rise earns because checking is already at its floor and cannot follow rates down. Balances are held flat and customer behaviour does not change with the shock.
@@ -618,6 +667,7 @@ The warehouse passed 210 of 210 dbt tests over 62 models. The identifier scan fo
 | fraud_account | Application fraud on the BAF suite | f04 | 1 | sole | in use | 2026-08-31 | approved with conditions | 0.880 |
 | aml_triage | Alert triage for transaction monitoring | f05 | 2 | sole | in use | 2026-08-31 | approved | 1.000 |
 | attrition | Deposit customer attrition, twelve month horizon | f06 | 2 | sole | in use | 2026-08-31 | approved | 0.583 |
+| relief | Monetary relief on consumer complaints | f07 | 2 | sole | development | 2026-08-31 | not approved | 0.869 |
 | cure | Cure within ninety days for delinquent loans | f09 | 2 | sole | in use | 2026-08-31 | approved | 0.787 |
 
 Source: mixed, the model inventory, as of 2026-08-31.
@@ -645,6 +695,8 @@ The effective challenge log:
 | 2026-09-27 | attrition | Sorted by probability alone, the top of the retention list fills with new customers holding a few hundred dollars. A retention call costs the same whoever answers. | The list is ranked by expected balance at risk. The report publishes, for the top tenth of the test months, the share of closers and the share of their balances found by each ordering, so the trade between the two is visible. |
 | 2026-09-27 | cure | A loan thirty days past due cures far more often than one ninety days past due. A model that only learned the bucket would beat the base rate comfortably and add nothing a collections supervisor does not already do by working the thirty day list first. | The bucket rule is a benchmark in the report, and a critical gate requires the model's test AUROC to beat the rule's by two hundredths. Cure rates by bucket are published beside the model's so the rule's strength is visible. |
 | 2026-09-27 | cure | A loan that is past due in June and July 2025 appears in the last training month and the first validation month, with nearly the same features and the same outcome. Early stopping and the choice between the two candidates were being made on loans the fit had already seen. | One loan in five is held out of the fit by a hash of its identifier, and early stopping and the choice of champion use only held out loans in the validation months. The test months begin three months after validation ends, so every outcome used to fit or choose the model was known before the first test month end, and a check in the trainer refuses to run otherwise. |
+| 2026-09-27 | relief | Complaints received in late 2024 ended in monetary relief about one time in seventy; by mid 2026 it was closer to one in fourteen. A model fitted on the early months will score the later ones too low, and a probability threshold chosen on 2025 would flag almost nothing in 2026. | The operating point flags the top twentieth of scores, set on the validation months immediately before the test months. Reliability on the test months is published with the drift stated beside it, the calibration gate is non critical, and the monitoring plan resets the operating point when the monthly base rate moves by half. |
+| 2026-09-27 | relief | Consumers write about their age, their disability, their military service and their family. A text model can learn that an elderly widow is more likely to get a refund, which is a protected basis entering a routing decision by the back door. The Bureau's own tags mark older Americans and servicemembers. | `rules/proxies.yaml` now lists words a text model may not learn from, and the relief model drops them, and any phrase containing them, from its vocabulary. The Bureau's tags are never features; they are used only to audit flag rates by group, and a gate watches the ratio. |
 
 ## The board's decision
 

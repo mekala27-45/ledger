@@ -485,8 +485,8 @@ first.</p>
 on our list, every model's features are tested against that list, and every decline carries its
 principal reasons.</p>
 <h2>Model risk</h2>
-<p>We use 7 models in this pack. Each has an SR 11-7 style validation report,
-a tier, an owner and a monitoring plan; 15 challenges were raised and
+<p>We use 8 models in this pack. Each has an SR 11-7 style validation report,
+a tier, an owner and a monitoring plan; 17 challenges were raised and
 answered during development and each is on record.</p>
 <table>
 <thead>
@@ -568,6 +568,17 @@ answered during development and each is on record.</p>
 <td>2026-08-31</td>
 <td>approved</td>
 <td style="text-align:right">0.583</td>
+</tr>
+<tr>
+<td>relief</td>
+<td>Monetary relief on consumer complaints</td>
+<td>f07</td>
+<td>2</td>
+<td>sole</td>
+<td>development</td>
+<td>2026-08-31</td>
+<td>not approved</td>
+<td style="text-align:right">0.869</td>
 </tr>
 <tr>
 <td>cure</td>
@@ -780,6 +791,26 @@ with where its data lives:</p>
 <td>The retention list: expected balance at risk</td>
 <td><code>results/f06/retention_list.parquet</code></td>
 <td>generated, marts.mart_deposits_monthly</td>
+</tr>
+<tr>
+<td>The thirty companies with the most complaints</td>
+<td><code>results/f07/companies.parquet</code></td>
+<td>real:cfpb, CFPB complaint search API aggregates</td>
+</tr>
+<tr>
+<td>The conduct risk view: issues ranked by the relief they are likely to cost</td>
+<td><code>results/f07/issues.parquet</code></td>
+<td>real:cfpb, CFPB export archive, sampled by a salted hash of the complaint id</td>
+</tr>
+<tr>
+<td>What the narratives are about: topics by month</td>
+<td><code>results/f07/topic_trend.parquet</code></td>
+<td>real:cfpb, CFPB export archive, sampled by a salted hash of the complaint id</td>
+</tr>
+<tr>
+<td>Complaints to the Bureau by product and month</td>
+<td><code>results/f07/volume_by_product.parquet</code></td>
+<td>real:cfpb, CFPB complaint search API aggregates</td>
 </tr>
 <tr>
 <td>The capital ratio along each scenario</td>

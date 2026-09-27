@@ -253,6 +253,54 @@
    },
    "title": "The retention list: expected balance at risk"
   },
+  "f07.fig_benchmark": {
+   "callout": "The three consumer reporting agencies received 86.6% of all complaints and closed almost none with monetary relief, because a credit report is corrected rather than refunded. Among the rest, BANK OF AMERICA, NATIONAL ASSOCIATION closed the largest share with money, 23.4%. Real companies, real public data, exactly as the Bureau publishes it; a count of complaints is not a measure of how a company treats its customers.",
+   "data": "f07/companies.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "title": "The thirty companies with the most complaints"
+  },
+  "f07.fig_issues": {
+   "callout": "On complaints from the test months, problem with a purchase shown on your statement (credit card) is expected to end in relief 126.0 times, and did 118 times. The ranking comes from the model on the form's metadata alone, because the narrative added only 0.014 of AUROC. In a bank this ranking is for routing and root cause, never for deciding whether a consumer gets relief.",
+   "data": "f07/issues.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "title": "The conduct risk view: issues ranked by the relief they are likely to cost"
+  },
+  "f07.fig_topics": {
+   "callout": "10 topics from non negative matrix factorisation over TF-IDF of 46,083 narratives. 4 of the 4 themes a reader expects emerged as topics of their own. 31.2% of narratives open like at least four others, form letters that were counted once when the topics were fitted. The sample is not a statistical sample of consumers' experiences in the marketplace, like the database it comes from.",
+   "data": "f07/topic_trend.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "title": "What the narratives are about: topics by month"
+  },
+  "f07.fig_volume": {
+   "callout": "11,430,555 complaints in two years, 89.3% of them about credit reporting or other personal consumer reports, and the monthly count went from 264,821 to 653,305. Real public data as the Bureau publishes it, which it states is not a statistical sample of consumers' experiences in the marketplace.",
+   "data": "f07/volume_by_product.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "title": "Complaints to the Bureau by product and month"
+  },
   "f08.fig_capital": {
    "callout": "The ratio starts at 19.8%. Severely adverse losses peak at $8.6M a quarter, while pre provision revenue, held at its last twelve months of $8.2M a quarter and moved by the scenario's short rate, falls no lower than $7.7M, so the ratio ends the 9 quarters at 21.7% and never falls below where it started. No tax, dividends or balance sheet growth; illustrative projections on a fictional bank in the shape of the supervisory exercise, not the exercise.",
    "data": "f08/stress_paths.parquet",
@@ -1945,6 +1993,793 @@
     ]
    ]
   },
+  "f07.benchmark": {
+   "columns": [
+    "Company",
+    "Most complained about product",
+    "Complaints",
+    "Monetary relief",
+    "Other relief",
+    "Answered on time"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "int",
+    "pct2",
+    "pct1",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "rows": [
+    [
+     "TRANSUNION INTERMEDIATE HOLDINGS, INC.",
+     "Credit reporting or other personal consumer reports",
+     3515174,
+     1.422404695e-06,
+     0.5527569901,
+     1.0
+    ],
+    [
+     "EQUIFAX, INC.",
+     "Credit reporting or other personal consumer reports",
+     3335868,
+     0.0,
+     0.5412273507,
+     1.0
+    ],
+    [
+     "Experian Information Solutions Inc.",
+     "Credit reporting or other personal consumer reports",
+     3047821,
+     8.399443406e-05,
+     0.05283184281,
+     0.9999862197
+    ],
+    [
+     "CAPITAL ONE FINANCIAL CORPORATION",
+     "Credit card",
+     65227,
+     0.04472074448,
+     0.1208855229,
+     0.9999693379
+    ],
+    [
+     "Block, Inc.",
+     "Money transfer, virtual currency, or money service",
+     60203,
+     0.0008803547996,
+     0.0,
+     0.984452602
+    ],
+    [
+     "CBC Companies, Inc.",
+     "Credit reporting or other personal consumer reports",
+     51021,
+     0.0,
+     0.5908351463,
+     1.0
+    ],
+    [
+     "JPMORGAN CHASE & CO.",
+     "Checking or savings account",
+     49370,
+     0.06682195665,
+     0.08085882115,
+     1.0
+    ],
+    [
+     "LEXISNEXIS",
+     "Credit reporting or other personal consumer reports",
+     48339,
+     4.137445955e-05,
+     0.2730300585,
+     0.9913941124
+    ],
+    [
+     "Resurgent Capital Services L.P.",
+     "Debt collection",
+     46447,
+     0.0,
+     0.2758628114,
+     0.9999784701
+    ],
+    [
+     "CITIBANK, N.A.",
+     "Credit card",
+     41726,
+     0.1842016968,
+     0.3117960025,
+     0.9999760341
+    ],
+    [
+     "BANK OF AMERICA, NATIONAL ASSOCIATION",
+     "Checking or savings account",
+     41119,
+     0.2343199008,
+     0.0542328364,
+     0.9933850531
+    ],
+    [
+     "WELLS FARGO & COMPANY",
+     "Checking or savings account",
+     40787,
+     0.0833844117,
+     0.1257263344,
+     0.9999019295
+    ],
+    [
+     "CL Holdings LLC",
+     "Debt collection",
+     40308,
+     0.0,
+     0.2343703483,
+     0.9999503821
+    ],
+    [
+     "ENCORE CAPITAL GROUP INC.",
+     "Debt collection",
+     38049,
+     0.0002102551972,
+     0.2998764751,
+     0.9998948724
+    ],
+    [
+     "Portfolio Recovery Associates, LLC",
+     "Debt collection",
+     34963,
+     0.0,
+     0.5057060321,
+     0.9798930298
+    ],
+    [
+     "Early Warning Services, LLC",
+     "Money transfer, virtual currency, or money service",
+     30067,
+     0.0,
+     0.0,
+     0.9999002228
+    ],
+    [
+     "SYNCHRONY FINANCIAL",
+     "Credit card",
+     28751,
+     0.09147507913,
+     0.09944001948,
+     0.9778790303
+    ],
+    [
+     "NAVY FEDERAL CREDIT UNION",
+     "Checking or savings account",
+     28057,
+     0.05634957408,
+     0.1748583241,
+     1.0
+    ],
+    [
+     "AMERICAN EXPRESS COMPANY",
+     "Credit card",
+     21678,
+     0.1257957376,
+     0.1409262847,
+     0.9935418397
+    ],
+    [
+     "MOHELA",
+     "Student loan",
+     19305,
+     0.00372960373,
+     0.006526806527,
+     0.4632996633
+    ],
+    [
+     "Bread Financial Holdings, Inc.",
+     "Credit reporting or other personal consumer reports",
+     19115,
+     0.1319905833,
+     0.2843316767,
+     0.9999476851
+    ],
+    [
+     "Chime Financial Inc",
+     "Checking or savings account",
+     17775,
+     0.06070323488,
+     0.02959212377,
+     0.9999437412
+    ],
+    [
+     "Paypal Holdings, Inc",
+     "Money transfer, virtual currency, or money service",
+     17675,
+     0.1644130127,
+     0.1914002829,
+     0.9997736917
+    ],
+    [
+     "CCS Financial Services, Inc.",
+     "Debt collection",
+     17452,
+     0.0,
+     0.1557414623,
+     0.815035526
+    ],
+    [
+     "Nelnet, Inc.",
+     "Student loan",
+     13732,
+     0.0,
+     7.282260414e-05,
+     0.9986891931
+    ],
+    [
+     "DISCOVER BANK",
+     "Credit reporting or other personal consumer reports",
+     13031,
+     0.03821656051,
+     0.2207044739,
+     1.0
+    ],
+    [
+     "Fidelity National Information Services, Inc. (FNIS)",
+     "Credit reporting or other personal consumer reports",
+     12923,
+     7.738141298e-05,
+     0.0,
+     1.0
+    ],
+    [
+     "Kriya Capital, LLC",
+     "Debt collection",
+     12513,
+     0.0,
+     0.9504515304,
+     1.0
+    ],
+    [
+     "Affirm Holdings, Inc",
+     "Credit reporting or other personal consumer reports",
+     12471,
+     0.0,
+     0.0,
+     0.9996792559
+    ],
+    [
+     "National Credit Systems,Inc.",
+     "Debt collection",
+     12445,
+     0.0,
+     0.0,
+     0.9991161109
+    ]
+   ]
+  },
+  "f07.examples": {
+   "columns": [
+    "Topic",
+    "Excerpt"
+   ],
+   "formats": [
+    "int",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     1,
+     "I am submitting this XXXX follow-up complaint regarding the continued reporting of inaccurate, incomplete, and unverifiable information appearing on my Experian , Equifax, and ..."
+    ],
+    [
+     1,
+     "I am filing this formal complaint against the three major credit reporting agencies : Experian, Equifax, and TransUnion, for reporting negative information on my credit reports ..."
+    ],
+    [
+     1,
+     "I am filing this complaint regarding XXXXXXXX XXXX continued reporting of an inaccurate and unverifiable charged-off account on my credit reports with Experian, Equifax, and ..."
+    ],
+    [
+     2,
+     "I opened an Account with Bank of America on XX/XX/year> and within the same week they closed it after I had already deposited {$100.00} to the account like it ask. When I tried to ..."
+    ],
+    [
+     2,
+     "Im filing this complaint against Bank of America for unfair, abusive and deceptive practices that adversely affected me. First off, this involves the checking account I have had ..."
+    ],
+    [
+     2,
+     "On XXXX my banking information as well as passwords, social security number, address, and other various personal information were exposed to a fraudulent company claiming to be a ..."
+    ],
+    [
+     3,
+     "XXXX XXXX, XXXX, XX/XX/XXXX This CFPB complaint has been filed to request pursuant to FCRA XXXX ( XXXX XXXX XXXX ) that you, the XXXX credit reporting agency , block information ..."
+    ],
+    [
+     3,
+     "XXXX XXXX XXXX, XXXX, XX/XX/XXXX This CFPB complaint has been filed to request pursuant to FCRA XXXX ( 15 U.S.C. XXXXc-2 ) that you, the Equifax credit reporting agency , block ..."
+    ],
+    [
+     3,
+     "XXXX XXXX, XX/XX/year> This CFPB complaint has been filed to request pursuant to FCRA 605B ( 15 U.S.C. XXXXc-2 ) that you, the XXXX XXXX XXXX XXXX XXXX block information appearing ..."
+    ],
+    [
+     4,
+     "I am requesting validation of this alleged debt pursuant to my rights under the Fair Debt Collection Practices Act ( FDCPA ). I do not recognize this account and request that you ..."
+    ],
+    [
+     4,
+     "I am writing in response to your communication regarding an alleged debt. Under my rights pursuant to the Fair Debt Collection Practices Act, I am requesting validation of this ..."
+    ],
+    [
+     4,
+     "Debt Validation Request Under the FDCPA XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX, Georgia, XXXX XXXX XXXX XXXX Subject : Debt Validation Request Under the FDCPA To Whom It May ..."
+    ],
+    [
+     5,
+     "XXXX XXXX This account should not be reporting any late payments XXXX XXXXXXXX I have never been late on this account XXXX XXXX XXXXXXXX I was never late late payments I was never ..."
+    ],
+    [
+     5,
+     "THE DATES FROM XX/XX/XXXX TO XX/XX/XXXX ARE INCORRECT WITH THE LATE PAYMENTS.I SHOULD HAVE NO LATE PAYMENT WITH THIS COMPANY."
+    ],
+    [
+     5,
+     "XXXX - XXXX was never late on this account, please remove late payment history."
+    ],
+    [
+     6,
+     "in accordance with the Fair Credit Reporting act XXXX Account XXXX XXXXXXXX, has violated my rights. XXXX XXXX XXXX section XXXX A. XXXX I have the right to privacy. XXXX XXXX ..."
+    ],
+    [
+     6,
+     "In accordance with the Fair Credit Reporting act XXXX Account XXXX has violated my rights. 15 U.S.C XXXX section 602 A States I Have the right to privacy. 15 U.S.C XXXX Section ..."
+    ],
+    [
+     6,
+     "In accordance with the Fair Credit Reporting act XXXX Account ( XXXX ) as violated my rights. XXXX 15 U.S.C XXXX section 602 A. States I have the right to privacy. XXXX 15 U.S.C ..."
+    ],
+    [
+     7,
+     "I filed multiple disputes in XXXX related to duplicate transactions and non-delivery of services through an online platform. The issue is straightforward : I paid for services and ..."
+    ],
+    [
+     7,
+     "Subject : Formal Complaint Wrongful Denial of Refund Dispute To Whom It May Concern, I am filing a formal complaint regarding a dispute that has been repeatedly denied by PayPal, ..."
+    ],
+    [
+     7,
+     "Introduction : I am writing to file a formal complaint against Venmo, which is owned by PayPal, regarding their mishandling of a chargeback dispute and their refusal to properly ..."
+    ],
+    [
+     8,
+     "I did not authorize these inquiries please remove these inquiries immediately"
+    ],
+    [
+     8,
+     "These inquiries are unauthorized and fraudulent, as I have no knowledge of these inquiries. Please take immediate action to remove these inquiries from my credit report."
+    ],
+    [
+     8,
+     "- These inquiries are unauthorized and fraudulent, as I have no knowledge of these inquiries. Please take immediate action to remove these inquiries from my credit report."
+    ],
+    [
+     9,
+     "Disputed Accounts : XXXX XXXX XXXXXXXX Account Number : XXXX Date Opened : XX/XX/XXXX Balance : {$XXXX.00} XXXX Account Number : XXXX Date Opened : XX/XX/XXXX Balance : {$820.00} ..."
+    ],
+    [
+     9,
+     "I am writing to dispute the following items on my credit reports. I believe these items to be inaccurate, and I request that they be investigated and corrected accordingly. ..."
+    ],
+    [
+     9,
+     "I am disputing the following charged-off accounts on my TransUnion credit report : Charged Off Accounts XXXX XXXX Account Number : XXXX Date Opened : XX/XX/XXXX Balance : {$91.00} ..."
+    ],
+    [
+     10,
+     "I have found fraudulent accounts on my credit report, XXXX XXXXXXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX ..."
+    ],
+    [
+     10,
+     "please remove fraudulent accounts from my credit report"
+    ],
+    [
+     10,
+     "I reviewed my credit report and noticed accounts that are not mine and are fraudulent. Please remove these accounts from my credit report and update my report."
+    ]
+   ]
+  },
+  "f07.expected": {
+   "columns": [
+    "What a reader expects",
+    "Marker words",
+    "Emerged as topic"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     "Billing disputes",
+     "dispute, charge, charged, refund, billing",
+     "9"
+    ],
+    [
+     "Credit reporting errors",
+     "report, reporting, inaccurate, bureau, bureaus",
+     "1"
+    ],
+    [
+     "Debt collection contact",
+     "collection, collector, debt, calls, calling",
+     "4"
+    ],
+    [
+     "Fraud on an account",
+     "fraud, fraudulent, unauthorized, stolen, scam",
+     "3"
+    ]
+   ]
+  },
+  "f07.issues": {
+   "columns": [
+    "Product",
+    "Issue",
+    "Complaints, test months",
+    "Relief expected",
+    "Relief that happened",
+    "Expected rate"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "int",
+    "float1",
+    "int",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     "Credit card",
+     "Problem with a purchase shown on your statement",
+     444,
+     126.0394385,
+     118,
+     0.2838726093
+    ],
+    [
+     "Checking or savings account",
+     "Managing an account",
+     847,
+     115.2263161,
+     108,
+     0.1360405149
+    ],
+    [
+     "Checking or savings account",
+     "Problem with a lender or other company charging your account",
+     238,
+     47.58815992,
+     28,
+     0.1999502518
+    ],
+    [
+     "Credit card",
+     "Fees or interest",
+     157,
+     46.02320069,
+     53,
+     0.2931414057
+    ],
+    [
+     "Checking or savings account",
+     "Closing an account",
+     219,
+     31.12981906,
+     36,
+     0.1421452925
+    ],
+    [
+     "Credit card",
+     "Other features, terms, or problems",
+     173,
+     20.75927395,
+     27,
+     0.1199958032
+    ],
+    [
+     "Checking or savings account",
+     "Problem caused by your funds being low",
+     87,
+     16.13870169,
+     13,
+     0.1855023183
+    ],
+    [
+     "Money transfer, virtual currency, or money service",
+     "Fraud or scam",
+     214,
+     14.39858707,
+     11,
+     0.06728311713
+    ],
+    [
+     "Money transfer, virtual currency, or money service",
+     "Unauthorized transactions or other transaction problem",
+     120,
+     12.96692208,
+     11,
+     0.108057684
+    ],
+    [
+     "Credit card",
+     "Problem when making payments",
+     69,
+     11.57269418,
+     19,
+     0.1677202055
+    ],
+    [
+     "Credit card",
+     "Closing your account",
+     116,
+     11.39804267,
+     8,
+     0.09825898849
+    ],
+    [
+     "Mortgage",
+     "Trouble during payment process",
+     290,
+     7.095028385,
+     6,
+     0.02446561512
+    ]
+   ]
+  },
+  "f07.products": {
+   "columns": [
+    "Product",
+    "Complaints",
+    "Share"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "rows": [
+    [
+     "Credit reporting or other personal consumer reports",
+     10210159,
+     0.8932338806
+    ],
+    [
+     "Debt collection",
+     569418,
+     0.04981542891
+    ],
+    [
+     "Credit card",
+     182274,
+     0.01594620734
+    ],
+    [
+     "Checking or savings account",
+     163725,
+     0.01432345149
+    ],
+    [
+     "Money transfer, virtual currency, or money service",
+     116560,
+     0.01019723014
+    ],
+    [
+     "Mortgage",
+     54993,
+     0.004811052482
+    ],
+    [
+     "Vehicle loan or lease",
+     42532,
+     0.003720904191
+    ],
+    [
+     "Student loan",
+     40850,
+     0.00357375473
+    ],
+    [
+     "Payday loan, title loan, personal loan, or advance loan",
+     29072,
+     0.002543358568
+    ],
+    [
+     "Prepaid card",
+     12649,
+     0.001106595437
+    ],
+    [
+     "Debt or credit management",
+     8323,
+     0.0007281361229
+    ]
+   ]
+  },
+  "f07.responses": {
+   "columns": [
+    "Company response",
+    "Complaints in the sample",
+    "Share"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     "Closed with explanation",
+     30747,
+     0.6672091661
+    ],
+    [
+     "Closed with non-monetary relief",
+     13534,
+     0.2936874769
+    ],
+    [
+     "Closed with monetary relief",
+     1389,
+     0.03014126684
+    ],
+    [
+     "Untimely response",
+     411,
+     0.008918690189
+    ],
+    [
+     "In progress",
+     2,
+     4.339995226e-05
+    ]
+   ]
+  },
+  "f07.topics": {
+   "columns": [
+    "Topic",
+    "Top terms",
+    "Complaints where it leads",
+    "Share",
+    "Of which form letters"
+   ],
+   "formats": [
+    "int",
+    "text",
+    "int",
+    "pct1",
+    "pct0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     1,
+     "fcra, reporting, inaccurate, accuracy, act, fair, dispute, disputed",
+     5118,
+     0.1110604778,
+     0.3894099258
+    ],
+    [
+     2,
+     "money, called, bank, card, sent, received, did, asked",
+     8116,
+     0.1761170063,
+     0.03758008871
+    ],
+    [
+     3,
+     "theft, identity, fraudulent, victim, ftc, block, result, fraud",
+     3584,
+     0.07777271445,
+     0.4503348214
+    ],
+    [
+     4,
+     "debt, collection, validation, original, alleged, fdcpa, collect, creditor",
+     4581,
+     0.09940759065,
+     0.2560576293
+    ],
+    [
+     5,
+     "late, payment, payments, paid, history, loan, reported, time",
+     4234,
+     0.09187769893,
+     0.3186112423
+    ],
+    [
+     6,
+     "section, consumer, usc, reporting, agency, rights, states, privacy",
+     4117,
+     0.08933880173,
+     0.6597036677
+    ],
+    [
+     7,
+     "funds, transaction, despite, regarding, complaint, financial, issue, provided",
+     6584,
+     0.1428726428,
+     0.1330498177
+    ],
+    [
+     8,
+     "inquiries, unauthorized, hard, inquiry, authorize, did, xxxxxx, consent",
+     2445,
+     0.05305644164,
+     0.3693251534
+    ],
+    [
+     9,
+     "balance, date, opened, number, charged, following, listed, charge",
+     1622,
+     0.03519736128,
+     0.1683107275
+    ],
+    [
+     10,
+     "accounts, fraudulent, remove, removed, breach, noticed, recently, data",
+     5682,
+     0.1232992644,
+     0.5617740232
+    ]
+   ]
+  },
   "f08.link_table": {
    "columns": [
     "Term",
@@ -2692,6 +3527,18 @@
      "cure",
      "A loan that is past due in June and July 2025 appears in the last training month and the first validation month, with nearly the same features and the same outcome. Early stopping and the choice between the two candidates were being made on loans the fit had already seen.",
      "One loan in five is held out of the fit by a hash of its identifier, and early stopping and the choice of champion use only held out loans in the validation months. The test months begin three months after validation ends, so every outcome used to fit or choose the model was known before the first test month end, and a check in the trainer refuses to run otherwise."
+    ],
+    [
+     "2026-09-27",
+     "relief",
+     "Complaints received in late 2024 ended in monetary relief about one time in seventy; by mid 2026 it was closer to one in fourteen. A model fitted on the early months will score the later ones too low, and a probability threshold chosen on 2025 would flag almost nothing in 2026.",
+     "The operating point flags the top twentieth of scores, set on the validation months immediately before the test months. Reliability on the test months is published with the drift stated beside it, the calibration gate is non critical, and the monitoring plan resets the operating point when the monthly base rate moves by half."
+    ],
+    [
+     "2026-09-27",
+     "relief",
+     "Consumers write about their age, their disability, their military service and their family. A text model can learn that an elderly widow is more likely to get a refund, which is a protected basis entering a routing decision by the back door. The Bureau's own tags mark older Americans and servicemembers.",
+     "`rules/proxies.yaml` now lists words a text model may not learn from, and the relief model drops them, and any phrase containing them, from its vocabulary. The Bureau's tags are never features; they are used only to audit flag rates by group, and a gate watches the ratio."
     ]
    ]
   },
@@ -2791,6 +3638,17 @@
      "2026-08-31",
      "approved",
      0.583038203
+    ],
+    [
+     "relief",
+     "Monetary relief on consumer complaints",
+     "f07",
+     "2",
+     "sole",
+     "development",
+     "2026-08-31",
+     "not approved",
+     0.8688340613
     ],
     [
      "cure",
@@ -7765,6 +8623,540 @@
      76.51482566
     ]
    ]
+  },
+  "models.relief.benchmark": {
+   "columns": [
+    "Model",
+    "AUROC",
+    "Gini",
+    "Brier",
+    "ECE"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float4",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     "This model",
+     0.8688340613,
+     0.7376681226,
+     0.05276944941,
+     0.007298886933
+    ],
+    [
+     "Base rate",
+     0.5,
+     0.0,
+     0.06559919144,
+     0.05319015915
+    ],
+    [
+     "The form's metadata alone",
+     0.8548268219,
+     0.7096536438,
+     0.05394153745,
+     0.01279814846
+    ]
+   ]
+  },
+  "models.relief.challenges": {
+   "columns": [
+    "Date",
+    "Challenge",
+    "Response",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     "2026-09-27",
+     "Complaints received in late 2024 ended in monetary relief about one time in seventy; by mid 2026 it was closer to one in fourteen. A model fitted on the early months will score the later ones too low, and a probability threshold chosen on 2025 would flag almost nothing in 2026.",
+     "The ranking survives a shift in the base rate far better than the probabilities do. The operating point is a capacity, not a probability: a review team that can read one complaint in twenty.",
+     "The operating point flags the top twentieth of scores, set on the validation months immediately before the test months. Reliability on the test months is published with the drift stated beside it, the calibration gate is non critical, and the monitoring plan resets the operating point when the monthly base rate moves by half."
+    ],
+    [
+     "2026-09-27",
+     "Consumers write about their age, their disability, their military service and their family. A text model can learn that an elderly widow is more likely to get a refund, which is a protected basis entering a routing decision by the back door. The Bureau's own tags mark older Americans and servicemembers.",
+     "Routing is not a credit decision, but it decides whose complaint a person reads first, and the same reasoning that keeps age out of a scorecard applies.",
+     "`rules/proxies.yaml` now lists words a text model may not learn from, and the relief model drops them, and any phrase containing them, from its vocabulary. The Bureau's tags are never features; they are used only to audit flag rates by group, and a gate watches the ratio."
+    ]
+   ]
+  },
+  "models.relief.conditions": {
+   "columns": [
+    "Condition"
+   ],
+   "formats": [
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     "Test AUROC above the metadata only model: the narrative has to add something (measured 0.01401)"
+    ]
+   ]
+  },
+  "models.relief.contract": {
+   "columns": [
+    "Line",
+    "What this model does"
+   ],
+   "formats": [
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     "trained",
+     "On complaints received September 2024 to December 2025; validation January to March 2026 sets the operating point."
+    ],
+    [
+     "timed",
+     "Only fields the consumer writes when filing; a check refuses any field the company writes afterwards, such as its response."
+    ],
+    [
+     "calibrated",
+     "Reliability on the test months is published; the base rate rose over the window, which the report states."
+    ],
+    [
+     "useful",
+     "Beats a model on the form's metadata alone, so the narrative adds something, and lifts precision well above the base rate at the operating point."
+    ],
+    [
+     "fair",
+     "Words naming a protected basis are removed from the vocabulary; flag rates by the Bureau's older American and servicemember tags are audited."
+    ],
+    [
+     "gated",
+     "Every gate in this report."
+    ],
+    [
+     "served",
+     "Scored in the pipeline over the loaded window; not served by the API."
+    ],
+    [
+     "integrated",
+     "Not integrated. Until the narrative earns its place, the conduct risk view ranks issues with the model on the form's metadata alone."
+    ],
+    [
+     "monitored",
+     "Monthly: precision at the operating point against closed complaints, the base rate, and flag rates by tag."
+    ],
+    [
+     "documented",
+     "This validation report and the complaints page."
+    ],
+    [
+     "bounded",
+     "Routes and ranks. Never decides whether a consumer gets relief, and never ranks consumers."
+    ],
+    [
+     "validated",
+     "This report, rendered from the manifest before the ranking is used."
+    ],
+    [
+     "explainable",
+     "The terms that raise and lower the score most are published; a routed complaint shows its product and issue."
+    ]
+   ]
+  },
+  "models.relief.gates": {
+   "columns": [
+    "Gate",
+    "Threshold",
+    "Measured",
+    "Result"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     "Test AUROC above the metadata only model: the narrative has to add something",
+     "at least 0.02",
+     0.01400723938,
+     "FAIL"
+    ],
+    [
+     "Test precision at the operating point over the base rate (lift)",
+     "at least 2",
+     5.870231133,
+     "pass"
+    ],
+    [
+     "Test AUROC at or above the floor",
+     "at least 0.7",
+     0.8688340613,
+     "pass"
+    ],
+    [
+     "Lowest over highest flag rate across the Bureau's tag groups",
+     "at least 0.5",
+     0.2361012117,
+     "FAIL"
+    ],
+    [
+     "Expected calibration error on test",
+     "at most 0.02",
+     0.007298886933,
+     "pass"
+    ]
+   ]
+  },
+  "models.relief.monitoring": {
+   "columns": [
+    "Measure",
+    "Trigger",
+    "Action"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     "Precision at the operating point against closed complaints",
+     "below twice the base rate for a quarter",
+     "Refit"
+    ],
+    [
+     "The monthly base rate of monetary relief",
+     "moves by half",
+     "Reset the operating point"
+    ],
+    [
+     "Flag rate by the Bureau's tags",
+     "any group below half the highest",
+     "Review the vocabulary"
+    ]
+   ]
+  },
+  "models.relief.reliability": {
+   "columns": [
+    "Bin",
+    "Accounts",
+    "Predicted",
+    "Observed"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "pct2",
+    "pct2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     1,
+     791,
+     0.00052708211,
+     0.0
+    ],
+    [
+     2,
+     791,
+     0.001866618183,
+     0.001264222503
+    ],
+    [
+     3,
+     791,
+     0.003252809482,
+     0.001264222503
+    ],
+    [
+     4,
+     791,
+     0.006627588591,
+     0.007585335019
+    ],
+    [
+     5,
+     791,
+     0.01441612279,
+     0.006321112516
+    ],
+    [
+     6,
+     790,
+     0.02974993517,
+     0.03037974684
+    ],
+    [
+     7,
+     790,
+     0.05357934718,
+     0.06455696203
+    ],
+    [
+     8,
+     790,
+     0.09206271541,
+     0.09493670886
+    ],
+    [
+     9,
+     790,
+     0.1617850449,
+     0.1594936709
+    ],
+    [
+     10,
+     790,
+     0.35167098,
+     0.3075949367
+    ]
+   ]
+  },
+  "models.relief.subgroups": {
+   "columns": [
+    "Group",
+    "N",
+    "Event rate",
+    "Mean score",
+    "Calibration gap",
+    "Auroc",
+    "Flag rate",
+    "Fpr",
+    "Recall"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct2",
+    "pct2",
+    "spct1",
+    "float3",
+    "pct2",
+    "pct2",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     "Older American",
+     477.0,
+     0.1488469602,
+     0.1323031684,
+     -0.01654379179,
+     0.8197807535,
+     0.1446540881,
+     0.1009852217,
+     0.3943661972
+    ],
+    [
+     "Older American, servicemember",
+     119.0,
+     0.1260504202,
+     0.09692954155,
+     -0.02912087862,
+     0.7903846154,
+     0.08403361345,
+     0.04807692308,
+     0.3333333333
+    ],
+    [
+     "Other",
+     6577.0,
+     0.06051391212,
+     0.0671514506,
+     0.006637538478,
+     0.8739758023,
+     0.0457655466,
+     0.02977828128,
+     0.2939698492
+    ],
+    [
+     "Other, servicemember",
+     732.0,
+     0.06557377049,
+     0.06694478893,
+     0.00137101844,
+     0.8480141326,
+     0.03415300546,
+     0.02192982456,
+     0.2083333333
+    ]
+   ]
+  },
+  "models.relief.terms": {
+   "columns": [
+    "raises_relief",
+    "weight_up",
+    "lowers_relief",
+    "weight_down"
+   ],
+   "formats": [
+    "text",
+    "float2",
+    "text",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "rows": [
+    [
+     "atm",
+     1.662976238,
+     "funds",
+     -0.9631272269
+    ],
+    [
+     "charged",
+     1.525997648,
+     "open",
+     -0.8006321709
+    ],
+    [
+     "checking account",
+     1.330345021,
+     "payment",
+     -0.7135575143
+    ],
+    [
+     "fee",
+     1.293698066,
+     "account year",
+     -0.6840320104
+    ],
+    [
+     "email",
+     1.232733745,
+     "showed",
+     -0.6769328458
+    ],
+    [
+     "didn",
+     1.206433131,
+     "loan",
+     -0.6573382034
+    ],
+    [
+     "checking",
+     1.093834745,
+     "wrong",
+     -0.6528156303
+    ],
+    [
+     "bofa",
+     1.077678423,
+     "tried",
+     -0.6406517964
+    ],
+    [
+     "bank",
+     1.07402519,
+     "verification",
+     -0.6152433302
+    ],
+    [
+     "claim",
+     1.037389964,
+     "believe",
+     -0.5981332481
+    ],
+    [
+     "refunded",
+     1.021949335,
+     "issues",
+     -0.5928011715
+    ],
+    [
+     "balance",
+     0.9967757879,
+     "day",
+     -0.5892952376
+    ],
+    [
+     "card stolen",
+     0.9895837614,
+     "income",
+     -0.5820629555
+    ],
+    [
+     "offer",
+     0.9771540011,
+     "points",
+     -0.5584800065
+    ],
+    [
+     "year",
+     0.9752489878,
+     "deposited",
+     -0.5499860775
+    ]
+   ]
   }
  },
  "values": {
@@ -9990,6 +11382,314 @@
    },
    "value": 0.1256791086
   },
+  "f07.caveat": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "not a statistical sample of consumers' experiences in the marketplace"
+  },
+  "f07.companies": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 30
+  },
+  "f07.complaints": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 11430555
+  },
+  "f07.distinct_narratives": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 30626
+  },
+  "f07.expected_emerged": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 4
+  },
+  "f07.expected_total": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 4
+  },
+  "f07.first_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "2024-09"
+  },
+  "f07.first_month_complaints": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 264821
+  },
+  "f07.growth": {
+   "fmt": "spct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 1.466968254
+  },
+  "f07.highest_relief_company": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "BANK OF AMERICA, NATIONAL ASSOCIATION"
+  },
+  "f07.highest_relief_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 0.2343199008
+  },
+  "f07.last_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "2026-08"
+  },
+  "f07.last_month_complaints": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 653305
+  },
+  "f07.narratives": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 46083
+  },
+  "f07.relief_conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": "not approved"
+  },
+  "f07.relief_metadata_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.8548268219
+  },
+  "f07.relief_narrative_gain": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.01400723938
+  },
+  "f07.relief_ranking_source": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": "the model on the form's metadata alone"
+  },
+  "f07.relief_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.03014126684
+  },
+  "f07.relief_rate_first": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.01124144673
+  },
+  "f07.relief_rate_last": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.07195301028
+  },
+  "f07.relief_status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": "development"
+  },
+  "f07.relief_test_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.8688340613
+  },
+  "f07.template_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.3123494564
+  },
+  "f07.top3_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 0.8660002073
+  },
+  "f07.top_product": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "Credit reporting or other personal consumer reports"
+  },
+  "f07.top_product_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 0.8932338806
+  },
+  "f07.topics_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 10
+  },
   "f08.base_capital_end": {
    "fmt": "pct1",
    "provenance": {
@@ -10912,7 +12612,7 @@
     "seed": null,
     "source": "effective challenge log"
    },
-   "value": 15
+   "value": 17
   },
   "f10.fraud_first_labelled_week": {
    "fmt": "text",
@@ -10956,7 +12656,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 7
+   "value": 8
   },
   "f10.not_approved": {
    "fmt": "int",
@@ -10967,7 +12667,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 1
+   "value": 2
   },
   "f10.pd_psi_worst": {
    "fmt": "float3",
@@ -16336,6 +18036,721 @@
     "source": "packages/models (pd_scorecard)"
    },
    "value": 3725
+  },
+  "models.relief.banned_terms": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 28
+  },
+  "models.relief.c_metadata": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 1.0
+  },
+  "models.relief.c_text": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 1.0
+  },
+  "models.relief.complaints": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 46082
+  },
+  "models.relief.conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "not approved"
+  },
+  "models.relief.conditions_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 1
+  },
+  "models.relief.development.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.9894434348
+  },
+  "models.relief.development.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.6872985589
+  },
+  "models.relief.development.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.008158603754
+  },
+  "models.relief.development.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.001473120363
+  },
+  "models.relief.development.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.01410901858
+  },
+  "models.relief.development.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 454
+  },
+  "models.relief.development.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.9788868695
+  },
+  "models.relief.development.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.9107054679
+  },
+  "models.relief.development.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 32178
+  },
+  "models.relief.feature_count": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "5"
+  },
+  "models.relief.features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "narrative_tfidf, product, sub_product, issue, company"
+  },
+  "models.relief.flag_share": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.05
+  },
+  "models.relief.flagged_op": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 405.0
+  },
+  "models.relief.last_validated": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "2026-08-31"
+  },
+  "models.relief.lift_op": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 5.870231133
+  },
+  "models.relief.metadata_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.8548268219
+  },
+  "models.relief.method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "TF-IDF of the narrative, one and two word terms, with product, sub product, issue and company one hot; logistic regression"
+  },
+  "models.relief.narrative_gain": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.01400723938
+  },
+  "models.relief.outcome": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "The company closed the complaint with monetary relief"
+  },
+  "models.relief.owner": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "Head of analytics"
+  },
+  "models.relief.precision_op": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.3950617284
+  },
+  "models.relief.prediction_time": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "When the complaint is filed; only the narrative and what the consumer chose on the form"
+  },
+  "models.relief.purpose": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "Route complaints likely to end in a refund to the team that can fix the cause, and rank issues by the relief they are likely to cost"
+  },
+  "models.relief.ranking_source": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "the model on the form's metadata alone"
+  },
+  "models.relief.recall_op": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.3007518797
+  },
+  "models.relief.role": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "sole"
+  },
+  "models.relief.status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "development"
+  },
+  "models.relief.test.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.8688340613
+  },
+  "models.relief.test.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.3196475757
+  },
+  "models.relief.test.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.05276944941
+  },
+  "models.relief.test.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.007298886933
+  },
+  "models.relief.test.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.06729917774
+  },
+  "models.relief.test.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 532
+  },
+  "models.relief.test.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.7376681226
+  },
+  "models.relief.test.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.5819042044
+  },
+  "models.relief.test.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 7905
+  },
+  "models.relief.test_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "April to July 2026"
+  },
+  "models.relief.test_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.06729917774
+  },
+  "models.relief.test_relief": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 532
+  },
+  "models.relief.test_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 7905
+  },
+  "models.relief.tier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "2"
+  },
+  "models.relief.tier_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "Informs a decision a person makes; moderate materiality"
+  },
+  "models.relief.title": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "Monetary relief on consumer complaints"
+  },
+  "models.relief.top_issue": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "Problem with a purchase shown on your statement (Credit card)"
+  },
+  "models.relief.train_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "September 2024 to December 2025"
+  },
+  "models.relief.train_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.01410901858
+  },
+  "models.relief.val_metadata": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.8690063576
+  },
+  "models.relief.val_text": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.8830096883
+  },
+  "models.relief.validation.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.8830096883
+  },
+  "models.relief.validation.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.3573614493
+  },
+  "models.relief.validation.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.05074400909
+  },
+  "models.relief.validation.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.004364944513
+  },
+  "models.relief.validation.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.06718906302
+  },
+  "models.relief.validation.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 403
+  },
+  "models.relief.validation.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.7660193766
+  },
+  "models.relief.validation.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 0.5943395934
+  },
+  "models.relief.validation.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 5998
+  },
+  "models.relief.validation_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": "January to March 2026"
+  },
+  "models.relief.vocabulary": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026",
+    "seed": null,
+    "source": "packages/models (relief)"
+   },
+   "value": 30000
   },
   "policy.approval_cutoff": {
    "fmt": "int",

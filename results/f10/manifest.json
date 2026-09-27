@@ -138,6 +138,18 @@
      "cure",
      "A loan that is past due in June and July 2025 appears in the last training month and the first validation month, with nearly the same features and the same outcome. Early stopping and the choice between the two candidates were being made on loans the fit had already seen.",
      "One loan in five is held out of the fit by a hash of its identifier, and early stopping and the choice of champion use only held out loans in the validation months. The test months begin three months after validation ends, so every outcome used to fit or choose the model was known before the first test month end, and a check in the trainer refuses to run otherwise."
+    ],
+    [
+     "2026-09-27",
+     "relief",
+     "Complaints received in late 2024 ended in monetary relief about one time in seventy; by mid 2026 it was closer to one in fourteen. A model fitted on the early months will score the later ones too low, and a probability threshold chosen on 2025 would flag almost nothing in 2026.",
+     "The operating point flags the top twentieth of scores, set on the validation months immediately before the test months. Reliability on the test months is published with the drift stated beside it, the calibration gate is non critical, and the monitoring plan resets the operating point when the monthly base rate moves by half."
+    ],
+    [
+     "2026-09-27",
+     "relief",
+     "Consumers write about their age, their disability, their military service and their family. A text model can learn that an elderly widow is more likely to get a refund, which is a protected basis entering a routing decision by the back door. The Bureau's own tags mark older Americans and servicemembers.",
+     "`rules/proxies.yaml` now lists words a text model may not learn from, and the relief model drops them, and any phrase containing them, from its vocabulary. The Bureau's tags are never features; they are used only to audit flag rates by group, and a gate watches the ratio."
     ]
    ]
   },
@@ -239,6 +251,17 @@
      0.583038203
     ],
     [
+     "relief",
+     "Monetary relief on consumer complaints",
+     "f07",
+     "2",
+     "sole",
+     "development",
+     "2026-08-31",
+     "not approved",
+     0.8688340613
+    ],
+    [
      "cure",
      "Cure within ninety days for delinquent loans",
      "f09",
@@ -324,7 +347,7 @@
     "seed": null,
     "source": "effective challenge log"
    },
-   "value": 15
+   "value": 17
   },
   "f10.fraud_first_labelled_week": {
    "fmt": "text",
@@ -368,7 +391,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 7
+   "value": 8
   },
   "f10.not_approved": {
    "fmt": "int",
@@ -379,7 +402,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 1
+   "value": 2
   },
   "f10.pd_psi_worst": {
    "fmt": "float3",

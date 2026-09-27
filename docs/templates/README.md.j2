@@ -36,6 +36,7 @@ The bank is {{ v('policy.bank_name') }}, and it does not exist: its name was che
 | Rate sensitivity | Net interest income changes by {{ v('f08.nii_up200') }} after a two point rise and {{ v('f08.nii_down200') }} after a two point fall, over twelve months | Repricing gaps with the recovered deposit betas; the balance sheet is {{ v('f08.stance') }} |
 | Charge off forecast | Six month charge offs missed by {{ v('f09.mape_flat') }} on average over {{ v('f09.origins') }} rolling origins, against {{ v('f09.mape_naive') }} for the naive benchmark | A roll rate chain over the delinquency buckets; the seasonal adjustment was tested and did not help |
 | Collections queue | Cure model AUROC {{ v('models.cure.test.auroc') }} against {{ v('models.cure.rule_auroc') }} for the bucket rule collectors use | The first {{ v('f09.queue_size') }} calls cover {{ v('f09.queue_exposure') }} of {{ v('f09.total_exposure') }} likely to be lost |
+| Complaint narratives, real CFPB data | {{ v('f07.template_share') }} of sampled narratives are form letters; counted once, {{ v('f07.expected_emerged') }} of {{ v('f07.expected_total') }} expected themes emerge as topics | NMF over TF-IDF on {{ v('f07.narratives') }} narratives; the relief model that reads them is {{ v('f07.relief_conclusion') }} because the narrative added {{ v('f07.relief_narrative_gain') }} of AUROC over the form |
 | Warehouse | {{ v('f11.dbt_tests_passed') }} of {{ v('f11.dbt_tests') }} tests pass over {{ v('f11.dbt_models') }} models | dbt on DuckDB |
 
 ## The fraud desk
@@ -58,6 +59,7 @@ The model's AUROC of {{ v('models.fraud_card.test.auroc') }} is a property of th
 | f04 | The fraud desk | At what score should the desk decline, and what can it say about its precision? | Cost {{ v('models.fraud_card.cost_op') }} at the operating point | The card networks' chargeback window; the BAF suite's fairness protocol | `fraud_card`, `fraud_account` | [/desk](https://mekala27-45.github.io/ledger/desk/) |
 | f05 | Financial crime | Do the rules find the planted typologies at a workable volume, and in what order? | {{ v('f05.episodes_found') }} of {{ v('f05.episodes') }} planted episodes found, {{ v('f05.per_100k') }} alerts per hundred thousand entries | BSA and the reporting threshold | `aml_triage` | [/crime](https://mekala27-45.github.io/ledger/crime/) |
 | f06 | Deposits and customers | Where are the deposits, how much of a rate move reaches customers, and whom should the bank call? | The largest one percent of depositors hold {{ v('f06.top1_share') }} | Deposit betas against the generator's | `attrition` | [/deposits](https://mekala27-45.github.io/ledger/deposits/) |
+| f07 | Complaints and conduct | What are consumers complaining about, and which issues will cost relief? | {{ v('f07.complaints') }} complaints, {{ v('f07.template_share') }} of narratives form letters | The CFPB's public complaint database | `relief` | [/complaints](https://mekala27-45.github.io/ledger/complaints/) |
 | f08 | Treasury and stress testing | What does a rate move do to earnings, and a severe recession to losses and capital? | Severely adverse losses {{ v('f08.severe_loss') }} over nine quarters | The Federal Reserve's {{ v('f08.scenario_year') }} scenarios | | [/treasury](https://mekala27-45.github.io/ledger/treasury/) |
 | f09 | Collections and recovery | How many loans will charge off, whom should a collector call first, and how much comes back? | {{ v('f09.forecast_charge_offs') }} charge offs expected in six months | Loss given default from observed recoveries | `cure` | [/collections](https://mekala27-45.github.io/ledger/collections/) |
 | f10 | Model risk management | Has every model earned the decisions it makes? | {{ v('f10.models') }} models, each with a validation report | SR 11-7 | | [/models](https://mekala27-45.github.io/ledger/models/) |
@@ -87,6 +89,7 @@ The scorecard studio at [/studio](https://mekala27-45.github.io/ledger/studio/) 
 | Deposit betas and customer attrition | f06, [/deposits](https://mekala27-45.github.io/ledger/deposits/) |
 | Interest rate risk, stress testing and liquidity | f08, `packages/stress`, [/treasury](https://mekala27-45.github.io/ledger/treasury/) |
 | Roll rate forecasting, cure modelling and recoveries | f09, [/collections](https://mekala27-45.github.io/ledger/collections/) |
+| Text analytics on complaints, topics and a routing model | f07, `packages/nlp`, [/complaints](https://mekala27-45.github.io/ledger/complaints/) |
 | Model risk management, SR 11-7 | f10, `report/validation`, [/models](https://mekala27-45.github.io/ledger/models/) |
 | Model monitoring, PSI and CSI | f10, the monitoring charts |
 | Ledger reconciliation and controls | f11, [/controls](https://mekala27-45.github.io/ledger/controls/) |

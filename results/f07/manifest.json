@@ -1,0 +1,1153 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f07.fig_benchmark": {
+   "callout": "The three consumer reporting agencies received 86.6% of all complaints and closed almost none with monetary relief, because a credit report is corrected rather than refunded. Among the rest, BANK OF AMERICA, NATIONAL ASSOCIATION closed the largest share with money, 23.4%. Real companies, real public data, exactly as the Bureau publishes it; a count of complaints is not a measure of how a company treats its customers.",
+   "data": "f07/companies.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "title": "The thirty companies with the most complaints"
+  },
+  "f07.fig_issues": {
+   "callout": "On complaints from the test months, problem with a purchase shown on your statement (credit card) is expected to end in relief 126.0 times, and did 118 times. The ranking comes from the model on the form's metadata alone, because the narrative added only 0.014 of AUROC. In a bank this ranking is for routing and root cause, never for deciding whether a consumer gets relief.",
+   "data": "f07/issues.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "title": "The conduct risk view: issues ranked by the relief they are likely to cost"
+  },
+  "f07.fig_topics": {
+   "callout": "10 topics from non negative matrix factorisation over TF-IDF of 46,083 narratives. 4 of the 4 themes a reader expects emerged as topics of their own. 31.2% of narratives open like at least four others, form letters that were counted once when the topics were fitted. The sample is not a statistical sample of consumers' experiences in the marketplace, like the database it comes from.",
+   "data": "f07/topic_trend.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "title": "What the narratives are about: topics by month"
+  },
+  "f07.fig_volume": {
+   "callout": "11,430,555 complaints in two years, 89.3% of them about credit reporting or other personal consumer reports, and the monthly count went from 264,821 to 653,305. Real public data as the Bureau publishes it, which it states is not a statistical sample of consumers' experiences in the marketplace.",
+   "data": "f07/volume_by_product.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "title": "Complaints to the Bureau by product and month"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f07.benchmark": {
+   "columns": [
+    "Company",
+    "Most complained about product",
+    "Complaints",
+    "Monetary relief",
+    "Other relief",
+    "Answered on time"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "int",
+    "pct2",
+    "pct1",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "rows": [
+    [
+     "TRANSUNION INTERMEDIATE HOLDINGS, INC.",
+     "Credit reporting or other personal consumer reports",
+     3515174,
+     1.422404695e-06,
+     0.5527569901,
+     1.0
+    ],
+    [
+     "EQUIFAX, INC.",
+     "Credit reporting or other personal consumer reports",
+     3335868,
+     0.0,
+     0.5412273507,
+     1.0
+    ],
+    [
+     "Experian Information Solutions Inc.",
+     "Credit reporting or other personal consumer reports",
+     3047821,
+     8.399443406e-05,
+     0.05283184281,
+     0.9999862197
+    ],
+    [
+     "CAPITAL ONE FINANCIAL CORPORATION",
+     "Credit card",
+     65227,
+     0.04472074448,
+     0.1208855229,
+     0.9999693379
+    ],
+    [
+     "Block, Inc.",
+     "Money transfer, virtual currency, or money service",
+     60203,
+     0.0008803547996,
+     0.0,
+     0.984452602
+    ],
+    [
+     "CBC Companies, Inc.",
+     "Credit reporting or other personal consumer reports",
+     51021,
+     0.0,
+     0.5908351463,
+     1.0
+    ],
+    [
+     "JPMORGAN CHASE & CO.",
+     "Checking or savings account",
+     49370,
+     0.06682195665,
+     0.08085882115,
+     1.0
+    ],
+    [
+     "LEXISNEXIS",
+     "Credit reporting or other personal consumer reports",
+     48339,
+     4.137445955e-05,
+     0.2730300585,
+     0.9913941124
+    ],
+    [
+     "Resurgent Capital Services L.P.",
+     "Debt collection",
+     46447,
+     0.0,
+     0.2758628114,
+     0.9999784701
+    ],
+    [
+     "CITIBANK, N.A.",
+     "Credit card",
+     41726,
+     0.1842016968,
+     0.3117960025,
+     0.9999760341
+    ],
+    [
+     "BANK OF AMERICA, NATIONAL ASSOCIATION",
+     "Checking or savings account",
+     41119,
+     0.2343199008,
+     0.0542328364,
+     0.9933850531
+    ],
+    [
+     "WELLS FARGO & COMPANY",
+     "Checking or savings account",
+     40787,
+     0.0833844117,
+     0.1257263344,
+     0.9999019295
+    ],
+    [
+     "CL Holdings LLC",
+     "Debt collection",
+     40308,
+     0.0,
+     0.2343703483,
+     0.9999503821
+    ],
+    [
+     "ENCORE CAPITAL GROUP INC.",
+     "Debt collection",
+     38049,
+     0.0002102551972,
+     0.2998764751,
+     0.9998948724
+    ],
+    [
+     "Portfolio Recovery Associates, LLC",
+     "Debt collection",
+     34963,
+     0.0,
+     0.5057060321,
+     0.9798930298
+    ],
+    [
+     "Early Warning Services, LLC",
+     "Money transfer, virtual currency, or money service",
+     30067,
+     0.0,
+     0.0,
+     0.9999002228
+    ],
+    [
+     "SYNCHRONY FINANCIAL",
+     "Credit card",
+     28751,
+     0.09147507913,
+     0.09944001948,
+     0.9778790303
+    ],
+    [
+     "NAVY FEDERAL CREDIT UNION",
+     "Checking or savings account",
+     28057,
+     0.05634957408,
+     0.1748583241,
+     1.0
+    ],
+    [
+     "AMERICAN EXPRESS COMPANY",
+     "Credit card",
+     21678,
+     0.1257957376,
+     0.1409262847,
+     0.9935418397
+    ],
+    [
+     "MOHELA",
+     "Student loan",
+     19305,
+     0.00372960373,
+     0.006526806527,
+     0.4632996633
+    ],
+    [
+     "Bread Financial Holdings, Inc.",
+     "Credit reporting or other personal consumer reports",
+     19115,
+     0.1319905833,
+     0.2843316767,
+     0.9999476851
+    ],
+    [
+     "Chime Financial Inc",
+     "Checking or savings account",
+     17775,
+     0.06070323488,
+     0.02959212377,
+     0.9999437412
+    ],
+    [
+     "Paypal Holdings, Inc",
+     "Money transfer, virtual currency, or money service",
+     17675,
+     0.1644130127,
+     0.1914002829,
+     0.9997736917
+    ],
+    [
+     "CCS Financial Services, Inc.",
+     "Debt collection",
+     17452,
+     0.0,
+     0.1557414623,
+     0.815035526
+    ],
+    [
+     "Nelnet, Inc.",
+     "Student loan",
+     13732,
+     0.0,
+     7.282260414e-05,
+     0.9986891931
+    ],
+    [
+     "DISCOVER BANK",
+     "Credit reporting or other personal consumer reports",
+     13031,
+     0.03821656051,
+     0.2207044739,
+     1.0
+    ],
+    [
+     "Fidelity National Information Services, Inc. (FNIS)",
+     "Credit reporting or other personal consumer reports",
+     12923,
+     7.738141298e-05,
+     0.0,
+     1.0
+    ],
+    [
+     "Kriya Capital, LLC",
+     "Debt collection",
+     12513,
+     0.0,
+     0.9504515304,
+     1.0
+    ],
+    [
+     "Affirm Holdings, Inc",
+     "Credit reporting or other personal consumer reports",
+     12471,
+     0.0,
+     0.0,
+     0.9996792559
+    ],
+    [
+     "National Credit Systems,Inc.",
+     "Debt collection",
+     12445,
+     0.0,
+     0.0,
+     0.9991161109
+    ]
+   ]
+  },
+  "f07.examples": {
+   "columns": [
+    "Topic",
+    "Excerpt"
+   ],
+   "formats": [
+    "int",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     1,
+     "I am submitting this XXXX follow-up complaint regarding the continued reporting of inaccurate, incomplete, and unverifiable information appearing on my Experian , Equifax, and ..."
+    ],
+    [
+     1,
+     "I am filing this formal complaint against the three major credit reporting agencies : Experian, Equifax, and TransUnion, for reporting negative information on my credit reports ..."
+    ],
+    [
+     1,
+     "I am filing this complaint regarding XXXXXXXX XXXX continued reporting of an inaccurate and unverifiable charged-off account on my credit reports with Experian, Equifax, and ..."
+    ],
+    [
+     2,
+     "I opened an Account with Bank of America on XX/XX/year> and within the same week they closed it after I had already deposited {$100.00} to the account like it ask. When I tried to ..."
+    ],
+    [
+     2,
+     "Im filing this complaint against Bank of America for unfair, abusive and deceptive practices that adversely affected me. First off, this involves the checking account I have had ..."
+    ],
+    [
+     2,
+     "On XXXX my banking information as well as passwords, social security number, address, and other various personal information were exposed to a fraudulent company claiming to be a ..."
+    ],
+    [
+     3,
+     "XXXX XXXX, XXXX, XX/XX/XXXX This CFPB complaint has been filed to request pursuant to FCRA XXXX ( XXXX XXXX XXXX ) that you, the XXXX credit reporting agency , block information ..."
+    ],
+    [
+     3,
+     "XXXX XXXX XXXX, XXXX, XX/XX/XXXX This CFPB complaint has been filed to request pursuant to FCRA XXXX ( 15 U.S.C. XXXXc-2 ) that you, the Equifax credit reporting agency , block ..."
+    ],
+    [
+     3,
+     "XXXX XXXX, XX/XX/year> This CFPB complaint has been filed to request pursuant to FCRA 605B ( 15 U.S.C. XXXXc-2 ) that you, the XXXX XXXX XXXX XXXX XXXX block information appearing ..."
+    ],
+    [
+     4,
+     "I am requesting validation of this alleged debt pursuant to my rights under the Fair Debt Collection Practices Act ( FDCPA ). I do not recognize this account and request that you ..."
+    ],
+    [
+     4,
+     "I am writing in response to your communication regarding an alleged debt. Under my rights pursuant to the Fair Debt Collection Practices Act, I am requesting validation of this ..."
+    ],
+    [
+     4,
+     "Debt Validation Request Under the FDCPA XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX, Georgia, XXXX XXXX XXXX XXXX Subject : Debt Validation Request Under the FDCPA To Whom It May ..."
+    ],
+    [
+     5,
+     "XXXX XXXX This account should not be reporting any late payments XXXX XXXXXXXX I have never been late on this account XXXX XXXX XXXXXXXX I was never late late payments I was never ..."
+    ],
+    [
+     5,
+     "THE DATES FROM XX/XX/XXXX TO XX/XX/XXXX ARE INCORRECT WITH THE LATE PAYMENTS.I SHOULD HAVE NO LATE PAYMENT WITH THIS COMPANY."
+    ],
+    [
+     5,
+     "XXXX - XXXX was never late on this account, please remove late payment history."
+    ],
+    [
+     6,
+     "in accordance with the Fair Credit Reporting act XXXX Account XXXX XXXXXXXX, has violated my rights. XXXX XXXX XXXX section XXXX A. XXXX I have the right to privacy. XXXX XXXX ..."
+    ],
+    [
+     6,
+     "In accordance with the Fair Credit Reporting act XXXX Account XXXX has violated my rights. 15 U.S.C XXXX section 602 A States I Have the right to privacy. 15 U.S.C XXXX Section ..."
+    ],
+    [
+     6,
+     "In accordance with the Fair Credit Reporting act XXXX Account ( XXXX ) as violated my rights. XXXX 15 U.S.C XXXX section 602 A. States I have the right to privacy. XXXX 15 U.S.C ..."
+    ],
+    [
+     7,
+     "I filed multiple disputes in XXXX related to duplicate transactions and non-delivery of services through an online platform. The issue is straightforward : I paid for services and ..."
+    ],
+    [
+     7,
+     "Subject : Formal Complaint Wrongful Denial of Refund Dispute To Whom It May Concern, I am filing a formal complaint regarding a dispute that has been repeatedly denied by PayPal, ..."
+    ],
+    [
+     7,
+     "Introduction : I am writing to file a formal complaint against Venmo, which is owned by PayPal, regarding their mishandling of a chargeback dispute and their refusal to properly ..."
+    ],
+    [
+     8,
+     "I did not authorize these inquiries please remove these inquiries immediately"
+    ],
+    [
+     8,
+     "These inquiries are unauthorized and fraudulent, as I have no knowledge of these inquiries. Please take immediate action to remove these inquiries from my credit report."
+    ],
+    [
+     8,
+     "- These inquiries are unauthorized and fraudulent, as I have no knowledge of these inquiries. Please take immediate action to remove these inquiries from my credit report."
+    ],
+    [
+     9,
+     "Disputed Accounts : XXXX XXXX XXXXXXXX Account Number : XXXX Date Opened : XX/XX/XXXX Balance : {$XXXX.00} XXXX Account Number : XXXX Date Opened : XX/XX/XXXX Balance : {$820.00} ..."
+    ],
+    [
+     9,
+     "I am writing to dispute the following items on my credit reports. I believe these items to be inaccurate, and I request that they be investigated and corrected accordingly. ..."
+    ],
+    [
+     9,
+     "I am disputing the following charged-off accounts on my TransUnion credit report : Charged Off Accounts XXXX XXXX Account Number : XXXX Date Opened : XX/XX/XXXX Balance : {$91.00} ..."
+    ],
+    [
+     10,
+     "I have found fraudulent accounts on my credit report, XXXX XXXXXXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX ..."
+    ],
+    [
+     10,
+     "please remove fraudulent accounts from my credit report"
+    ],
+    [
+     10,
+     "I reviewed my credit report and noticed accounts that are not mine and are fraudulent. Please remove these accounts from my credit report and update my report."
+    ]
+   ]
+  },
+  "f07.expected": {
+   "columns": [
+    "What a reader expects",
+    "Marker words",
+    "Emerged as topic"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     "Billing disputes",
+     "dispute, charge, charged, refund, billing",
+     "9"
+    ],
+    [
+     "Credit reporting errors",
+     "report, reporting, inaccurate, bureau, bureaus",
+     "1"
+    ],
+    [
+     "Debt collection contact",
+     "collection, collector, debt, calls, calling",
+     "4"
+    ],
+    [
+     "Fraud on an account",
+     "fraud, fraudulent, unauthorized, stolen, scam",
+     "3"
+    ]
+   ]
+  },
+  "f07.issues": {
+   "columns": [
+    "Product",
+    "Issue",
+    "Complaints, test months",
+    "Relief expected",
+    "Relief that happened",
+    "Expected rate"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "int",
+    "float1",
+    "int",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     "Credit card",
+     "Problem with a purchase shown on your statement",
+     444,
+     126.0394385,
+     118,
+     0.2838726093
+    ],
+    [
+     "Checking or savings account",
+     "Managing an account",
+     847,
+     115.2263161,
+     108,
+     0.1360405149
+    ],
+    [
+     "Checking or savings account",
+     "Problem with a lender or other company charging your account",
+     238,
+     47.58815992,
+     28,
+     0.1999502518
+    ],
+    [
+     "Credit card",
+     "Fees or interest",
+     157,
+     46.02320069,
+     53,
+     0.2931414057
+    ],
+    [
+     "Checking or savings account",
+     "Closing an account",
+     219,
+     31.12981906,
+     36,
+     0.1421452925
+    ],
+    [
+     "Credit card",
+     "Other features, terms, or problems",
+     173,
+     20.75927395,
+     27,
+     0.1199958032
+    ],
+    [
+     "Checking or savings account",
+     "Problem caused by your funds being low",
+     87,
+     16.13870169,
+     13,
+     0.1855023183
+    ],
+    [
+     "Money transfer, virtual currency, or money service",
+     "Fraud or scam",
+     214,
+     14.39858707,
+     11,
+     0.06728311713
+    ],
+    [
+     "Money transfer, virtual currency, or money service",
+     "Unauthorized transactions or other transaction problem",
+     120,
+     12.96692208,
+     11,
+     0.108057684
+    ],
+    [
+     "Credit card",
+     "Problem when making payments",
+     69,
+     11.57269418,
+     19,
+     0.1677202055
+    ],
+    [
+     "Credit card",
+     "Closing your account",
+     116,
+     11.39804267,
+     8,
+     0.09825898849
+    ],
+    [
+     "Mortgage",
+     "Trouble during payment process",
+     290,
+     7.095028385,
+     6,
+     0.02446561512
+    ]
+   ]
+  },
+  "f07.products": {
+   "columns": [
+    "Product",
+    "Complaints",
+    "Share"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "rows": [
+    [
+     "Credit reporting or other personal consumer reports",
+     10210159,
+     0.8932338806
+    ],
+    [
+     "Debt collection",
+     569418,
+     0.04981542891
+    ],
+    [
+     "Credit card",
+     182274,
+     0.01594620734
+    ],
+    [
+     "Checking or savings account",
+     163725,
+     0.01432345149
+    ],
+    [
+     "Money transfer, virtual currency, or money service",
+     116560,
+     0.01019723014
+    ],
+    [
+     "Mortgage",
+     54993,
+     0.004811052482
+    ],
+    [
+     "Vehicle loan or lease",
+     42532,
+     0.003720904191
+    ],
+    [
+     "Student loan",
+     40850,
+     0.00357375473
+    ],
+    [
+     "Payday loan, title loan, personal loan, or advance loan",
+     29072,
+     0.002543358568
+    ],
+    [
+     "Prepaid card",
+     12649,
+     0.001106595437
+    ],
+    [
+     "Debt or credit management",
+     8323,
+     0.0007281361229
+    ]
+   ]
+  },
+  "f07.responses": {
+   "columns": [
+    "Company response",
+    "Complaints in the sample",
+    "Share"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     "Closed with explanation",
+     30747,
+     0.6672091661
+    ],
+    [
+     "Closed with non-monetary relief",
+     13534,
+     0.2936874769
+    ],
+    [
+     "Closed with monetary relief",
+     1389,
+     0.03014126684
+    ],
+    [
+     "Untimely response",
+     411,
+     0.008918690189
+    ],
+    [
+     "In progress",
+     2,
+     4.339995226e-05
+    ]
+   ]
+  },
+  "f07.topics": {
+   "columns": [
+    "Topic",
+    "Top terms",
+    "Complaints where it leads",
+    "Share",
+    "Of which form letters"
+   ],
+   "formats": [
+    "int",
+    "text",
+    "int",
+    "pct1",
+    "pct0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "rows": [
+    [
+     1,
+     "fcra, reporting, inaccurate, accuracy, act, fair, dispute, disputed",
+     5118,
+     0.1110604778,
+     0.3894099258
+    ],
+    [
+     2,
+     "money, called, bank, card, sent, received, did, asked",
+     8116,
+     0.1761170063,
+     0.03758008871
+    ],
+    [
+     3,
+     "theft, identity, fraudulent, victim, ftc, block, result, fraud",
+     3584,
+     0.07777271445,
+     0.4503348214
+    ],
+    [
+     4,
+     "debt, collection, validation, original, alleged, fdcpa, collect, creditor",
+     4581,
+     0.09940759065,
+     0.2560576293
+    ],
+    [
+     5,
+     "late, payment, payments, paid, history, loan, reported, time",
+     4234,
+     0.09187769893,
+     0.3186112423
+    ],
+    [
+     6,
+     "section, consumer, usc, reporting, agency, rights, states, privacy",
+     4117,
+     0.08933880173,
+     0.6597036677
+    ],
+    [
+     7,
+     "funds, transaction, despite, regarding, complaint, financial, issue, provided",
+     6584,
+     0.1428726428,
+     0.1330498177
+    ],
+    [
+     8,
+     "inquiries, unauthorized, hard, inquiry, authorize, did, xxxxxx, consent",
+     2445,
+     0.05305644164,
+     0.3693251534
+    ],
+    [
+     9,
+     "balance, date, opened, number, charged, following, listed, charge",
+     1622,
+     0.03519736128,
+     0.1683107275
+    ],
+    [
+     10,
+     "accounts, fraudulent, remove, removed, breach, noticed, recently, data",
+     5682,
+     0.1232992644,
+     0.5617740232
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f07.caveat": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "not a statistical sample of consumers' experiences in the marketplace"
+  },
+  "f07.companies": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 30
+  },
+  "f07.complaints": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 11430555
+  },
+  "f07.distinct_narratives": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 30626
+  },
+  "f07.expected_emerged": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 4
+  },
+  "f07.expected_total": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 4
+  },
+  "f07.first_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "2024-09"
+  },
+  "f07.first_month_complaints": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 264821
+  },
+  "f07.growth": {
+   "fmt": "spct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 1.466968254
+  },
+  "f07.highest_relief_company": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "BANK OF AMERICA, NATIONAL ASSOCIATION"
+  },
+  "f07.highest_relief_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 0.2343199008
+  },
+  "f07.last_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "2026-08"
+  },
+  "f07.last_month_complaints": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 653305
+  },
+  "f07.narratives": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 46083
+  },
+  "f07.relief_conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": "not approved"
+  },
+  "f07.relief_metadata_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.8548268219
+  },
+  "f07.relief_narrative_gain": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.01400723938
+  },
+  "f07.relief_ranking_source": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": "the model on the form's metadata alone"
+  },
+  "f07.relief_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.03014126684
+  },
+  "f07.relief_rate_first": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.01124144673
+  },
+  "f07.relief_rate_last": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.07195301028
+  },
+  "f07.relief_status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": "development"
+  },
+  "f07.relief_test_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.8688340613
+  },
+  "f07.template_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 0.3123494564
+  },
+  "f07.top3_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 0.8660002073
+  },
+  "f07.top_product": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": "Credit reporting or other personal consumer reports"
+  },
+  "f07.top_product_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "Every complaint the Bureau received, September 2024 to August 2026, as it publishes them",
+    "seed": null,
+    "source": "CFPB complaint search API aggregates"
+   },
+   "value": 0.8932338806
+  },
+  "f07.topics_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:cfpb",
+    "population": "A reproducible sample of about 2,000 complaints with narratives a month, September 2024 to August 2026",
+    "seed": null,
+    "source": "CFPB export archive, sampled by a salted hash of the complaint id"
+   },
+   "value": 10
+  }
+ }
+}

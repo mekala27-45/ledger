@@ -1,0 +1,559 @@
+<h1>Validation report: Monetary relief on consumer complaints</h1>
+<blockquote>
+<p>Harborline Bank is fictional. This is a demonstration on generated data and public datasets; no real customer, account or transaction of any real institution appears here.</p>
+<p>Nothing here is a credit decision, a fraud determination, a suspicious activity finding or investment advice.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>relief</code></td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Route complaints likely to end in a refund to the team that can fix the cause, and rank issues by the relief they are likely to cost</td>
+</tr>
+<tr>
+<td>Tier</td>
+<td>2: Informs a decision a person makes; moderate materiality</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>sole</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>development</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Head of analytics</td>
+</tr>
+<tr>
+<td>Prediction time</td>
+<td>When the complaint is filed; only the narrative and what the consumer chose on the form</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>The company closed the complaint with monetary relief</td>
+</tr>
+<tr>
+<td>Last validated</td>
+<td>2026-08-31</td>
+</tr>
+<tr>
+<td>Conclusion</td>
+<td><strong>not approved</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Purpose and scope</h2>
+<p>Route complaints likely to end in monetary relief to the team that can fix the cause,
+and rank issues by the relief they are likely to cost. In a bank, a model like this is
+for routing and root cause. It must never decide whether a consumer gets relief, and it
+must never rank consumers; it ranks complaints and issues. It informs a person, so it is
+tier two.</p>
+<p>The data are real: complaints with narratives from the Consumer Financial Protection
+Bureau's public database, about real companies, exactly as the Bureau publishes them. The
+Bureau states that the database is &quot;not a statistical sample of consumers' experiences
+in the marketplace&quot;.</p>
+<h2>Conceptual soundness</h2>
+<p>Whether a complaint ends in a refund depends on what went wrong and with whom: the
+product, the issue, the company, and what the consumer describes. The method is a
+logistic regression on TF-IDF of the narrative, one and two word terms, with the form's
+product, sub product, issue and company one hot encoded. A transformer would read the
+narrative better; it needs model weights this build cannot download, and the always
+available path is the one validated here.</p>
+<p>The benchmark that matters is a model on the form's metadata alone: if the narrative
+adds nothing, reading it is not worth the risk it carries.</p>
+<h2>Data and assumptions</h2>
+<p>46,082 closed complaints with narratives. Training on complaints
+received September 2024 to December 2025, validation January to March 2026, test
+April to July 2026 (7,905 complaints, 532
+ending in monetary relief). The rate of relief rose from 1.4% in the
+training months to 6.7% in the test months.</p>
+<p>Only fields the consumer writes when filing are features; a check refuses anything the
+company writes afterwards. 28 words that name a protected basis are
+removed from the vocabulary, leaving 30,000 terms, and the Bureau's
+tags for older Americans and servicemembers are used only for the audit below.</p>
+<h2>Development evidence</h2>
+<p>Development AUROC 0.989, validation 0.883.
+The terms that move the score most:</p>
+<table>
+<thead>
+<tr>
+<th>raises_relief</th>
+<th style="text-align:right">weight_up</th>
+<th>lowers_relief</th>
+<th style="text-align:right">weight_down</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>atm</td>
+<td style="text-align:right">1.66</td>
+<td>funds</td>
+<td style="text-align:right">-0.96</td>
+</tr>
+<tr>
+<td>charged</td>
+<td style="text-align:right">1.53</td>
+<td>open</td>
+<td style="text-align:right">-0.80</td>
+</tr>
+<tr>
+<td>checking account</td>
+<td style="text-align:right">1.33</td>
+<td>payment</td>
+<td style="text-align:right">-0.71</td>
+</tr>
+<tr>
+<td>fee</td>
+<td style="text-align:right">1.29</td>
+<td>account year</td>
+<td style="text-align:right">-0.68</td>
+</tr>
+<tr>
+<td>email</td>
+<td style="text-align:right">1.23</td>
+<td>showed</td>
+<td style="text-align:right">-0.68</td>
+</tr>
+<tr>
+<td>didn</td>
+<td style="text-align:right">1.21</td>
+<td>loan</td>
+<td style="text-align:right">-0.66</td>
+</tr>
+<tr>
+<td>checking</td>
+<td style="text-align:right">1.09</td>
+<td>wrong</td>
+<td style="text-align:right">-0.65</td>
+</tr>
+<tr>
+<td>bofa</td>
+<td style="text-align:right">1.08</td>
+<td>tried</td>
+<td style="text-align:right">-0.64</td>
+</tr>
+<tr>
+<td>bank</td>
+<td style="text-align:right">1.07</td>
+<td>verification</td>
+<td style="text-align:right">-0.62</td>
+</tr>
+<tr>
+<td>claim</td>
+<td style="text-align:right">1.04</td>
+<td>believe</td>
+<td style="text-align:right">-0.60</td>
+</tr>
+<tr>
+<td>refunded</td>
+<td style="text-align:right">1.02</td>
+<td>issues</td>
+<td style="text-align:right">-0.59</td>
+</tr>
+<tr>
+<td>balance</td>
+<td style="text-align:right">1.00</td>
+<td>day</td>
+<td style="text-align:right">-0.59</td>
+</tr>
+<tr>
+<td>card stolen</td>
+<td style="text-align:right">0.99</td>
+<td>income</td>
+<td style="text-align:right">-0.58</td>
+</tr>
+<tr>
+<td>offer</td>
+<td style="text-align:right">0.98</td>
+<td>points</td>
+<td style="text-align:right">-0.56</td>
+</tr>
+<tr>
+<td>year</td>
+<td style="text-align:right">0.98</td>
+<td>deposited</td>
+<td style="text-align:right">-0.55</td>
+</tr>
+</tbody>
+</table>
+<h2>Outcomes analysis on held out data</h2>
+<p>On the test months the model reaches an AUROC of 0.869, against
+0.855 for the metadata alone. At the operating point, the top
+5% of scores set on the validation months, it flags
+405 complaints with a precision of 39.5%,
+5.9 times the base rate, and finds 30.1% of the
+complaints that ended in relief.</p>
+<p>By the Bureau's tags, at the operating point:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th style="text-align:right">N</th>
+<th style="text-align:right">Event rate</th>
+<th style="text-align:right">Mean score</th>
+<th style="text-align:right">Calibration gap</th>
+<th style="text-align:right">Auroc</th>
+<th style="text-align:right">Flag rate</th>
+<th style="text-align:right">Fpr</th>
+<th style="text-align:right">Recall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Older American</td>
+<td style="text-align:right">477</td>
+<td style="text-align:right">14.88%</td>
+<td style="text-align:right">13.23%</td>
+<td style="text-align:right">-1.7%</td>
+<td style="text-align:right">0.820</td>
+<td style="text-align:right">14.47%</td>
+<td style="text-align:right">10.10%</td>
+<td style="text-align:right">39.4%</td>
+</tr>
+<tr>
+<td>Older American, servicemember</td>
+<td style="text-align:right">119</td>
+<td style="text-align:right">12.61%</td>
+<td style="text-align:right">9.69%</td>
+<td style="text-align:right">-2.9%</td>
+<td style="text-align:right">0.790</td>
+<td style="text-align:right">8.40%</td>
+<td style="text-align:right">4.81%</td>
+<td style="text-align:right">33.3%</td>
+</tr>
+<tr>
+<td>Other</td>
+<td style="text-align:right">6,577</td>
+<td style="text-align:right">6.05%</td>
+<td style="text-align:right">6.72%</td>
+<td style="text-align:right">+0.7%</td>
+<td style="text-align:right">0.874</td>
+<td style="text-align:right">4.58%</td>
+<td style="text-align:right">2.98%</td>
+<td style="text-align:right">29.4%</td>
+</tr>
+<tr>
+<td>Other, servicemember</td>
+<td style="text-align:right">732</td>
+<td style="text-align:right">6.56%</td>
+<td style="text-align:right">6.69%</td>
+<td style="text-align:right">+0.1%</td>
+<td style="text-align:right">0.848</td>
+<td style="text-align:right">3.42%</td>
+<td style="text-align:right">2.19%</td>
+<td style="text-align:right">20.8%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: real:cfpb, Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026, as of 2026-08-31.</p>
+<p>Calibration on the test sample, ten equal count bins:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Bin</th>
+<th style="text-align:right">Accounts</th>
+<th style="text-align:right">Predicted</th>
+<th style="text-align:right">Observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">791</td>
+<td style="text-align:right">0.05%</td>
+<td style="text-align:right">0.00%</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">791</td>
+<td style="text-align:right">0.19%</td>
+<td style="text-align:right">0.13%</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">791</td>
+<td style="text-align:right">0.33%</td>
+<td style="text-align:right">0.13%</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">791</td>
+<td style="text-align:right">0.66%</td>
+<td style="text-align:right">0.76%</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">791</td>
+<td style="text-align:right">1.44%</td>
+<td style="text-align:right">0.63%</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">790</td>
+<td style="text-align:right">2.97%</td>
+<td style="text-align:right">3.04%</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">790</td>
+<td style="text-align:right">5.36%</td>
+<td style="text-align:right">6.46%</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">790</td>
+<td style="text-align:right">9.21%</td>
+<td style="text-align:right">9.49%</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">790</td>
+<td style="text-align:right">16.18%</td>
+<td style="text-align:right">15.95%</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">790</td>
+<td style="text-align:right">35.17%</td>
+<td style="text-align:right">30.76%</td>
+</tr>
+</tbody>
+</table>
+<p>Source: real:cfpb, Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026, as of 2026-08-31.</p>
+<h2>Benchmarking</h2>
+<p>Against the base rate and a logistic regression on the form's metadata alone, on the test months:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align:right">AUROC</th>
+<th style="text-align:right">Gini</th>
+<th style="text-align:right">Brier</th>
+<th style="text-align:right">ECE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This model</td>
+<td style="text-align:right">0.869</td>
+<td style="text-align:right">0.738</td>
+<td style="text-align:right">0.0528</td>
+<td style="text-align:right">0.0073</td>
+</tr>
+<tr>
+<td>Base rate</td>
+<td style="text-align:right">0.500</td>
+<td style="text-align:right">0.000</td>
+<td style="text-align:right">0.0656</td>
+<td style="text-align:right">0.0532</td>
+</tr>
+<tr>
+<td>The form's metadata alone</td>
+<td style="text-align:right">0.855</td>
+<td style="text-align:right">0.710</td>
+<td style="text-align:right">0.0539</td>
+<td style="text-align:right">0.0128</td>
+</tr>
+</tbody>
+</table>
+<p>Source: real:cfpb, Complaints with narratives in the Bureau's public database, a sample from September 2024 to August 2026, as of 2026-08-31.</p>
+<h2>Limitations</h2>
+<ul>
+<li>The complaints are a sample of the Bureau's public database, and the database is not a
+sample of consumers: people who complain, and who write a narrative, are not typical.</li>
+<li>The outcome is the company's own label for its response. Companies differ in what
+they call monetary relief.</li>
+<li>The rate of relief rose across the window, so the probabilities run low on the test
+months; the ranking is what the model is used for.</li>
+</ul>
+<h2>Ongoing monitoring plan</h2>
+<p>Monthly, against complaints as they close:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Trigger</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Precision at the operating point against closed complaints</td>
+<td>below twice the base rate for a quarter</td>
+<td>Refit</td>
+</tr>
+<tr>
+<td>The monthly base rate of monetary relief</td>
+<td>moves by half</td>
+<td>Reset the operating point</td>
+</tr>
+<tr>
+<td>Flag rate by the Bureau's tags</td>
+<td>any group below half the highest</td>
+<td>Review the vocabulary</td>
+</tr>
+</tbody>
+</table>
+<h2>Effective challenge</h2>
+<p>From <code>DECISIONS.md</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Challenge</th>
+<th>Response</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-27</td>
+<td>Complaints received in late 2024 ended in monetary relief about one time in seventy; by mid 2026 it was closer to one in fourteen. A model fitted on the early months will score the later ones too low, and a probability threshold chosen on 2025 would flag almost nothing in 2026.</td>
+<td>The ranking survives a shift in the base rate far better than the probabilities do. The operating point is a capacity, not a probability: a review team that can read one complaint in twenty.</td>
+<td>The operating point flags the top twentieth of scores, set on the validation months immediately before the test months. Reliability on the test months is published with the drift stated beside it, the calibration gate is non critical, and the monitoring plan resets the operating point when the monthly base rate moves by half.</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>Consumers write about their age, their disability, their military service and their family. A text model can learn that an elderly widow is more likely to get a refund, which is a protected basis entering a routing decision by the back door. The Bureau's own tags mark older Americans and servicemembers.</td>
+<td>Routing is not a credit decision, but it decides whose complaint a person reads first, and the same reasoning that keeps age out of a scorecard applies.</td>
+<td><code>rules/proxies.yaml</code> now lists words a text model may not learn from, and the relief model drops them, and any phrase containing them, from its vocabulary. The Bureau's tags are never features; they are used only to audit flag rates by group, and a gate watches the ratio.</td>
+</tr>
+</tbody>
+</table>
+<h2>Promotion gates</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Threshold</th>
+<th style="text-align:right">Measured</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test AUROC above the metadata only model: the narrative has to add something</td>
+<td>at least 0.02</td>
+<td style="text-align:right">0.0140</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>Test precision at the operating point over the base rate (lift)</td>
+<td>at least 2</td>
+<td style="text-align:right">5.8702</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Test AUROC at or above the floor</td>
+<td>at least 0.7</td>
+<td style="text-align:right">0.8688</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>Lowest over highest flag rate across the Bureau's tag groups</td>
+<td>at least 0.5</td>
+<td style="text-align:right">0.2361</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>Expected calibration error on test</td>
+<td>at most 0.02</td>
+<td style="text-align:right">0.0073</td>
+<td>pass</td>
+</tr>
+</tbody>
+</table>
+<h2>Validation conclusion</h2>
+<p>The model ranks complaints well, but the narrative adds only 0.014 of
+AUROC to what the form's metadata already says, short of the two hundredths the gate
+asks for. Reading consumers' own words is not worth its risk for that gain, so the model
+is not approved and stays in development; the conduct risk view ranks issues with
+the model on the form's metadata alone. It would be revisited with a transformer, which reads a
+narrative better than a bag of words, once model weights can be reached.</p>
+<p><strong>not approved.</strong> Conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test AUROC above the metadata only model: the narrative has to add something (measured 0.01401)</td>
+</tr>
+</tbody>
+</table>
+<h2>The integration contract</h2>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>What this model does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trained</td>
+<td>On complaints received September 2024 to December 2025; validation January to March 2026 sets the operating point.</td>
+</tr>
+<tr>
+<td>timed</td>
+<td>Only fields the consumer writes when filing; a check refuses any field the company writes afterwards, such as its response.</td>
+</tr>
+<tr>
+<td>calibrated</td>
+<td>Reliability on the test months is published; the base rate rose over the window, which the report states.</td>
+</tr>
+<tr>
+<td>useful</td>
+<td>Beats a model on the form's metadata alone, so the narrative adds something, and lifts precision well above the base rate at the operating point.</td>
+</tr>
+<tr>
+<td>fair</td>
+<td>Words naming a protected basis are removed from the vocabulary; flag rates by the Bureau's older American and servicemember tags are audited.</td>
+</tr>
+<tr>
+<td>gated</td>
+<td>Every gate in this report.</td>
+</tr>
+<tr>
+<td>served</td>
+<td>Scored in the pipeline over the loaded window; not served by the API.</td>
+</tr>
+<tr>
+<td>integrated</td>
+<td>Not integrated. Until the narrative earns its place, the conduct risk view ranks issues with the model on the form's metadata alone.</td>
+</tr>
+<tr>
+<td>monitored</td>
+<td>Monthly: precision at the operating point against closed complaints, the base rate, and flag rates by tag.</td>
+</tr>
+<tr>
+<td>documented</td>
+<td>This validation report and the complaints page.</td>
+</tr>
+<tr>
+<td>bounded</td>
+<td>Routes and ranks. Never decides whether a consumer gets relief, and never ranks consumers.</td>
+</tr>
+<tr>
+<td>validated</td>
+<td>This report, rendered from the manifest before the ranking is used.</td>
+</tr>
+<tr>
+<td>explainable</td>
+<td>The terms that raise and lower the score most are published; a routed complaint shows its product and issue.</td>
+</tr>
+</tbody>
+</table>
