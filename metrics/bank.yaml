@@ -1,0 +1,89 @@
+# The bank's reported figures and ratios. Measures are the components; metrics are
+# built from them. A measure is a flow (summed over a period), a balance (taken at the
+# period's last month end) or an average balance (the mean of the period's month ends).
+# Ratios are always recomputed from summed components at each grain, never averaged.
+
+source: marts.mart_bank_month
+grains: [month, quarter, year, window]
+
+measures:
+  interest_income: {kind: flow, expr: "interest_income_loans + interest_income_securities"}
+  interest_expense: {kind: flow, expr: "interest_expense_deposits + interest_expense_borrowings"}
+  net_interest_income: {kind: flow, expr: "interest_income_loans + interest_income_securities - interest_expense_deposits - interest_expense_borrowings"}
+  noninterest_income: {kind: flow, expr: "noninterest_income"}
+  noninterest_expense: {kind: flow, expr: "noninterest_expense"}
+  provision: {kind: flow, expr: "provision"}
+  tax: {kind: flow, expr: "tax"}
+  net_income: {kind: flow, expr: "net_income"}
+  total_assets: {kind: balance, expr: "total_assets"}
+  total_loans: {kind: balance, expr: "total_loans"}
+  total_deposits: {kind: balance, expr: "total_deposits"}
+  total_equity: {kind: balance, expr: "total_equity"}
+  allowance: {kind: balance, expr: "allowance"}
+  nonperforming_loans: {kind: balance, expr: "nonperforming_loans"}
+  risk_weighted_assets:
+    kind: balance
+    # Simplified risk weights from config/ledger.yaml, labelled simplified wherever used.
+    expr: "cash * {risk_weight_cash} + securities * {risk_weight_securities} + loans_mortgage * {risk_weight_mortgage} + loans_installment * {risk_weight_installment} + loans_card * {risk_weight_card}"
+  average_assets: {kind: average, expr: "total_assets"}
+  average_earning_assets: {kind: average, expr: "earning_assets"}
+  average_equity: {kind: average, expr: "total_equity"}
+
+metrics:
+  nim:
+    label: Net interest margin
+    definition: Net interest income, annualised, over average earning assets (securities and loans).
+    numerator: net_interest_income
+    denominator: average_earning_assets
+    annualise: true
+    format: pct2
+  efficiency_ratio:
+    label: Efficiency ratio
+    definition: Noninterest expense over net interest income plus noninterest income. Lower is better.
+    numerator: noninterest_expense
+    denominator: [net_interest_income, noninterest_income]
+    format: pct1
+  roa:
+    label: Return on assets
+    definition: Net income, annualised, over average total assets.
+    numerator: net_income
+    denominator: average_assets
+    annualise: true
+    format: pct2
+  roe:
+    label: Return on equity
+    definition: Net income, annualised, over average equity.
+    numerator: net_income
+    denominator: average_equity
+    annualise: true
+    format: pct1
+  npl_ratio:
+    label: Nonperforming loan ratio
+    definition: Loans 90 or more days past due over gross loans, at the period end.
+    numerator: nonperforming_loans
+    denominator: total_loans
+    format: pct2
+  allowance_coverage:
+    label: Allowance coverage
+    definition: Allowance for credit losses over nonperforming loans, at the period end.
+    numerator: allowance
+    denominator: nonperforming_loans
+    format: pct0
+  allowance_to_loans:
+    label: Allowance to loans
+    definition: Allowance for credit losses over gross loans, at the period end.
+    numerator: allowance
+    denominator: total_loans
+    format: pct2
+  capital_ratio:
+    label: Capital ratio (simplified)
+    definition: Equity over risk weighted assets under the simplified weights in config, at the period end. Not a regulatory capital ratio.
+    numerator: total_equity
+    denominator: risk_weighted_assets
+    format: pct1
+  loans_to_deposits:
+    label: Loans to deposits
+    definition: Gross loans over total deposits, at the period end.
+    numerator: total_loans
+    denominator: total_deposits
+    format: pct1

@@ -87,6 +87,28 @@ def _reconcile(p: Paths, args: argparse.Namespace) -> int:
     return 0
 
 
+@command("metrics", "compute the metric layer at four grains and reconcile the grains")
+def _metrics(p: Paths, args: argparse.Namespace) -> int:
+    from ledger_core.config import load_config
+
+    from ledger_functions import metrics as ml
+    from ledger_functions.warehouse import connect
+
+    cfg = load_config(p.config)
+    spec = ml.load_spec(p.metrics / "bank.yaml")
+    monthly = ml.monthly_frame(connect(p), spec, ml.constants_from_config(cfg.capital.risk_weights))
+    checks = ml.reconcile(monthly, spec)
+    out = p.results / "metrics"
+    out.mkdir(parents=True, exist_ok=True)
+    for grain in ml.GRAINS:
+        ml.at_grain(monthly, spec, grain).write_parquet(out / f"bank_{grain}.parquet")
+    import polars as pl
+
+    pl.DataFrame([c.__dict__ for c in checks]).write_parquet(out / "reconciliation.parquet")
+    print(json.dumps({"checks": len(checks), "failed": sum(not c.passed for c in checks)}))
+    return 0
+
+
 @command("functions", "run the function modules f01 to f12 over the warehouse and the model results")
 def _functions(p: Paths, args: argparse.Namespace) -> int:
     from ledger_core.config import load_config

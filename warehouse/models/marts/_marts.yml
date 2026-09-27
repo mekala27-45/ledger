@@ -287,3 +287,17 @@ models:
         data_tests: [not_null]
     data_tests:
       - dbt_utils_unique_combination: {arguments: {columns: ["scenario", "quarter"]}}
+
+  - name: mart_bank_month
+    description: Every component the executive ratios are built from, one row per month.
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+      - name: total_loans
+        data_tests: [not_null]
+      - name: earning_assets
+        data_tests: [not_null]
+      - name: net_income
+        data_tests: [not_null]
+      - name: nonperforming_loans
+        data_tests: [not_null]
