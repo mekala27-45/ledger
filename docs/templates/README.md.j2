@@ -5,7 +5,7 @@ The analytics function of a fictional retail bank: a live fraud desk, a credit s
 [![ci](https://github.com/mekala27-45/ledger/actions/workflows/ci.yml/badge.svg)](https://github.com/mekala27-45/ledger/actions/workflows/ci.yml)
 [![pages](https://github.com/mekala27-45/ledger/actions/workflows/pages.yml/badge.svg)](https://mekala27-45.github.io/ledger/)
 
-![The fraud desk: the feed, the queue, the late label panel and the threshold slider](docs/images/desk.png)
+![The fraud desk playing its recorded replay: the feed, the alert queue, the merchant map and the threshold slider](docs/images/desk.gif)
 
 **Live site:** [mekala27-45.github.io/ledger](https://mekala27-45.github.io/ledger/) · **Every number:** [RESULTS.md](RESULTS.md) · **The board pack:** [report/board-pack.md](report/board-pack.md) · **Decisions and challenges:** [DECISIONS.md](DECISIONS.md)
 
