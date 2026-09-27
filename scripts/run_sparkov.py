@@ -4,7 +4,16 @@ Sparkov (github.com/namebrandon/Sparkov_Data_Generation, MIT) seeds Faker but
 not Python's random module or numpy, and it farms chunks out to a process pool,
 so two runs with the same seed differ. This wrapper seeds every chunk from the
 base seed, the profile and the chunk offset before it runs, which makes the
-output independent of pool scheduling. Nothing in Sparkov is modified.
+output independent of pool scheduling.
+
+One correction is applied at run time and nothing else in Sparkov changes. At the
+pinned commit, ``Profile.closest_rand_parallel`` maps its random column to a
+weight table by comparing column 1 whatever column it is asked to use, so the
+time of day and the merchant category are drawn from the same number as the
+date. The first run showed it plainly: every genuine transaction in September
+2025 fell before noon and every one from May 2026 after it. The wrapper replaces
+the method with the comparison the code evidently intends, on the column it was
+given, so date, daypart and category are drawn independently.
 
 Ingestion drops every field that identifies a generated person (names, street,
 card number, account number, SSN, date of birth to the day, job) and keeps a
@@ -40,6 +49,17 @@ def _seed_for(base: int, *parts: object) -> int:
     return int(digest[:8], 16)
 
 
+def _closest_rand_parallel(self: object, r: np.ndarray, i: int, j: int, obj: dict) -> np.ndarray:  # noqa: F821
+    """Sparkov's mapping from a uniform draw to a weight table, comparing the column it was given."""
+    import numpy as np
+
+    keys = np.array(list(obj.keys())[::-1])
+    r2 = r[r[:, i].argsort()]
+    for x in keys:
+        r2[:, j] = np.where(r2[:, i] <= x, x, r2[:, j])
+    return r2
+
+
 def ensure_checkout() -> Path:
     if not (CACHE / "datagen.py").exists():
         CACHE.parent.mkdir(parents=True, exist_ok=True)
@@ -56,8 +76,10 @@ def _run_chunk(args: tuple[str, str, str, str, str, int, int, int]) -> str:
 
     import datagen_transaction
     import numpy as np
+    import profile_weights
     from faker import Faker
 
+    profile_weights.Profile.closest_rand_parallel = _closest_rand_parallel
     s = _seed_for(seed, profile, lo)
     random.seed(s)
     np.random.seed(s % (2**32))

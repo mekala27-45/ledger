@@ -30,8 +30,14 @@ under `data/external/`.
 - **Command:** `uv run --group sparkov python scripts/run_sparkov.py --customers 1250 --start 2025-09-01 --end 2026-08-31`
   with seed 20260831 and Faker 13.12.0. The wrapper seeds `random`, numpy and
   Faker per chunk from the seed, the profile and the chunk offset, so the output
-  does not depend on process pool scheduling. Sparkov itself is not modified.
-- **Output:** 1,079,250 transactions on 1,243 cards, 11,898 labelled fraud,
+  does not depend on process pool scheduling.
+- **One correction:** at the pinned commit `Profile.closest_rand_parallel` compares
+  column 1 of its random array whatever column it is asked to map, which ties the
+  time of day and the merchant category to the date. The wrapper replaces that one
+  method at run time with the comparison on the column it is given. Nothing else in
+  Sparkov changes. The daypart and the category still share one random draw, as
+  Sparkov designs them.
+- **Output:** 1,077,220 transactions on 1,246 cards, 11,793 labelled fraud,
   September 2025 to August 2026.
 - **Reduction:** names, street, card number, account number, SSN, job and date
   of birth are dropped at ingest; the card number becomes a salted key and the
