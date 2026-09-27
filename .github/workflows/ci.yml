@@ -75,6 +75,8 @@ jobs:
       - run: uv sync --frozen
       - name: Tests with the coverage floor
         run: uv run pytest --cov --cov-report=term-missing:skip-covered --cov-report=xml
+      - name: The five notebooks run on the committed results
+        run: uv run pytest --nbmake notebooks -p no:cacheprovider
 
   web:
     runs-on: ubuntu-latest
