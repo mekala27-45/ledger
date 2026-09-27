@@ -59,7 +59,10 @@ def recover_default_process(
     if frame.height == 0:
         raise RecoveryError("no loan months to estimate the default process from")
     if frame.height > sample:
-        frame = frame.sample(n=sample, seed=seed)
+        # A fixed seed fixes the sample only if the rows arrive in a fixed order, and neither
+        # a warehouse query nor a join promises one: sorted first, the estimate is the same
+        # on every run instead of moving by a few hundredths.
+        frame = frame.sort("loan_id", "month").sample(n=sample, seed=seed)
     mob = frame["months_on_book"].to_numpy()
     dummies = np.column_stack([(mob == k).astype(float) for k in range(1, int(mob.max()) + 1)])
     x = np.column_stack(
