@@ -18,7 +18,8 @@ make web          # build the static site into web/out
 ```
 
 `make fetch` is the only step that reaches the internet, and it is run by hand. Everything
-after it is deterministic for a given seed in `config/ledger.yaml`.
+after it is deterministic for a given seed in `config/ledger.yaml`, down to the last bits of
+floats that DuckDB and Polars sum in parallel, which can differ from run to run.
 
 ## Before a release
 
@@ -27,8 +28,12 @@ make rederive
 ```
 
 It clears everything derived, runs the pipeline from the contracts on, runs every gate,
-and fails if any committed result differs afterwards. Run it after recording the demo or
-touching the live API, so the published figures are the ones a fresh clone reproduces.
+and fails if any committed result differs afterwards: a document by a single byte, a data
+file by more than one part in a billion in any number. Data files that moved less than
+that are put back to their committed bytes, and the run says how many. Run it after
+recording the demo or touching the live API, so the published figures are the ones a fresh
+clone reproduces, and after adding a model, since functions such as the proxy audit read
+every model on disk.
 Then tag: `git tag -a vX.Y.Z -m "..."` and push the tag; the release workflow reruns the
 gates and attaches the workbook.
 
