@@ -213,3 +213,60 @@ point, labels that arrive late, and precision that only counts what has been lab
 **Changed:** The validation report and the desk page lead with cost and late labels,
 state this limitation beside the discrimination figures, and the AUROC gate is not the
 reason the model is approved.
+
+## 2026-09-27: A negative number lost its minus sign in print
+
+The site formats numbers in the browser, so a test now runs the site's formatter and
+the pipeline's over the same grid of values and requires identical text. Its first
+run failed, and the failure was in the pipeline, not the site. The Python formatter
+cleaned up negative zero with a string replacement of `-0.00`, which also matched the
+start of any negative number between minus one cent and zero printed to more
+decimals. The scorecard's validation report listed the gate "Test AUROC no more than
+0.02 below the logistic benchmark" as measured at 0.0063 when the value was -0.0063.
+The gate passed either way, but the report said the scorecard beat the benchmark when
+it trails it slightly. A value now loses its sign only when it rounds to zero in the
+digits printed, both formatters round half to even on the exact binary value, and
+the parity test holds them together.
+
+## 2026-09-27: The proportional hazards test gave different answers on the same data
+
+Re-running the lending function without changing any input moved the Cox model's
+proportional hazards p value for unemployment at origination from 0.28 to 0.04: one
+run said the assumption held, the next that it failed. The test's rank time
+transform numbers tied event times in row order, loan durations are whole months so
+nearly every event time is tied, and the warehouse returns rows in no fixed order.
+The test now uses the Kaplan Meier transform, the default in R's `cox.zph`, which
+gives tied times the same value, and the input is sorted by loan. Two consecutive
+runs now publish identical p values, and the loosened vintage and unemployment
+effects both fail the assumption, which the lending page says plainly: their hazard
+ratios are averages over loan age.
+
+## 2026-09-27: The explorer ships Arrow, not parquet
+
+The first version of the in-browser SQL explorer loaded the warehouse extracts as
+parquet. DuckDB-WASM reads parquet through an extension it downloads on first use
+from DuckDB's own servers, so a page that promised nothing leaves the browser would
+have fetched code from a third party, and in a locked down network it failed
+outright. The extracts are now Arrow IPC streams, which DuckDB-WASM inserts natively.
+The page fetches nothing but its own files.
+
+## 2026-09-27: The threshold slider disagreed with the model at the operating point
+
+The desk's slider recomputes precision and recall from a histogram of test scores.
+Set to the operating point it read 92.1% precision and 93.1% recall, where the
+model's report says 74.8% and 97.6%. The histogram's bins came from evenly spaced
+quantiles, so above the 99th percentile, where every decline happens, one bin held
+over a thousand transactions and the operating point fell inside one. The histogram
+is now built by the desk function from the scored test months, with fine bins above
+the 99th percentile and the operating and queue points as exact edges, and a test
+requires the histogram to reproduce the flagged count, the frauds caught and the
+cost at both points to the transaction.
+
+## 2026-09-27: The identifier scan read decimals as card numbers
+
+Once the site bundle and the model outputs were in its path, the identifier scan
+failed on hundreds of "card numbers", every one the fractional digits of a float in a
+JSON file, sixteen or seventeen digits that happened to pass the Luhn check. The scan
+now ignores a digit run that follows a decimal point, a test pins that a float's
+fraction is not a card while a card number at the end of a sentence still is, and the
+planted card number test still fails the scan as it should.
