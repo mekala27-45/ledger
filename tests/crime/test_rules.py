@@ -8,10 +8,11 @@ from pathlib import Path
 
 import duckdb
 import networkx as nx
+import numpy as np
 import polars as pl
 import pytest
 from ledger_crime.evaluate import label_alerts, posted_truth, scorecard
-from ledger_crime.network import communities
+from ledger_crime.network import build_graph, communities
 from ledger_crime.rules import AmlParams, mule, rapid_movement, round_tripping, run_rules, structuring
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -193,3 +194,16 @@ def test_communities_are_the_same_on_every_run() -> None:
     nx.set_edge_attributes(g, 1.0, "amount")
     g = nx.relabel_nodes(g, {n: f"A{n}" for n in g.nodes})
     assert communities(g, seed=5) == communities(g, seed=5)
+
+
+def test_communities_do_not_depend_on_the_order_transfers_arrive_in() -> None:
+    # The warehouse returns grouped transfers in no fixed order, and Louvain's answer depends
+    # on the order nodes and edges were added as well as on its seed.
+    rng = np.random.default_rng(0)
+    g = nx.les_miserables_graph()
+    rows = [(f"A{a}", f"A{b}", float(d["weight"]) * 100 + rng.random(), 1) for a, b, d in g.edges(data=True)]
+    edges = pl.DataFrame(rows, schema=["src", "dst", "amount", "transfers"], orient="row")
+    reference = communities(build_graph(edges), seed=5)
+    for shuffle in range(5):
+        shuffled = edges.sample(fraction=1.0, shuffle=True, seed=shuffle)
+        assert communities(build_graph(shuffled), seed=5) == reference

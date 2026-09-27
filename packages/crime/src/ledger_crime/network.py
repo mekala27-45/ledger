@@ -27,13 +27,16 @@ def internal_edges(con: duckdb.DuckDBPyConnection) -> pl.DataFrame:
         join marts.dim_deposit_account d on d.account_id = t.target_party
         where t.txn_type = 'INTERNAL_TRANSFER' and s.customer_id <> d.customer_id
         group by 1, 2
+        order by 1, 2
         """
     ).pl()
 
 
 def build_graph(edges: pl.DataFrame) -> nx.Graph:
+    """The undirected transfer graph. Louvain's result depends on the order nodes and edges
+    arrive in as well as on its seed, so the edges are added in a fixed order."""
     g = nx.Graph()
-    for src, dst, amount, transfers in edges.iter_rows():
+    for src, dst, amount, transfers in edges.sort("src", "dst").iter_rows():
         if g.has_edge(src, dst):
             g.edges[src, dst]["amount"] += amount
             g.edges[src, dst]["transfers"] += transfers
@@ -182,6 +185,7 @@ def alert_counterparties(con: duckdb.DuckDBPyConnection, alerts: pl.DataFrame) -
             join marts.fct_deposit_entry e
                 on e.account_id = w.account_id and e.posted_at between w.start_at and w.end_at
             where e.counterparty_id is not null and e.txn_type in ('P2P_IN', 'WIRE_IN', 'WIRE_OUT', 'P2P_OUT')
+            order by 1, 2, 3
             """
         ).pl()
     finally:
