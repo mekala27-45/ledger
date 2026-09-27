@@ -19,6 +19,7 @@ from ledger_scan.bank_name import collisions, load_names
 
 from ledger_functions.base import Context, FunctionSpec
 from ledger_functions.f11_controls.reconcile import reconcile
+from ledger_functions.warehouse import last_full_build
 
 
 def run(ctx: Context) -> None:
@@ -153,20 +154,16 @@ def run(ctx: Context) -> None:
     m.put("f11.fdic_institutions", len(names), "int", **fdic)
     m.put("f11.bank_name_collisions", len(hits_name), "int", **fdic)
 
-    # The warehouse's own tests, from the last build.
-    run_results = ctx.paths.warehouse_dir / "target" / "run_results.json"
-    if run_results.exists():
-        results = json.loads(run_results.read_text())["results"]
-        tests = [r for r in results if r["unique_id"].startswith("test.")]
-        models = [r for r in results if r["unique_id"].startswith("model.")]
-        wh: dict[str, Any] = {
-            "backend": "generated",
-            "population": "the dbt warehouse",
-            "source": "warehouse/target/run_results.json",
-        }
-        m.put("f11.dbt_tests", len(tests), "int", **wh)
-        m.put("f11.dbt_tests_passed", sum(r["status"] == "pass" for r in tests), "int", **wh)
-        m.put("f11.dbt_models", len(models), "int", **wh)
+    # The warehouse's own tests, from the last full build.
+    record = last_full_build(ctx.paths.warehouse_dir / "target" / "run_results.json")
+    wh: dict[str, Any] = {
+        "backend": "generated",
+        "population": "the dbt warehouse",
+        "source": "warehouse/target/run_results.json",
+    }
+    m.put("f11.dbt_tests", record.tests, "int", **wh)
+    m.put("f11.dbt_tests_passed", record.tests_passed, "int", **wh)
+    m.put("f11.dbt_models", record.models, "int", **wh)
 
     # A real dataset's own issue, found by rule: FDIC peers that stop reporting inside the window.
     stops = ctx.sql(
