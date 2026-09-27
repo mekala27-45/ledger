@@ -144,6 +144,14 @@ def _manifest(p: Paths, args: argparse.Namespace) -> int:
     return 0
 
 
+@command("export", "write the credit and treasury workbook and the BI extracts into results/exports")
+def _export(p: Paths, args: argparse.Namespace) -> int:
+    from ledger_functions.exports import main
+
+    print(json.dumps(main(p)))
+    return 0
+
+
 @command("site-data", "export the bundle the static site reads into web/public/data")
 def _site_data(p: Paths, args: argparse.Namespace) -> int:
     from ledger_functions.site_data import main
