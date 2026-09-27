@@ -1,0 +1,14 @@
+# The pipeline in a container: generate, contracts, warehouse, reconcile, metrics, models,
+# functions, manifest and render. Real datasets are mounted at data/external; they are
+# not baked into the image.
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+RUN pip install --no-cache-dir "uv>=0.8,<0.9" && apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 git make && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY pyproject.toml uv.lock README.md ./
+COPY packages ./packages
+RUN uv sync --frozen --no-dev
+COPY . .
+ENV LEDGER_ROOT=/app PATH="/app/.venv/bin:$PATH"
+CMD ["make", "pipeline"]
