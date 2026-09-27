@@ -455,3 +455,46 @@ early stopping and the choice of champion use only held out loans in the validat
 months. The test months begin three months after validation ends, so every outcome used
 to fit or choose the model was known before the first test month end, and a check in
 the trainer refuses to run otherwise.
+
+## 2026-09-27: Challenge (relief): the rate of monetary relief tripled across the window
+
+**Raised:** Complaints received in late 2024 ended in monetary relief about one time in
+seventy; by mid 2026 it was closer to one in fourteen. A model fitted on the early
+months will score the later ones too low, and a probability threshold chosen on 2025
+would flag almost nothing in 2026.
+
+**Response:** The ranking survives a shift in the base rate far better than the
+probabilities do. The operating point is a capacity, not a probability: a review team
+that can read one complaint in twenty.
+
+**Changed:** The operating point flags the top twentieth of scores, set on the
+validation months immediately before the test months. Reliability on the test months is
+published with the drift stated beside it, the calibration gate is non critical, and
+the monitoring plan resets the operating point when the monthly base rate moves by half.
+
+## 2026-09-27: Challenge (relief): a narrative can name a protected basis
+
+**Raised:** Consumers write about their age, their disability, their military service
+and their family. A text model can learn that an elderly widow is more likely to get a
+refund, which is a protected basis entering a routing decision by the back door. The
+Bureau's own tags mark older Americans and servicemembers.
+
+**Response:** Routing is not a credit decision, but it decides whose complaint a person
+reads first, and the same reasoning that keeps age out of a scorecard applies.
+
+**Changed:** `rules/proxies.yaml` now lists words a text model may not learn from, and
+the relief model drops them, and any phrase containing them, from its vocabulary. The
+Bureau's tags are never features; they are used only to audit flag rates by group, and
+a gate watches the ratio.
+
+## 2026-09-27: A third of the complaint narratives are form letters
+
+The first topic model over the narratives found topics made of legal boilerplate:
+"section, consumer, usc, agency, furnish", "presume, doctrine, estoppel, silence". They
+were form letters, many from credit repair services, filed word for word by different
+consumers, and counted as they were they became topics of their own and drowned out
+what individual consumers wrote. Grouping narratives by their normalised opening words,
+31 percent open like at least four others. Topics are now fitted with each opening
+counted once and then scored over every narrative, and each topic reports its share of
+form letters. With that change all four themes a reader expects in bank complaints
+emerged as topics; before it, two did.

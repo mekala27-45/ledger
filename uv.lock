@@ -1346,6 +1346,8 @@ version = "0.1.0"
 source = { editable = "packages/nlp" }
 dependencies = [
     { name = "ledger-core" },
+    { name = "ledger-models" },
+    { name = "ledger-scorecard" },
     { name = "polars" },
     { name = "scikit-learn" },
 ]
@@ -1353,6 +1355,8 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "ledger-core", editable = "packages/core" },
+    { name = "ledger-models", editable = "packages/models" },
+    { name = "ledger-scorecard", editable = "packages/scorecard" },
     { name = "polars", specifier = ">=1.30" },
     { name = "scikit-learn", specifier = ">=1.6" },
 ]

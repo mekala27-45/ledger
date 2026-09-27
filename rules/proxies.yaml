@@ -45,3 +45,36 @@ proxies:
   # Counted by grouping applications on the applicant's date of birth, so its value
   # depends on how common the applicant's birth year is among applicants: it carries age.
   - date_of_birth_distinct_emails_4w
+
+# Words a text model may not learn from: they name a protected basis directly. The
+# complaint relief model drops them from its vocabulary; the Bureau's own tags for older
+# consumers and servicemembers are used only to audit it.
+text_terms:
+  - age
+  - aged
+  - elderly
+  - senior
+  - seniors
+  - retired
+  - retiree
+  - disabled
+  - disability
+  - veteran
+  - veterans
+  - military
+  - servicemember
+  - race
+  - racial
+  - black
+  - white
+  - hispanic
+  - latino
+  - asian
+  - immigrant
+  - religion
+  - religious
+  - pregnant
+  - widow
+  - widowed
+  - divorced
+  - married

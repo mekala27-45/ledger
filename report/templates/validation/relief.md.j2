@@ -1,0 +1,83 @@
+{% set model = 'relief' %}
+{% set m = 'models.relief' %}
+{% set purpose %}
+Route complaints likely to end in monetary relief to the team that can fix the cause,
+and rank issues by the relief they are likely to cost. In a bank, a model like this is
+for routing and root cause. It must never decide whether a consumer gets relief, and it
+must never rank consumers; it ranks complaints and issues. It informs a person, so it is
+tier two.
+
+The data are real: complaints with narratives from the Consumer Financial Protection
+Bureau's public database, about real companies, exactly as the Bureau publishes them. The
+Bureau states that the database is "not a statistical sample of consumers' experiences
+in the marketplace".
+{% endset %}
+{% set soundness %}
+Whether a complaint ends in a refund depends on what went wrong and with whom: the
+product, the issue, the company, and what the consumer describes. The method is a
+logistic regression on TF-IDF of the narrative, one and two word terms, with the form's
+product, sub product, issue and company one hot encoded. A transformer would read the
+narrative better; it needs model weights this build cannot download, and the always
+available path is the one validated here.
+
+The benchmark that matters is a model on the form's metadata alone: if the narrative
+adds nothing, reading it is not worth the risk it carries.
+{% endset %}
+{% set data %}
+{{ v(m ~ '.complaints') }} closed complaints with narratives. Training on complaints
+received {{ v(m ~ '.train_period') }}, validation {{ v(m ~ '.validation_period') }}, test
+{{ v(m ~ '.test_period') }} ({{ v(m ~ '.test_rows') }} complaints, {{ v(m ~ '.test_relief') }}
+ending in monetary relief). The rate of relief rose from {{ v(m ~ '.train_rate') }} in the
+training months to {{ v(m ~ '.test_rate') }} in the test months.
+
+Only fields the consumer writes when filing are features; a check refuses anything the
+company writes afterwards. {{ v(m ~ '.banned_terms') }} words that name a protected basis are
+removed from the vocabulary, leaving {{ v(m ~ '.vocabulary') }} terms, and the Bureau's
+tags for older Americans and servicemembers are used only for the audit below.
+{% endset %}
+{% set development %}
+Development AUROC {{ v(m ~ '.development.auroc') }}, validation {{ v(m ~ '.validation.auroc') }}.
+The terms that move the score most:
+
+{{ table(m ~ '.terms') }}
+{% endset %}
+{% set outcomes %}
+On the test months the model reaches an AUROC of {{ v(m ~ '.test.auroc') }}, against
+{{ v(m ~ '.metadata_auroc') }} for the metadata alone. At the operating point, the top
+{{ v(m ~ '.flag_share') }} of scores set on the validation months, it flags
+{{ v(m ~ '.flagged_op') }} complaints with a precision of {{ v(m ~ '.precision_op') }},
+{{ v(m ~ '.lift_op') }} times the base rate, and finds {{ v(m ~ '.recall_op') }} of the
+complaints that ended in relief.
+
+By the Bureau's tags, at the operating point:
+
+{{ table(m ~ '.subgroups') }}
+
+{{ label(m ~ '.subgroups') }}
+{% endset %}
+{% set benchmarking %}
+Against the base rate and a logistic regression on the form's metadata alone, on the test months:
+{% endset %}
+{% set limitations %}
+- The complaints are a sample of the Bureau's public database, and the database is not a
+  sample of consumers: people who complain, and who write a narrative, are not typical.
+- The outcome is the company's own label for its response. Companies differ in what
+  they call monetary relief.
+- The rate of relief rose across the window, so the probabilities run low on the test
+  months; the ranking is what the model is used for.
+{% endset %}
+{% set monitoring %}
+Monthly, against complaints as they close:
+{% endset %}
+{% set challenge %}
+From `DECISIONS.md`:
+{% endset %}
+{% set conclusion %}
+The model ranks complaints well, but the narrative adds only {{ v(m ~ '.narrative_gain') }} of
+AUROC to what the form's metadata already says, short of the two hundredths the gate
+asks for. Reading consumers' own words is not worth its risk for that gain, so the model
+is not approved and stays in development; the conduct risk view ranks issues with
+{{ v(m ~ '.ranking_source') }}. It would be revisited with a transformer, which reads a
+narrative better than a bag of words, once model weights can be reached.
+{% endset %}
+{% include "validation/_report.md.j2" %}

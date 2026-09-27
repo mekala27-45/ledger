@@ -221,5 +221,38 @@
   "status": "in use",
   "tier": 1,
   "title": "Probability of default scorecard (champion)"
+ },
+ "relief": {
+  "auroc_test": 0.8688340612823258,
+  "conclusion": "not approved",
+  "conditions": [
+   "Test AUROC above the metadata only model: the narrative has to add something (measured 0.01401)"
+  ],
+  "function": "f07",
+  "last_validated": "2026-08-31",
+  "model_id": "relief",
+  "monitoring": [
+   [
+    "Precision at the operating point against closed complaints",
+    "below twice the base rate for a quarter",
+    "Refit"
+   ],
+   [
+    "The monthly base rate of monetary relief",
+    "moves by half",
+    "Reset the operating point"
+   ],
+   [
+    "Flag rate by the Bureau's tags",
+    "any group below half the highest",
+    "Review the vocabulary"
+   ]
+  ],
+  "owner": "Head of analytics",
+  "purpose": "Route complaints likely to end in a refund to the team that can fix the cause, and rank issues by the relief they are likely to cost",
+  "role": "sole",
+  "status": "development",
+  "tier": 2,
+  "title": "Monetary relief on consumer complaints"
  }
 }

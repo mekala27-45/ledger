@@ -8,6 +8,8 @@ dependencies = [
   "scikit-learn>=1.6",
   "polars>=1.30",
   "ledger-core",
+  "ledger-models",
+  "ledger-scorecard",
 ]
 
 [build-system]
@@ -19,3 +21,5 @@ packages = ["src/ledger_nlp"]
 
 [tool.uv.sources]
 ledger-core = { workspace = true }
+ledger-models = { workspace = true }
+ledger-scorecard = { workspace = true }
