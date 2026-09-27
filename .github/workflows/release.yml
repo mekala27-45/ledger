@@ -1,0 +1,39 @@
+name: release
+
+# A version tag cuts a GitHub release after the gates that guard every published figure
+# pass again on the tagged commit. The workbook is attached; nothing else is published,
+# and no registry or package index is involved, so the release cannot be held up by a
+# credential the repository does not have.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --frozen
+      - name: The gates, on the tagged commit
+        run: |
+          uv run python scripts/check_published_numbers.py
+          uv run python scripts/check_no_em_dash.py
+          uv run python scripts/check_vocabulary.py
+          uv run python scripts/check_statements.py
+          uv run python scripts/scan_for_planted_identifiers.py
+      - name: The release, with the credit and treasury workbook attached
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          results/exports/ledger_credit_and_treasury.xlsx
+          --title "ledger $GITHUB_REF_NAME"
+          --notes-file .github/release-notes.md
+          --verify-tag
