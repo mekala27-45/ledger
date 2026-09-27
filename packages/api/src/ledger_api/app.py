@@ -21,6 +21,7 @@ import polars as pl
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from ledger_core.statements import statements_payload
 from ledger_desk.replay import Event, LabelBook, ReplayWorker
@@ -178,6 +179,14 @@ def create_app(settings: Settings | None = None, *, start_desk: bool = True) -> 
 
     app = FastAPI(title="ledger", version="0.1.0", lifespan=lifespan)
     app.state.ledger = AppState(settings=cfg, engine=engine)
+    if cfg.cors_origins:
+        # The static site lives on another origin; only the origins named in the settings may call.
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=list(cfg.cors_origins),
+            allow_methods=["GET", "POST", "PATCH"],
+            allow_headers=["authorization", "content-type", "x-ledger-actor"],
+        )
 
     @app.exception_handler(StarletteHTTPException)
     async def http_error(request: Request, exc: StarletteHTTPException) -> JSONResponse:

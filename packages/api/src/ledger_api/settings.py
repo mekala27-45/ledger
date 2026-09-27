@@ -17,6 +17,8 @@ class Settings:
     replay_file: Path
     environment: str
     replay_loop: bool = True
+    # Origins allowed to call the API from a browser, such as the static site's host.
+    cors_origins: tuple[str, ...] = ()
 
     @property
     def token_required(self) -> bool:
@@ -37,4 +39,7 @@ def load_settings() -> Settings:
         ),
         environment=os.environ.get("LEDGER_ENV", "development"),
         replay_loop=os.environ.get("LEDGER_REPLAY_LOOP", "1") != "0",
+        cors_origins=tuple(
+            o.strip() for o in os.environ.get("LEDGER_CORS_ORIGINS", "").split(",") if o.strip()
+        ),
     )

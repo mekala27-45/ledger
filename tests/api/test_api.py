@@ -215,3 +215,27 @@ def test_the_stream_emits_the_fixture_in_order_and_persists_exactly_its_alerts(
     expected = set(fixture.filter(fixture["decision"] != "approve")["txn_id"].to_list())
     stored = {r[0] for r in rows(settings.database_url, "select txn_id from alerts")}
     assert stored == expected
+
+
+def test_cors_allows_only_the_named_origin(settings: Settings) -> None:
+    from dataclasses import replace
+
+    site = "https://example.github.io"
+    app = create_app(replace(settings, cors_origins=(site,)), start_desk=False)
+    with TestClient(app) as c:
+        ok = c.options(
+            "/v1/scorecard/score",
+            headers={"Origin": site, "Access-Control-Request-Method": "POST"},
+        )
+        assert ok.headers.get("access-control-allow-origin") == site
+        other = c.options(
+            "/v1/scorecard/score",
+            headers={"Origin": "https://elsewhere.example", "Access-Control-Request-Method": "POST"},
+        )
+        assert other.headers.get("access-control-allow-origin") is None
+
+
+def test_no_cors_headers_without_configured_origins(client: TestClient) -> None:
+    r = client.get("/v1/health", headers={"Origin": "https://example.github.io"})
+    assert r.status_code == 200
+    assert "access-control-allow-origin" not in r.headers
