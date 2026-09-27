@@ -1,0 +1,32 @@
+# The model inventory
+
+{{ statements() }}
+
+Every model the bank uses, with its tier, role, status and the conclusion of its last
+validation. Each has a report in `report/validation/` with the same sections in the same
+order, rendered from the manifest, and a report with a section missing does not render.
+
+{{ table('f10.inventory') }}
+
+{{ label('f10.inventory') }}
+
+## How a model is tiered
+
+Materiality first, complexity as a tie breaker upward. A model that decides
+automatically is tier one. A model that informs a decision a person makes is tier one if
+its method is hard to inspect and tier two otherwise. Analytical and monitoring models
+are tier three.
+
+## What every model must show
+
+Thirteen contract lines, each a sentence or two in the model's own report: how it was
+trained, how its features are timed, calibrated, useful against a baseline that is not a
+straw man, fair, gated, served, integrated, monitored, documented, bounded, validated and
+explainable. Promotion gates are set in the training module before the model is
+evaluated, and a model that fails a critical gate is not approved, whatever else it does.
+
+## Challenges on record
+
+{{ v('f10.challenge_count') }} effective challenges were raised and answered during
+development, at least two for every model. Each names what was raised, the response, and
+what changed; they are listed in each report and in `DECISIONS.md`.

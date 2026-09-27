@@ -1,0 +1,57 @@
+# Treasury and stress: method, simplifications, and what the numbers can say
+
+{{ statements() }}
+
+The method behind f08 and the `/treasury` page. These are illustrative projections
+on a fictional bank in the shape of the supervisory exercise, not the exercise.
+
+## Net interest income under rate shocks
+
+A repricing gap over {{ v('policy.treasury_horizon_months') }} months. Each position
+reprices some share of its balance within the horizon, weighted by how much of the
+horizon is left when it does: cash and card loans at once; installment loans and
+mortgages as they run off ({{ v('f08.installment_runoff') }} and {{ v('f08.mortgage_runoff') }}
+of their books over the last year); securities as an even
+{{ v('f08.securities_ladder_years') }} year ladder; certificates as they mature
+({{ v('f08.cd_share_in_year') }} within the year). Deposits move by the betas recovered in
+f06, and no rate falls below its floor.
+
+{{ table('f08.nii_table') }}
+
+{{ label('f08.nii_table') }}
+
+The balance sheet is held flat and customers do not change behaviour with rates. Economic
+value of equity is not measured.
+
+## The macro link
+
+The log odds of a current unsecured loan rolling thirty days past due in a month, on
+unemployment, house price growth, the loose underwriting vintages, months on book and the
+product, fitted on {{ v('f08.link_loan_months') }} loan months. The generator's stated
+sensitivity is {{ v('f08.link_stated') }} per point of unemployment and the link recovers
+{{ v('f08.link_unemployment') }} ({{ v('f08.link_unemployment_low') }} to
+{{ v('f08.link_unemployment_high') }}): within the stated tolerance of {{ v('f08.link_tolerance') }},
+and attenuated, because a bank never sees the latent risk score the generator uses. No
+scenario is projected from a link that fails this check.
+
+{{ table('f08.link_table') }}
+
+## The supervisory scenarios
+
+The Federal Reserve's {{ v('f08.scenario_year') }} baseline and severely adverse scenarios,
+applied as changes from their jump off quarter to the bank's own starting unemployment of
+{{ v('f08.unemployment_start') }}, for {{ v('f08.quarters') }} quarters. Losses follow the roll
+into delinquency by a quarter, through each product's observed conversion to charge off
+and its loss given default; intervals come from the link's covariance.
+
+{{ table('f08.scenario_table') }}
+
+{{ figure('f08.fig_capital').callout }}
+
+## Liquidity
+
+High quality liquid assets over thirty day outflows at the stated run rates of
+{{ v('policy.outflow_rate_checking') }} for checking, {{ v('policy.outflow_rate_savings') }} for
+savings and {{ v('policy.outflow_rate_time') }} for time deposits: {{ v('f08.lcr') }}, and
+{{ v('f08.lcr_concentration') }} if the largest one percent of depositors also left in full.
+Not the regulatory ratio: no inflows, no level two haircuts, no committed lines.

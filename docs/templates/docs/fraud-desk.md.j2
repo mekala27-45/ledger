@@ -1,0 +1,71 @@
+# The fraud desk: how the threshold is set, and what the desk can say about itself
+
+{{ statements() }}
+
+The method behind f04, the `/desk` page and the `fraud_card` model. Every figure is
+rendered from the manifest.
+
+## What a decision costs
+
+A decline on a genuine transaction costs the bank {{ v('policy.cost_false_decline') }}: the
+interchange it does not earn and the call the customer makes. A missed fraud costs its
+amount plus {{ v('policy.cost_missed_fraud_handling') }} for the investigation and the new
+card. Both are assumptions stated in `config/ledger.yaml`, not measured costs, and changing
+either moves the operating point; the slider on the desk shows by how much.
+
+## The operating point
+
+The threshold is the one that minimised expected cost on the validation months
+({{ v('models.fraud_card.validation_period') }}), and it is reported only on the test months
+({{ v('models.fraud_card.test_period') }}), which it never saw.
+
+{{ figure('f04.fig_cost').callout }}
+
+{{ table('models.fraud_card.operating_points') }}
+
+{{ label('models.fraud_card.operating_points') }}
+
+The analyst queue holds alerts above a second, stricter threshold: the lowest whose
+validation precision reached {{ v('policy.queue_precision_floor') }}, because an analyst's
+hour is budgeted and every queued alert ends in a call to a customer.
+
+## Late labels
+
+A card fraud label exists only once the chargeback window of
+{{ v('policy.chargeback_window_days') }} days has passed.
+
+{{ figure('f04.fig_lag').callout }}
+
+On the as of date the desk reports precision over labelled decisions only,
+{{ v('models.fraud_card.labelled_precision_as_of') }}, and says how many decisions it cannot
+yet judge. Counting every unlabelled decline as a mistake would have printed
+{{ v('models.fraud_card.naive_precision_as_of') }}, a number that looks like a crisis and is
+an artefact of the calendar. A test rejects any precision computed over the window.
+
+## The rules beside the model
+
+Rules can send a transaction to review but never decline it alone. Each is kept only
+while its precision on labelled months stays above twice the base rate.
+
+{{ table('models.fraud_card.rules') }}
+
+## Who the errors fall on
+
+{{ figure('f04.fig_card_fairness').callout }}
+
+Application fraud has the same question with more at stake, because a false flag there
+delays an account. On the BAF suite, measured under its own protocol:
+
+{{ figure('f04.fig_baf').callout }}
+
+{{ figure('f04.fig_alternatives').callout }}
+
+The full protocol, both variants and the search for a less discriminatory alternative
+are in `report/validation/fraud_account.md`.
+
+## The live desk and the recording
+
+The API replays the scored test stream on a simulated clock: an asyncio task reading a
+file and pushing server sent events, not a message bus. Each decision is written to the
+audit log before any payload leaves the API. When the API is asleep, the page plays a
+recording of the same stream in the browser and says so in a banner.

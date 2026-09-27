@@ -112,10 +112,14 @@ The scorecard studio at [/studio](https://mekala27-45.github.io/ledger/studio/) 
 ```
 make setup          # uv sync and the site's npm install
 make fetch          # checks the real datasets against data/PROVENANCE.md, says how to get any missing
-make pipeline       # generate, contracts, warehouse, reconcile, metrics, models, functions, render
+make pipeline       # generate, ingest, contracts, warehouse, reconcile, metrics, models, functions,
+                    # manifest, render, export, site-data (dags/ledger.py runs the same targets in Airflow)
 make gates          # every gate CI runs
+make rederive       # clear everything derived, rebuild it, and fail if any committed result moved
 make web            # the static site into web/out
 ```
+
+The documents: [ARCHITECTURE.md](ARCHITECTURE.md) for how the pieces fit, [docs/runbook.md](docs/runbook.md) for running and deploying, [docs/models.md](docs/models.md) for the model inventory, [docs/fraud-desk.md](docs/fraud-desk.md), [docs/fair-lending.md](docs/fair-lending.md), [docs/crime.md](docs/crime.md) and [docs/stress.md](docs/stress.md) for the methods, [docs/definitions.md](docs/definitions.md) for every metric's definition, and `report/validation/` for the eight validation reports. `ledger export` writes the credit and treasury workbook, with live formulas, to `results/exports/`.
 
 The API runs with `uv run uvicorn ledger_api.main:app` against Postgres; `DATABASE_URL`, `LEDGER_API_TOKEN` and `LEDGER_CORS_ORIGINS` configure it. The site works without it, from the committed bundle and the recorded replay.
 
