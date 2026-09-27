@@ -1,0 +1,461 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f11.fig_recon": {
+   "callout": "786 of 792 account months tie to the cent. The one break is savings deposits, account 2010, first appearing in 2026-03 at $4,217.36 and carried unchanged into every later month: one break, located, not 6. Every posting traces to a sub ledger transaction.",
+   "data": "f11/reconciliation.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "title": "Reported balance against the sum of postings, by account and month"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f11.breaks_table": {
+   "columns": [
+    "Account",
+    "First month",
+    "Amount",
+    "Months carried",
+    "Comparison",
+    "Finding"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "usd2",
+    "int",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "rows": [
+    [
+     "2010",
+     "2026-03",
+     4217.36,
+     6,
+     "reported vs postings",
+     "the injected break, located"
+    ]
+   ]
+  },
+  "f11.dq_table": {
+   "columns": [
+    "Rule",
+    "Table",
+    "Severity",
+    "Rows checked",
+    "Rows hit",
+    "Injected",
+    "Finding"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "int",
+    "int",
+    "int",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "every staged table",
+    "seed": null,
+    "source": "contracts stage"
+   },
+   "rows": [
+    [
+     "application income missing",
+     "loan applications",
+     "flag",
+     36210,
+     0,
+     null,
+     ""
+    ],
+    [
+     "loan opened after as of",
+     "loans",
+     "quarantine",
+     40288,
+     0,
+     null,
+     ""
+    ],
+    [
+     "loan balance negative",
+     "loan performance",
+     "quarantine",
+     854389,
+     0,
+     null,
+     ""
+    ],
+    [
+     "transfer without counterparty",
+     "deposit entries",
+     "flag",
+     8229331,
+     1721,
+     1721,
+     "caught at the injected count"
+    ],
+    [
+     "entry after as of",
+     "deposit entries",
+     "quarantine",
+     8229331,
+     0,
+     null,
+     ""
+    ],
+    [
+     "balance does not roll",
+     "deposit balances",
+     "flag",
+     2127521,
+     212,
+     212,
+     "caught at the injected count"
+    ],
+    [
+     "posting duplicate",
+     "gl postings",
+     "quarantine",
+     17990726,
+     7193,
+     7193,
+     "caught at the injected count"
+    ],
+    [
+     "posting zero amount",
+     "gl postings",
+     "quarantine",
+     17990726,
+     0,
+     null,
+     ""
+    ],
+    [
+     "card txn nonpositive",
+     "card transactions",
+     "quarantine",
+     1077220,
+     0,
+     null,
+     ""
+    ],
+    [
+     "hmda exempt value",
+     "hmda lar",
+     "flag",
+     609413,
+     9864,
+     null,
+     ""
+    ],
+    [
+     "hmda income not available",
+     "hmda lar",
+     "flag",
+     609413,
+     49974,
+     null,
+     ""
+    ],
+    [
+     "hmda ltv not available",
+     "hmda lar",
+     "flag",
+     609413,
+     171322,
+     null,
+     ""
+    ],
+    [
+     "cfpb response in progress",
+     "cfpb narratives",
+     "flag",
+     46084,
+     2,
+     null,
+     ""
+    ],
+    [
+     "uci undocumented code",
+     "uci default",
+     "flag",
+     30000,
+     399,
+     null,
+     ""
+    ],
+    [
+     "baf missing marker",
+     "baf",
+     "flag",
+     600000,
+     564284,
+     null,
+     ""
+    ],
+    [
+     "bls month unavailable",
+     "macro monthly",
+     "flag",
+     116,
+     1,
+     null,
+     ""
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f11.account_months": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 792
+  },
+  "f11.account_months_tied": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 786
+  },
+  "f11.bank_name_collisions": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "every FDIC insured institution, active and inactive",
+    "seed": null,
+    "source": "data/reference/fdic_institution_names.csv.gz"
+   },
+   "value": 0
+  },
+  "f11.break_account": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": "2010"
+  },
+  "f11.break_amount": {
+   "fmt": "usd2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 4217.36
+  },
+  "f11.break_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": "2026-03"
+  },
+  "f11.break_months_carried": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 6
+  },
+  "f11.breaks": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 1
+  },
+  "f11.dbt_models": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "the dbt warehouse",
+    "seed": 20260831,
+    "source": "warehouse/target/run_results.json"
+   },
+   "value": 62
+  },
+  "f11.dbt_tests": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "the dbt warehouse",
+    "seed": 20260831,
+    "source": "warehouse/target/run_results.json"
+   },
+   "value": 210
+  },
+  "f11.dbt_tests_passed": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "the dbt warehouse",
+    "seed": 20260831,
+    "source": "warehouse/target/run_results.json"
+   },
+   "value": 210
+  },
+  "f11.dq_rules": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "every staged table",
+    "seed": null,
+    "source": "contracts stage"
+   },
+   "value": 16
+  },
+  "f11.fdic_institutions": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "every FDIC insured institution, active and inactive",
+    "seed": null,
+    "source": "data/reference/fdic_institution_names.csv.gz"
+   },
+   "value": 27834
+  },
+  "f11.fdic_stopped_reporting": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:fdic",
+    "population": "FDIC financials, seven state region",
+    "seed": null,
+    "source": "mart_fdic_peer_quarter"
+   },
+   "value": 47
+  },
+  "f11.identifier_findings": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "every staged table",
+    "seed": null,
+    "source": "ledger_scan"
+   },
+   "value": 0
+  },
+  "f11.injected_caught": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 3
+  },
+  "f11.injected_defects": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 3
+  },
+  "f11.subledger_checks": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 216
+  },
+  "f11.subledger_tied": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 216
+  },
+  "f11.tables_scanned": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "mixed",
+    "population": "every staged table",
+    "seed": null,
+    "source": "ledger_scan"
+   },
+   "value": 30
+  },
+  "f11.unsourced_postings": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline general ledger, 22 accounts by 36 months",
+    "seed": 20260831,
+    "source": "f11 reconciliation"
+   },
+   "value": 0
+  }
+ }
+}

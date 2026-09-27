@@ -1,0 +1,122 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f04.fig_cost": {
+   "callout": "False declines cost $12.00 each and missed fraud costs its amount plus $35.00. The threshold that minimised the sum on the validation months, 0.0503, costs $24,927 on the test months against $1,573,327 for approving everything. Accuracy would have chosen 0.6376 and cost $89,153.",
+   "data": "f04/cost_curve.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "title": "Expected cost of fraud by decline threshold, test months"
+  },
+  "f04.fig_lag": {
+   "callout": "On 2026-08-31, 200,569 of 472,370 scored decisions were still inside the 60 day chargeback window. Precision over the labelled ones was 73.4%. A figure that treated the unlabelled declines as mistakes would read 27.0%.",
+   "data": "f04/label_lag.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "title": "What the desk could know, day by day"
+  },
+  "f04.fig_pr": {
+   "callout": "At the operating point the desk declines with precision 74.8% and recall 97.6%; the queue point narrows to precision 89.7% for the analyst queue.",
+   "data": "f04/pr_curve.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "title": "Precision and recall across thresholds, test months"
+  }
+ },
+ "seed": 20260831,
+ "tables": {},
+ "values": {
+  "f04.decisions_on_as_of": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "value": 472370
+  },
+  "f04.operating_point": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "value": 0.05033822858
+  },
+  "f04.queue_point": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "value": 0.2758569459
+  },
+  "f04.recorded_declines": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "value": 55
+  },
+  "f04.recorded_events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "value": 2993
+  },
+  "f04.recorded_hours": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "value": 30
+  },
+  "f04.unlabelled_on_as_of": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, June to August 2026",
+    "seed": null,
+    "source": "fraud_card scored stream"
+   },
+   "value": 200569
+  }
+ }
+}

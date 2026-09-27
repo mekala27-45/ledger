@@ -1,0 +1,152 @@
+{
+ "baf": {
+  "rows_in": 600000,
+  "rows_kept": 600000,
+  "rows_quarantined": 0
+ },
+ "card_transactions": {
+  "rows_in": 1077220,
+  "rows_kept": 1077220,
+  "rows_quarantined": 0
+ },
+ "cfpb_archive_counts": {
+  "rows_in": 25,
+  "rows_kept": 25,
+  "rows_quarantined": 0
+ },
+ "cfpb_companies": {
+  "rows_in": 30,
+  "rows_kept": 30,
+  "rows_quarantined": 0
+ },
+ "cfpb_narratives": {
+  "rows_in": 46084,
+  "rows_kept": 46084,
+  "rows_quarantined": 0
+ },
+ "cfpb_volume_by_issue": {
+  "rows_in": 960,
+  "rows_kept": 960,
+  "rows_quarantined": 0
+ },
+ "cfpb_volume_by_product": {
+  "rows_in": 264,
+  "rows_kept": 264,
+  "rows_quarantined": 0
+ },
+ "customers": {
+  "rows_in": 50000,
+  "rows_kept": 50000,
+  "rows_quarantined": 0
+ },
+ "deposit_accounts": {
+  "rows_in": 79669,
+  "rows_kept": 79669,
+  "rows_quarantined": 0
+ },
+ "deposit_balances": {
+  "rows_in": 2127521,
+  "rows_kept": 2127521,
+  "rows_quarantined": 0
+ },
+ "deposit_entries": {
+  "rows_in": 8229331,
+  "rows_kept": 8229331,
+  "rows_quarantined": 0
+ },
+ "deposit_rates": {
+  "rows_in": 36,
+  "rows_kept": 36,
+  "rows_quarantined": 0
+ },
+ "fdic_financials": {
+  "rows_in": 5871,
+  "rows_kept": 5871,
+  "rows_quarantined": 0
+ },
+ "fdic_institutions": {
+  "rows_in": 27834,
+  "rows_kept": 27834,
+  "rows_quarantined": 0
+ },
+ "fhfa_hpi_nj_quarterly": {
+  "rows_in": 46,
+  "rows_kept": 46,
+  "rows_quarantined": 0
+ },
+ "frb_charge_off_delinquency": {
+  "rows_in": 46,
+  "rows_kept": 46,
+  "rows_quarantined": 0
+ },
+ "frb_scenarios": {
+  "rows_in": 70,
+  "rows_kept": 70,
+  "rows_quarantined": 0
+ },
+ "gl_chart": {
+  "rows_in": 22,
+  "rows_kept": 22,
+  "rows_quarantined": 0
+ },
+ "gl_journals": {
+  "rows_in": 513,
+  "rows_kept": 513,
+  "rows_quarantined": 0
+ },
+ "gl_postings": {
+  "rows_in": 17990726,
+  "rows_kept": 17983533,
+  "rows_quarantined": 7193
+ },
+ "gl_reported_balances": {
+  "rows_in": 792,
+  "rows_kept": 792,
+  "rows_quarantined": 0
+ },
+ "hmda_lar": {
+  "rows_in": 609413,
+  "rows_kept": 609413,
+  "rows_quarantined": 0
+ },
+ "hmda_style_applications": {
+  "rows_in": 2121,
+  "rows_kept": 2121,
+  "rows_quarantined": 0
+ },
+ "loan_applications": {
+  "rows_in": 36210,
+  "rows_kept": 36210,
+  "rows_quarantined": 0
+ },
+ "loan_events": {
+  "rows_in": 1951833,
+  "rows_kept": 1951833,
+  "rows_quarantined": 0
+ },
+ "loan_performance": {
+  "rows_in": 854389,
+  "rows_kept": 854389,
+  "rows_quarantined": 0
+ },
+ "loans": {
+  "rows_in": 40288,
+  "rows_kept": 40288,
+  "rows_quarantined": 0
+ },
+ "macro_monthly": {
+  "rows_in": 116,
+  "rows_kept": 116,
+  "rows_quarantined": 0
+ },
+ "macro_path": {
+  "rows_in": 36,
+  "rows_kept": 36,
+  "rows_quarantined": 0
+ },
+ "uci_default": {
+  "rows_in": 30000,
+  "rows_kept": 30000,
+  "rows_quarantined": 0
+ }
+}
