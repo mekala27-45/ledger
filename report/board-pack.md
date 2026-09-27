@@ -246,6 +246,9 @@ with where its data lives:
 | Checking accounts opened and closed each month | `results/f06/deposits_monthly.parquet` | generated, marts.mart_deposits_monthly |
 | The policy rate, and what each product pays | `results/f06/rates.parquet` | generated, marts.mart_deposits_monthly |
 | The retention list: expected balance at risk | `results/f06/retention_list.parquet` | generated, marts.mart_deposits_monthly |
+| The capital ratio along each scenario | `results/f08/stress_paths.parquet` | real:frb_scenarios, marts.mart_scenarios and ledger_stress.link |
+| Net interest income over twelve months, parallel rate shocks | `results/f08/nii_shocks.parquet` | generated, marts.mart_balance_sheet_monthly |
+| Unsecured loans rolling into delinquency each quarter, along the 2026 scenarios | `results/f08/stress_paths.parquet` | real:frb_scenarios, marts.mart_scenarios and ledger_stress.link |
 | The fraud model's monitoring, week by week | `results/f10/fraud_weekly.parquet` | replayed, fraud_card |
 | Score stability by application quarter, against the development quarters | `results/f10/pd_psi_by_quarter.parquet` | generated, pd_scorecard |
 | Reported balance against the sum of postings, by account and month | `results/f11/reconciliation.parquet` | generated, f11 reconciliation |

@@ -325,6 +325,17 @@
    },
    "value": 0.01998035703
   },
+  "f06.beta_products": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 3
+  },
   "f06.beta_savings": {
    "fmt": "float2",
    "provenance": {

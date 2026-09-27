@@ -500,6 +500,45 @@ The 500 customers at the top of the list hold $114,622,517 and carry $9,442,588 
 
 Source: generated, Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
 
+## Treasury and stress testing
+
+Against $54.7M of net interest income over the last twelve months, a 200 basis point rise changes it by -$6,981 and a 200 basis point fall by -$175,123. The balance sheet is close to neutral: what the assets gain from a rise, the deposits give back, because savings pass on a large share of any move and most certificates reprice within the year. The fall costs more than the rise earns because checking is already at its floor and cannot follow rates down. Balances are held flat and customer behaviour does not change with the shock.
+
+| Parallel shock | Change in net interest income | Share of the last twelve months | From assets | From deposits |
+|---:|---:|---:|---:|---:|
+| -200 | -$175,123 | -0.3% | -$4,029,084 | $3,853,960 |
+| -100 | -$87,562 | -0.2% | -$2,014,542 | $1,926,980 |
+| 100 | -$3,490 | 0.0% | $2,014,542 | -$2,018,032 |
+| 200 | -$6,981 | 0.0% | $4,029,084 | -$4,036,064 |
+
+Source: generated, Harborline's balance sheet as of 2026-08, seed 20260831, as of 2026-08-31.
+
+The macro link, fitted on the generator's thirty six months:
+
+| Term | Coefficient | Low | High |
+|---|---:|---:|---:|
+| Intercept | -4.782 | -4.847 | -4.718 |
+| Unemployment, per point above four | 0.215 | 0.186 | 0.244 |
+| House price growth, per point a year | -0.008 | -0.016 | 0.000 |
+| The loose underwriting vintages | 0.439 | 0.385 | 0.493 |
+| Card rather than installment | 0.877 | 0.827 | 0.927 |
+| Six to eleven months on book | 0.417 | 0.355 | 0.480 |
+| Twelve to twenty three months on book | 0.236 | 0.173 | 0.299 |
+| Two years or more on book | -0.067 | -0.129 | -0.005 |
+
+Under the severely adverse scenario, the bank's unemployment peaks at 10.5 and the quarterly roll into delinquency rises with it; the band is the link's uncertainty. These are illustrative projections on a fictional bank in the shape of the supervisory exercise, not the exercise.
+
+| Scenario | Peak unemployment, bank | Losses over 9 quarters | Low | High | Share of loans | Capital ratio at its lowest | Low | Capital ratio after 9 quarters |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Baseline | 5.1 | $27.2M | $27.2M | $27.2M | 3.8% | 19.8% | 19.8% | 28.8% |
+| Severely adverse | 10.5 | $59.8M | $55.9M | $63.9M | 8.3% | 19.8% | 19.8% | 21.7% |
+
+Source: real:frb_scenarios, The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline, as of 2026-08-31.
+
+The ratio starts at 19.8%. Severely adverse losses peak at $8.6M a quarter, while pre provision revenue, held at its last twelve months of $8.2M a quarter and moved by the scenario's short rate, falls no lower than $7.7M, so the ratio ends the 9 quarters at 21.7% and never falls below where it started. No tax, dividends or balance sheet growth; illustrative projections on a fictional bank in the shape of the supervisory exercise, not the exercise.
+
+Liquidity coverage, simplified: 378%, and 180% if the largest one percent of depositors also leave in full.
+
 ## Controls
 
 786 of 792 account months tie to the cent. The one break is savings deposits, account 2010, first appearing in 2026-03 at $4,217.36 and carried unchanged into every later month: one break, located, not 6. Every posting traces to a sub ledger transaction.

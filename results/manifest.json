@@ -253,6 +253,42 @@
    },
    "title": "The retention list: expected balance at risk"
   },
+  "f08.fig_capital": {
+   "callout": "The ratio starts at 19.8%. Severely adverse losses peak at $8.6M a quarter, while pre provision revenue, held at its last twelve months of $8.2M a quarter and moved by the scenario's short rate, falls no lower than $7.7M, so the ratio ends the 9 quarters at 21.7% and never falls below where it started. No tax, dividends or balance sheet growth; illustrative projections on a fictional bank in the shape of the supervisory exercise, not the exercise.",
+   "data": "f08/stress_paths.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "title": "The capital ratio along each scenario"
+  },
+  "f08.fig_nii": {
+   "callout": "Against $54.7M of net interest income over the last twelve months, a 200 basis point rise changes it by -$6,981 and a 200 basis point fall by -$175,123. The balance sheet is close to neutral: what the assets gain from a rise, the deposits give back, because savings pass on a large share of any move and most certificates reprice within the year. The fall costs more than the rise earns because checking is already at its floor and cannot follow rates down. Balances are held flat and customer behaviour does not change with the shock.",
+   "data": "f08/nii_shocks.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "title": "Net interest income over twelve months, parallel rate shocks"
+  },
+  "f08.fig_roll": {
+   "callout": "Under the severely adverse scenario, the bank's unemployment peaks at 10.5 and the quarterly roll into delinquency rises with it; the band is the link's uncertainty. These are illustrative projections on a fictional bank in the shape of the supervisory exercise, not the exercise.",
+   "data": "f08/stress_paths.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "title": "Unsecured loans rolling into delinquency each quarter, along the 2026 scenarios"
+  },
   "f10.fig_fraud_monitoring": {
    "callout": "Score stability is measurable the day a transaction is scored; discrimination is not. For the first 8 weeks of the test months no test transaction had cleared the 60 day chargeback window, so the model's AUROC on the new months could not be computed at all. That gap is the monitoring lag, and the plan says so rather than filling it.",
    "data": "f10/fraud_weekly.parquet",
@@ -1858,6 +1894,327 @@
      121096.61,
      45226.9122,
      "has complained; customer for under a year"
+    ]
+   ]
+  },
+  "f08.link_table": {
+   "columns": [
+    "Term",
+    "Coefficient",
+    "Low",
+    "High"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float3"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "rows": [
+    [
+     "Intercept",
+     -4.782435104,
+     -4.84725494,
+     -4.717615269
+    ],
+    [
+     "Unemployment, per point above four",
+     0.2149973279,
+     0.1855639008,
+     0.2444307549
+    ],
+    [
+     "House price growth, per point a year",
+     -0.007914800607,
+     -0.01550675218,
+     -0.000322849038
+    ],
+    [
+     "The loose underwriting vintages",
+     0.438780397,
+     0.3845401576,
+     0.4930206365
+    ],
+    [
+     "Card rather than installment",
+     0.8767152589,
+     0.8266396704,
+     0.9267908474
+    ],
+    [
+     "Six to eleven months on book",
+     0.4170445962,
+     0.3545134949,
+     0.4795756974
+    ],
+    [
+     "Twelve to twenty three months on book",
+     0.2357143642,
+     0.1727817265,
+     0.298647002
+    ],
+    [
+     "Two years or more on book",
+     -0.06701193558,
+     -0.1292301598,
+     -0.004793711352
+    ]
+   ]
+  },
+  "f08.liquidity": {
+   "columns": [
+    "Line",
+    "Amount"
+   ],
+   "formats": [
+    "text",
+    "usdm"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "rows": [
+    [
+     "Cash",
+     31008438.22
+    ],
+    [
+     "Securities, after the haircut",
+     296389329.4
+    ],
+    [
+     "High quality liquid assets",
+     327397767.6
+    ],
+    [
+     "Checking outflow at 10%",
+     45570843.29
+    ],
+    [
+     "Savings outflow at 10%",
+     34734878.36
+    ],
+    [
+     "Time deposit outflow at 5%",
+     6378562.166
+    ],
+    [
+     "Thirty day net outflows",
+     86684283.82
+    ],
+    [
+     "If the largest 1% of depositors also leave in full",
+     181997761.0
+    ]
+   ]
+  },
+  "f08.nii_table": {
+   "columns": [
+    "Parallel shock",
+    "Change in net interest income",
+    "Share of the last twelve months",
+    "From assets",
+    "From deposits"
+   ],
+   "formats": [
+    "int",
+    "usd0",
+    "spct1",
+    "usd0",
+    "usd0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "rows": [
+    [
+     -200,
+     -175123.4678,
+     -0.0032025096,
+     -4029083.601,
+     3853960.133
+    ],
+    [
+     -100,
+     -87561.73388,
+     -0.0016012548,
+     -2014541.8,
+     1926980.066
+    ],
+    [
+     100,
+     -3490.438028,
+     -6.383017329e-05,
+     2014541.8,
+     -2018032.238
+    ],
+    [
+     200,
+     -6980.876057,
+     -0.0001276603466,
+     4029083.601,
+     -4036064.477
+    ]
+   ]
+  },
+  "f08.repricing": {
+   "columns": [
+    "Position",
+    "Balance",
+    "Repricing weight in twelve months",
+    "Beta",
+    "Change at +200 bp",
+    "Change at -200 bp"
+   ],
+   "formats": [
+    "text",
+    "usdm",
+    "pct1",
+    "float2",
+    "usd0",
+    "usd0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "rows": [
+    [
+     "Cash",
+     31008438.22,
+     1.0,
+     1.0,
+     620168.7644,
+     -620168.7644
+    ],
+    [
+     "Securities",
+     296389329.4,
+     0.09166666667,
+     1.0,
+     543380.4373,
+     -543380.4373
+    ],
+    [
+     "Card loans",
+     49325083.28,
+     1.0,
+     1.0,
+     986501.6656,
+     -986501.6656
+    ],
+    [
+     "Installment loans",
+     152140930.5,
+     0.2070322653,
+     1.0,
+     629961.6299,
+     -629961.6299
+    ],
+    [
+     "Mortgages",
+     518486185.3,
+     0.1204536532,
+     1.0,
+     1249071.103,
+     -1249071.103
+    ],
+    [
+     "Checking",
+     455708432.9,
+     1.0,
+     0.01998035703,
+     -182104.3438,
+     0.0
+    ],
+    [
+     "Savings",
+     347348783.6,
+     1.0,
+     0.3799485788,
+     -2639493.534,
+     2639493.534
+    ],
+    [
+     "Time deposits",
+     127571243.3,
+     0.6610575647,
+     0.7200514212,
+     -1214466.599,
+     1214466.599
+    ]
+   ]
+  },
+  "f08.scenario_table": {
+   "columns": [
+    "Scenario",
+    "Peak unemployment, bank",
+    "Losses over 9 quarters",
+    "Low",
+    "High",
+    "Share of loans",
+    "Capital ratio at its lowest",
+    "Low",
+    "Capital ratio after 9 quarters"
+   ],
+   "formats": [
+    "text",
+    "float1",
+    "usdm",
+    "usdm",
+    "usdm",
+    "pct1",
+    "pct1",
+    "pct1",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "rows": [
+    [
+     "Baseline",
+     5.14,
+     27184158.89,
+     27176429.85,
+     27192043.14,
+     0.03775828302,
+     0.1980552457,
+     0.1980552457,
+     0.2879040412
+    ],
+    [
+     "Severely adverse",
+     10.54,
+     59781332.99,
+     55859370.29,
+     63900217.69,
+     0.08303514187,
+     0.1980552457,
+     0.1980552457,
+     0.2172850909
     ]
    ]
   },
@@ -8366,6 +8723,17 @@
    },
    "value": 0.01998035703
   },
+  "f06.beta_products": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "marts.mart_deposits_monthly"
+   },
+   "value": 3
+  },
   "f06.beta_savings": {
    "fmt": "float2",
    "provenance": {
@@ -8761,6 +9129,655 @@
     "source": "marts.mart_deposits_monthly"
    },
    "value": 0.1256791086
+  },
+  "f08.base_capital_end": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 0.2879040412
+  },
+  "f08.base_capital_trough": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 0.1980552457
+  },
+  "f08.base_capital_trough_low": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 0.1980552457
+  },
+  "f08.base_loss": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 27184158.89
+  },
+  "f08.base_loss_high": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 27192043.14
+  },
+  "f08.base_loss_low": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 27176429.85
+  },
+  "f08.base_loss_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 0.03775828302
+  },
+  "f08.base_nii": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 54683198.38
+  },
+  "f08.base_peak_loss_quarter": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 3080892.785
+  },
+  "f08.base_peak_unemployment": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 5.14
+  },
+  "f08.base_ppnr_low": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 8209406.74
+  },
+  "f08.capital_ratio_start": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 0.1980552457
+  },
+  "f08.cd_share_in_year": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 0.8599310555
+  },
+  "f08.first_quarter": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": "2026Q1"
+  },
+  "f08.hqla": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 327397767.6
+  },
+  "f08.installment_runoff": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 0.4517067607
+  },
+  "f08.last_quarter": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": "2028Q1"
+  },
+  "f08.lcr": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 3.776898801
+  },
+  "f08.lcr_concentration": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 1.798910964
+  },
+  "f08.link_hpi": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": -0.007914800607
+  },
+  "f08.link_hpi_high": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": -0.000322849038
+  },
+  "f08.link_hpi_low": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": -0.01550675218
+  },
+  "f08.link_loan_months": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": 675353
+  },
+  "f08.link_rolls": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": 13353
+  },
+  "f08.link_stated": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": 0.3
+  },
+  "f08.link_tolerance": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": 0.1
+  },
+  "f08.link_unemployment": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": 0.2149973279
+  },
+  "f08.link_unemployment_high": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": 0.2444307549
+  },
+  "f08.link_unemployment_low": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": 0.1855639008
+  },
+  "f08.link_within": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "ledger_stress.link, loan months September 2023 to August 2026"
+   },
+   "value": "yes"
+  },
+  "f08.monotone": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": "yes"
+  },
+  "f08.mortgage_runoff": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 0.2628079707
+  },
+  "f08.nii_down100": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": -87561.73388
+  },
+  "f08.nii_down100_share": {
+   "fmt": "spct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": -0.0016012548
+  },
+  "f08.nii_down200": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": -175123.4678
+  },
+  "f08.nii_down200_share": {
+   "fmt": "spct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": -0.0032025096
+  },
+  "f08.nii_up100": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": -3490.438028
+  },
+  "f08.nii_up100_share": {
+   "fmt": "spct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": -6.383017329e-05
+  },
+  "f08.nii_up200": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": -6980.876057
+  },
+  "f08.nii_up200_share": {
+   "fmt": "spct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": -0.0001276603466
+  },
+  "f08.outflows": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 86684283.82
+  },
+  "f08.ppnr_quarter": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 8222541.0
+  },
+  "f08.quarters": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 9
+  },
+  "f08.rwa": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 519986972.3
+  },
+  "f08.scenario_year": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": "2026"
+  },
+  "f08.securities_ladder_years": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 5.0
+  },
+  "f08.severe_capital_end": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 0.2172850909
+  },
+  "f08.severe_capital_trough": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 0.1980552457
+  },
+  "f08.severe_capital_trough_low": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 0.1980552457
+  },
+  "f08.severe_loss": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 59781332.99
+  },
+  "f08.severe_loss_high": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 63900217.69
+  },
+  "f08.severe_loss_low": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 55859370.29
+  },
+  "f08.severe_loss_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 0.08303514187
+  },
+  "f08.severe_peak_loss_quarter": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 8594189.233
+  },
+  "f08.severe_peak_unemployment": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 10.54
+  },
+  "f08.severe_ppnr_low": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:frb_scenarios",
+    "population": "The Federal Reserve Board's 2026 supervisory scenarios, applied to Harborline",
+    "seed": null,
+    "source": "marts.mart_scenarios and ledger_stress.link"
+   },
+   "value": 7698041.186
+  },
+  "f08.stance": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": "close to neutral"
+  },
+  "f08.top1_balances": {
+   "fmt": "usdm",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 105903863.5
+  },
+  "f08.unemployment_start": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline's balance sheet as of 2026-08",
+    "seed": 20260831,
+    "source": "marts.mart_balance_sheet_monthly"
+   },
+   "value": 5.04
   },
   "f10.approved": {
    "fmt": "int",

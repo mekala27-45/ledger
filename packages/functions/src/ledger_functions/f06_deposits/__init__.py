@@ -187,6 +187,7 @@ def run(ctx: Context) -> None:
         rows.append([PRODUCT_NAMES[product], truth[product], b, "yes" if ok else "no", paid_year, paid_cycle])
         betas[product] = (b, paid_year, paid_cycle)
     m.put("f06.betas_recovered", recovered, "int", **gen)
+    m.put("f06.beta_products", len(PRODUCTS), "int", **gen)
     m.put("f06.beta_tolerance", BETA_TOLERANCE, "float2", **gen)
     m.put("f06.policy_move", move, "float2", **gen)
     m.put("f06.policy_cut", abs(move), "float2", **gen)
