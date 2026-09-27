@@ -77,6 +77,11 @@ liquidity:
 treasury:
   shocks_bps: [-200, -100, 100, 200]
   horizon_months: 12
+  # Securities are assumed to be an even ladder of this many years, so a fifth of the
+  # book matures and reprices each year. A stated simplification, not a holdings file.
+  securities_ladder_years: 5
+  # The supervisory exercise projects nine quarters.
+  stress_quarters: 9
 
 aml:
   reporting_threshold: 10000.0

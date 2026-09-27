@@ -81,6 +81,8 @@ class LiquiditySection(StrictModel):
 class TreasurySection(StrictModel):
     shocks_bps: list[int]
     horizon_months: int
+    securities_ladder_years: float = 5.0
+    stress_quarters: int = 9
 
 
 class AmlSection(StrictModel):
