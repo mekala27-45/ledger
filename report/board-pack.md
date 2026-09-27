@@ -160,8 +160,8 @@ principal reasons.
 
 ## Model risk
 
-We use 3 models in this pack. Each has an SR 11-7 style validation report,
-a tier, an owner and a monitoring plan; 7 challenges were raised and
+We use 5 models in this pack. Each has an SR 11-7 style validation report,
+a tier, an owner and a monitoring plan; 11 challenges were raised and
 answered during development and each is on record.
 
 | Model | Title | Function | Tier | Role | Status | Last validated | Conclusion | Test AUROC |
@@ -169,6 +169,8 @@ answered during development and each is on record.
 | pd_scorecard | Probability of default scorecard (champion) | f02 | 1 | champion | in use | 2026-08-31 | approved with conditions | 0.662 |
 | pd_challenger | Probability of default challenger (monotone GBM) | f02 | 1 | challenger | validated | 2026-08-31 | not approved | 0.667 |
 | fraud_card | Card transaction fraud (the desk's model) | f04 | 1 | sole | in use | 2026-08-31 | approved | 1.000 |
+| fraud_account | Application fraud on the BAF suite | f04 | 1 | sole | in use | 2026-08-31 | approved with conditions | 0.880 |
+| aml_triage | Alert triage for transaction monitoring | f05 | 2 | sole | in use | 2026-08-31 | approved | 1.000 |
 
 The probability of default scorecard is approved with a condition: its calibration on the
 loosened and recession vintages, which the expected loss overlay covers until it is

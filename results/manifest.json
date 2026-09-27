@@ -1615,6 +1615,30 @@
      "fraud_card",
      "Once the stream was corrected, the model separates fraud from genuine transactions almost perfectly on the test months.",
      "The validation report and the desk page lead with cost and late labels, state this limitation beside the discrimination figures, and the AUROC gate is not the reason the model is approved."
+    ],
+    [
+     "2026-09-27",
+     "aml_triage",
+     "On months it never saw, the triage model put every alert that matched an injected typology ahead of every legitimate lookalike: an AUROC of one.",
+     "The report publishes the ranking without the two strongest features and the rules' own order as benchmarks, states that the measured quality is a property of the generator, and makes investigator dispositions the monitoring measure the model would be refit on before any real use."
+    ],
+    [
+     "2026-09-27",
+     "aml_triage",
+     "The mule, rapid movement and round tripping rules fired no false alerts on this data, so a model that only learned which rule fired would already rank most of the queue correctly.",
+     "A gate now measures the model within structuring alerts alone, where the rules' order carries no information, and the benchmark table includes ranking by each rule's development precision."
+    ],
+    [
+     "2026-09-27",
+     "fraud_account",
+     "customer_age is on the proxy list and never a feature, yet at the suite's threshold older applicants who are not fraudsters are flagged far more often than younger ones. If the model cannot see age, where does the gap come from?",
+     "The date of birth count is on the proxy list now, with its reason, so no model may use it. The report publishes a search for a less discriminatory alternative: the next strongest age carriers removed one at a time, with the recall each step costs and the parity it buys, on both variants. The model's use is bounded to asking for documents before an account opens, never to declining one, because a false flag then costs an applicant a delay rather than an account."
+    ],
+    [
+     "2026-09-27",
+     "fraud_account",
+     "Recall at a five percent false positive rate sets the threshold on the same months it reports. A bank has to fix its threshold before the applications arrive, and the false positive rate it then gets is whatever the new months give it.",
+     "The report and the page publish both: the suite's measure, and the recall, false positive rate and predictive equality on months 6 and 7 at the threshold fixed on month 5. The recall gate uses the fixed threshold, and a gate watches how far the realised false positive rate drifts from its target."
     ]
    ]
   },
@@ -1681,6 +1705,28 @@
      "2026-08-31",
      "approved",
      0.9996245673
+    ],
+    [
+     "fraud_account",
+     "Application fraud on the BAF suite",
+     "f04",
+     "1",
+     "sole",
+     "in use",
+     "2026-08-31",
+     "approved with conditions",
+     0.8800948352
+    ],
+    [
+     "aml_triage",
+     "Alert triage for transaction monitoring",
+     "f05",
+     "2",
+     "sole",
+     "in use",
+     "2026-08-31",
+     "approved",
+     1.0
     ]
    ]
   },
@@ -7458,7 +7504,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 1
+   "value": 2
   },
   "f10.challenge_count": {
    "fmt": "int",
@@ -7469,7 +7515,7 @@
     "seed": null,
     "source": "effective challenge log"
    },
-   "value": 7
+   "value": 11
   },
   "f10.fraud_first_labelled_week": {
    "fmt": "text",
@@ -7513,7 +7559,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 3
+   "value": 5
   },
   "f10.not_approved": {
    "fmt": "int",
@@ -7557,7 +7603,7 @@
     "seed": null,
     "source": "results/models/registry.json"
    },
-   "value": 1
+   "value": 2
   },
   "f11.account_months": {
    "fmt": "int",
