@@ -65,6 +65,13 @@ RULES: tuple[Rule, ...] = (
         lambda: pl.col("closing_balance") < -0.005,
     ),
     Rule(
+        "loan_opened_after_as_of",
+        "loans",
+        "quarantine",
+        "No account can be opened after the as of date.",
+        lambda: pl.col("origination_date") > pl.date(2026, 8, 31),
+    ),
+    Rule(
         "application_income_missing",
         "loan_applications",
         "flag",

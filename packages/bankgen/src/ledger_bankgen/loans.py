@@ -222,7 +222,10 @@ def build_loan_book(
                 mi = k
         card_month.append(mi if card_open[-1] >= timeline.months[0] else -1)
     card_month_arr = np.array(card_month)
-    keep = card_month_arr < n_months
+    last = timeline.months[-1]
+    window_end = date(last.year + (last.month // 12), last.month % 12 + 1, 1) - timedelta(days=1)
+    # A card opened after the as of date does not exist yet.
+    keep = (card_month_arr < n_months) & np.array([c <= window_end for c in card_open], dtype=bool)
     card_idx = card_idx[keep]
     card_open = [c for c, k in zip(card_open, keep, strict=True) if k]
     card_month_arr = card_month_arr[keep]

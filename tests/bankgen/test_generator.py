@@ -119,3 +119,14 @@ def test_ledger_break_is_in_reported_balances_only(small_bank: tuple[Path, Path,
         "month": params.defects.ledger_break_month,
         "amount": params.defects.ledger_break_amount,
     }
+
+
+def test_nothing_opens_after_the_as_of_date(small_bank: tuple[Path, Path, GeneratorParams]) -> None:
+    import datetime as _dt
+
+    raw, _, _ = small_bank
+    as_of = _dt.date(2026, 8, 31)
+    loans = pl.read_parquet(raw / "loans.parquet")
+    assert loans.filter(pl.col("origination_date") > as_of).height == 0
+    accounts = pl.read_parquet(raw / "deposit_accounts.parquet")
+    assert accounts.filter(pl.col("open_date") > as_of).height == 0
