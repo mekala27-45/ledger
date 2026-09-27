@@ -560,6 +560,18 @@ wheels = [
 ]
 
 [[package]]
+name = "faker"
+version = "13.12.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "python-dateutil" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/36/6a/76e3e85cd0ddeb10d32be4250f5c502cacbcc86cc47d60b97192f80d1364/Faker-13.12.0.tar.gz", hash = "sha256:1f6478011ac8a8273e0f9cd6da03d9ea6391c622db340eca015339512e9cde29", size = 1528234, upload-time = "2022-05-25T14:09:34.763Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/85/fc/dc9b8929f260a825f93dffa528d17675b14d152ed9b97ae8a49c171f0327/Faker-13.12.0-py3-none-any.whl", hash = "sha256:5cbb89fc6a16793b2bd98252c03a86098c7426beab0a20382709a815651b8804", size = 1573217, upload-time = "2022-05-25T14:09:30.96Z" },
+]
+
+[[package]]
 name = "fastapi"
 version = "0.141.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1026,6 +1038,9 @@ dev = [
     { name = "types-openpyxl" },
     { name = "types-pyyaml" },
 ]
+sparkov = [
+    { name = "faker" },
+]
 warehouse = [
     { name = "dbt-core" },
     { name = "dbt-duckdb" },
@@ -1069,6 +1084,7 @@ dev = [
     { name = "types-openpyxl" },
     { name = "types-pyyaml" },
 ]
+sparkov = [{ name = "faker", specifier = "==13.12.0" }]
 warehouse = [
     { name = "dbt-core", specifier = ">=1.10,<1.11" },
     { name = "dbt-duckdb", specifier = ">=1.9,<1.10" },
@@ -1128,6 +1144,7 @@ version = "0.1.0"
 source = { editable = "packages/contracts" }
 dependencies = [
     { name = "ledger-core" },
+    { name = "ledger-scan" },
     { name = "pandera", extra = ["polars"] },
     { name = "polars" },
 ]
@@ -1135,6 +1152,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "ledger-core", editable = "packages/core" },
+    { name = "ledger-scan", editable = "packages/scan" },
     { name = "pandera", extras = ["polars"], specifier = ">=0.24" },
     { name = "polars", specifier = ">=1.30" },
 ]

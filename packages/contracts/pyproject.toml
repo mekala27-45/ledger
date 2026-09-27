@@ -8,6 +8,7 @@ dependencies = [
   "pandera[polars]>=0.24",
   "polars>=1.30",
   "ledger-core",
+  "ledger-scan",
 ]
 
 [build-system]
@@ -18,4 +19,5 @@ build-backend = "hatchling.build"
 packages = ["src/ledger_contracts"]
 
 [tool.uv.sources]
+ledger-scan = { workspace = true }
 ledger-core = { workspace = true }
