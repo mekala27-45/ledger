@@ -150,6 +150,26 @@ def recall_at_fpr(y: np.ndarray, p: np.ndarray, target_fpr: float) -> tuple[floa
     return recall, threshold
 
 
+def predictive_equality(
+    y: np.ndarray, p: np.ndarray, protected: np.ndarray, threshold: float
+) -> tuple[float, float, float]:
+    """The BAF suite's fairness measure: false positive rates of two groups at one threshold.
+
+    ``protected`` marks one group (in the suite, applicants aged fifty and over). The ratio
+    is the lower rate over the higher, so one is parity and it never exceeds one.
+    Returns (rate for the protected group, rate for the rest, ratio).
+    """
+    negatives = y == 0
+    a = negatives & protected
+    b = negatives & ~protected
+    if not a.any() or not b.any():
+        raise EvaluationError("predictive equality needs negatives in both groups")
+    fpr_a = float((p[a] >= threshold).mean())
+    fpr_b = float((p[b] >= threshold).mean())
+    high = max(fpr_a, fpr_b)
+    return fpr_a, fpr_b, (min(fpr_a, fpr_b) / high if high > 0 else 1.0)
+
+
 def bootstrap_auroc_interval(y: np.ndarray, p: np.ndarray, seed: int, reps: int = 200) -> tuple[float, float]:
     rng = np.random.default_rng(seed)
     values = []

@@ -193,3 +193,37 @@ def test_no_model_in_the_manifest_uses_a_protected_attribute_or_proxy() -> None:
     for key, value in feature_lists.items():
         features = {f.strip().lower() for f in str(value).split(",")}
         assert not features & proxies, (key, features & proxies)
+
+
+def test_predictive_equality_as_the_suite_defines_it() -> None:
+    from ledger_models.evaluate import predictive_equality
+
+    # Ten genuine applicants in each group and one fraud each. At 0.5 the older group has
+    # four false positives and the younger one, so the rates are 0.4 and 0.1.
+    older = np.array([True] * 11 + [False] * 11)
+    y = np.array([0.0] * 10 + [1.0] + [0.0] * 10 + [1.0])
+    p = np.array([0.9, 0.8, 0.7, 0.6] + [0.1] * 6 + [0.9] + [0.9] + [0.1] * 9 + [0.9])
+    fpr_old, fpr_young, ratio = predictive_equality(y, p, older, 0.5)
+    assert (fpr_old, fpr_young) == pytest.approx((0.4, 0.1))
+    assert ratio == pytest.approx(0.25)
+    # The ratio is symmetric in which group is marked, and one is parity.
+    assert predictive_equality(y, p, ~older, 0.5)[2] == pytest.approx(0.25)
+    assert predictive_equality(y, np.zeros_like(p), older, 0.5)[2] == 1.0
+    with pytest.raises(EvaluationError):
+        predictive_equality(y, p, np.ones_like(older), 0.5)
+
+
+def test_the_baf_protocol_keeps_a_threshold_it_is_given() -> None:
+    from ledger_models.train_baf import protocol
+
+    rng = np.random.default_rng(3)
+    y = (rng.random(4000) < 0.05).astype(float)
+    p = np.clip(rng.normal(0.2 + 0.4 * y, 0.15), 0, 1)
+    older = rng.random(4000) < 0.3
+    chosen = protocol(y, p, older)
+    # With no threshold the suite's rule sets it at a five percent false positive rate.
+    assert chosen["fpr"] == pytest.approx(0.05, abs=0.002)
+    # A threshold fixed elsewhere is used as given, never re-chosen on these rows.
+    fixed = protocol(y, p, older, threshold=0.5)
+    assert fixed["threshold"] == 0.5
+    assert fixed["recall"] == pytest.approx(float((p[y == 1] >= 0.5).mean()))

@@ -1,0 +1,1503 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {},
+ "seed": 20260831,
+ "tables": {
+  "models.fraud_account.alternatives": {
+   "columns": [
+    "variant",
+    "removed",
+    "auroc",
+    "recall",
+    "fpr_older",
+    "fpr_younger",
+    "ratio"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float3",
+    "pct1",
+    "pct2",
+    "pct2",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "Base",
+     "Nothing (the model)",
+     0.8800948352,
+     0.49003517,
+     0.09193284193,
+     0.04190728582,
+     0.4558467348
+    ],
+    [
+     "Base",
+     "employment_status",
+     0.8765897672,
+     0.4830011723,
+     0.08927108927,
+     0.04242148564,
+     0.4751984768
+    ],
+    [
+     "Base",
+     "employment_status, housing_status",
+     0.8590617458,
+     0.4478311841,
+     0.07893120393,
+     0.0444189542,
+     0.5627553108
+    ],
+    [
+     "Base",
+     "employment_status, housing_status, current_address_months_count",
+     0.854457776,
+     0.4419695193,
+     0.07800982801,
+     0.04459694644,
+     0.5716836914
+    ],
+    [
+     "Variant II",
+     "Nothing (the model)",
+     0.8819180164,
+     0.4925544101,
+     0.06958626177,
+     0.03041661138,
+     0.4371065583
+    ],
+    [
+     "Variant II",
+     "employment_status",
+     0.8788832436,
+     0.4948453608,
+     0.06706670203,
+     0.03293750829,
+     0.4911156699
+    ],
+    [
+     "Variant II",
+     "employment_status, housing_status",
+     0.8601253056,
+     0.4432989691,
+     0.06620474738,
+     0.03379992039,
+     0.5105362037
+    ],
+    [
+     "Variant II",
+     "employment_status, housing_status, current_address_months_count",
+     0.8546335877,
+     0.4341351661,
+     0.06451399019,
+     0.0354915749,
+     0.5501376491
+    ]
+   ]
+  },
+  "models.fraud_account.benchmark": {
+   "columns": [
+    "Model",
+    "AUROC",
+    "Gini",
+    "Brier",
+    "ECE"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float4",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "This model",
+     0.8800948352,
+     0.7601896703,
+     0.0126338299,
+     0.004395996106
+    ],
+    [
+     "Base rate",
+     0.5,
+     0.0,
+     0.01376447604,
+     0.004184627301
+    ],
+    [
+     "Logistic on the same features",
+     0.8748205805,
+     0.749641161,
+     0.01291904155,
+     0.00687298223
+    ]
+   ]
+  },
+  "models.fraud_account.challenges": {
+   "columns": [
+    "Date",
+    "Challenge",
+    "Response",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "2026-09-27",
+     "customer_age is on the proxy list and never a feature, yet at the suite's threshold older applicants who are not fraudsters are flagged far more often than younger ones. If the model cannot see age, where does the gap come from?",
+     "From the other features. A model trained to predict fifty and over from the fraud model's own features separates the two groups well, and the strongest single carrier was date_of_birth_distinct_emails_4w: a count taken by grouping applications on the applicant's date of birth, so its value depends on how common the applicant's birth year is among applicants. Employment status, housing status and time at the current address come next, and each is also a legitimate fraud signal.",
+     "The date of birth count is on the proxy list now, with its reason, so no model may use it. The report publishes a search for a less discriminatory alternative: the next strongest age carriers removed one at a time, with the recall each step costs and the parity it buys, on both variants. The model's use is bounded to asking for documents before an account opens, never to declining one, because a false flag then costs an applicant a delay rather than an account."
+    ],
+    [
+     "2026-09-27",
+     "Recall at a five percent false positive rate sets the threshold on the same months it reports. A bank has to fix its threshold before the applications arrive, and the false positive rate it then gets is whatever the new months give it.",
+     "The suite's measure is right for comparing models with each other and with the published results, and wrong as a statement of what the bank would see.",
+     "The report and the page publish both: the suite's measure, and the recall, false positive rate and predictive equality on months 6 and 7 at the threshold fixed on month 5. The recall gate uses the fixed threshold, and a gate watches how far the realised false positive rate drifts from its target."
+    ]
+   ]
+  },
+  "models.fraud_account.conditions": {
+   "columns": [
+    "Condition"
+   ],
+   "formats": [
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "Remediate before the next validation: Predictive equality between the age groups at the suite's threshold (measured 0.4558)"
+    ]
+   ]
+  },
+  "models.fraud_account.contract": {
+   "columns": [
+    "Line",
+    "What this model does"
+   ],
+   "formats": [
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "trained",
+     "On months 0 to 4 of the base variant; month 5 chooses the tree count and the deployable threshold."
+    ],
+    [
+     "timed",
+     "The suite computes its features at application time and ships no raw history to recompute them from, so the split is temporal and a single feature screen looks for anything known only after the outcome."
+    ],
+    [
+     "calibrated",
+     "Reliability on the test months is published; the threshold is set by false positive rate, so the score is used as a rank."
+    ],
+    [
+     "useful",
+     "Beats the base rate and a logistic model on the same features at the suite's own measure, recall at a five percent false positive rate."
+    ],
+    [
+     "fair",
+     "Predictive equality between applicants aged fifty and over and the rest, on both variants, with a search for a less discriminatory alternative published beside it."
+    ],
+    [
+     "gated",
+     "Every gate in this report, including the recall at a threshold fixed before the test months."
+    ],
+    [
+     "served",
+     "Scored in the pipeline; not served by the API, because no live application stream exists here."
+    ],
+    [
+     "integrated",
+     "An application at or above the threshold asks for documents before the account opens. The model never declines one."
+    ],
+    [
+     "monitored",
+     "Monthly false positive rate against the threshold, by age group; recall on labelled applications; score PSI."
+    ],
+    [
+     "documented",
+     "This validation report and the desk page's fairness audit."
+    ],
+    [
+     "bounded",
+     "Routes applications to document checks only; never declines, never prices, and never sees age."
+    ],
+    [
+     "validated",
+     "This report, rendered from the manifest before the threshold is used."
+    ],
+    [
+     "explainable",
+     "A routed application shows the features that moved its score most, in the suite's own terms."
+    ]
+   ]
+  },
+  "models.fraud_account.gates": {
+   "columns": [
+    "Gate",
+    "Threshold",
+    "Measured",
+    "Result"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "Test AUROC at or above the floor",
+     "at least 0.8",
+     0.8800948352,
+     "pass"
+    ],
+    [
+     "Test recall at the threshold fixed on month five",
+     "at least 0.4",
+     0.5381008206,
+     "pass"
+    ],
+    [
+     "Recall at a five percent false positive rate above the logistic benchmark",
+     "at least 0",
+     0.01758499414,
+     "pass"
+    ],
+    [
+     "Test false positive rate at the threshold fixed on month five",
+     "at most 0.075",
+     0.05943777763,
+     "pass"
+    ],
+    [
+     "Strongest single feature's test AUROC (a feature known after the outcome would stand alone)",
+     "at most 0.8",
+     0.7235122164,
+     "pass"
+    ],
+    [
+     "Predictive equality between the age groups at the suite's threshold",
+     "at least 0.8",
+     0.4558467348,
+     "FAIL"
+    ],
+    [
+     "Expected calibration error on test",
+     "at most 0.01",
+     0.004395996106,
+     "pass"
+    ]
+   ]
+  },
+  "models.fraud_account.monitoring": {
+   "columns": [
+    "Measure",
+    "Trigger",
+    "Action"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "False positive rate at the threshold, monthly, by age group",
+     "overall above 7.5% or the ratio below its validated value",
+     "Reset the threshold on the latest labelled month"
+    ],
+    [
+     "Recall on labelled applications, monthly",
+     "below the validated recall for two months",
+     "Revalidate"
+    ],
+    [
+     "Score PSI, monthly against month five",
+     "above 0.25",
+     "Revalidate"
+    ]
+   ]
+  },
+  "models.fraud_account.reliability": {
+   "columns": [
+    "Bin",
+    "Accounts",
+    "Predicted",
+    "Observed"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "pct2",
+    "pct2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     1,
+     6119,
+     0.0005718948019,
+     0.0001634253963
+    ],
+    [
+     2,
+     6119,
+     0.0009082226667,
+     0.0009805523778
+    ],
+    [
+     3,
+     6119,
+     0.001254195749,
+     0.001470828567
+    ],
+    [
+     4,
+     6119,
+     0.00166924299,
+     0.002124530152
+    ],
+    [
+     5,
+     6119,
+     0.002196817168,
+     0.003268507926
+    ],
+    [
+     6,
+     6118,
+     0.002958924829,
+     0.00441320693
+    ],
+    [
+     7,
+     6118,
+     0.004140135714,
+     0.004740111147
+    ],
+    [
+     8,
+     6118,
+     0.006316687048,
+     0.01029748284
+    ],
+    [
+     9,
+     6118,
+     0.01182182446,
+     0.02157567833
+    ],
+    [
+     10,
+     6118,
+     0.06443914291,
+     0.09038901602
+    ]
+   ]
+  },
+  "models.fraud_account.subgroups": {
+   "columns": [
+    "Group",
+    "N",
+    "Event rate",
+    "Mean score",
+    "Calibration gap",
+    "Auroc",
+    "Flag rate",
+    "Fpr",
+    "Recall"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct2",
+    "pct2",
+    "spct1",
+    "float3",
+    "pct2",
+    "pct2",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "under 30",
+     15411.0,
+     0.006553760301,
+     0.005465223664,
+     -0.001088536637,
+     0.8825364901,
+     0.02420349101,
+     0.02194644024,
+     0.3663366337
+    ],
+    [
+     "30 to 39",
+     18963.0,
+     0.01191794547,
+     0.008229987103,
+     -0.00368795837,
+     0.8584871352,
+     0.04382218003,
+     0.03906708651,
+     0.4380530973
+    ],
+    [
+     "40 to 49",
+     16755.0,
+     0.01420471501,
+     0.01132042137,
+     -0.002884293642,
+     0.8744125609,
+     0.06971053417,
+     0.06363141006,
+     0.4915966387
+    ],
+    [
+     "50 to 59",
+     7622.0,
+     0.02453424298,
+     0.01556106076,
+     -0.008973182222,
+     0.8756833736,
+     0.1043033325,
+     0.09213180901,
+     0.5882352941
+    ],
+    [
+     "60 and over",
+     2434.0,
+     0.04149548069,
+     0.01662282431,
+     -0.02487265638,
+     0.8598371196,
+     0.11010682,
+     0.09129875697,
+     0.5445544554
+    ]
+   ]
+  },
+  "models.fraud_account.variants": {
+   "columns": [
+    "Measure",
+    "Base",
+    "Variant II"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "rows": [
+    [
+     "Applications in the sample",
+     "300,000",
+     "300,000"
+    ],
+    [
+     "Share aged fifty and over",
+     "18.3%",
+     "50.5%"
+    ],
+    [
+     "Fraud rate, aged fifty and over",
+     "2.34%",
+     "1.82%"
+    ],
+    [
+     "Fraud rate, under fifty",
+     "0.81%",
+     "0.38%"
+    ],
+    [
+     "Test AUROC",
+     "0.880",
+     "0.882"
+    ],
+    [
+     "Recall at a five percent false positive rate (the suite's measure)",
+     "49.0%",
+     "49.3%"
+    ],
+    [
+     "False positive rate, aged fifty and over",
+     "9.19%",
+     "6.96%"
+    ],
+    [
+     "False positive rate, under fifty",
+     "4.19%",
+     "3.04%"
+    ],
+    [
+     "Predictive equality (lower rate over higher)",
+     "0.46",
+     "0.44"
+    ],
+    [
+     "Logistic benchmark: recall at the same rate",
+     "47.2%",
+     "47.7%"
+    ],
+    [
+     "Threshold fixed on month five: recall on the test months",
+     "53.8%",
+     "52.9%"
+    ],
+    [
+     "Threshold fixed on month five: false positive rate on the test months",
+     "5.94%",
+     "6.07%"
+    ],
+    [
+     "Threshold fixed on month five: predictive equality",
+     "0.47",
+     "0.44"
+    ],
+    [
+     "AUROC of the features at predicting age fifty and over",
+     "0.782",
+     "0.788"
+    ]
+   ]
+  }
+ },
+ "values": {
+  "models.fraud_account.age_auc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.7823779162
+  },
+  "models.fraud_account.alt_best_ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.5716836914
+  },
+  "models.fraud_account.alt_last_ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.5716836914
+  },
+  "models.fraud_account.alt_last_recall": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.4419695193
+  },
+  "models.fraud_account.base_older_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.1830633333
+  },
+  "models.fraud_account.base_prevalence_times": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 2.878729223
+  },
+  "models.fraud_account.carriers": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "employment_status, housing_status, current_address_months_count"
+  },
+  "models.fraud_account.conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "approved with conditions"
+  },
+  "models.fraud_account.conditions_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 1
+  },
+  "models.fraud_account.development.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.9495668668
+  },
+  "models.fraud_account.development.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.3210790939
+  },
+  "models.fraud_account.development.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.008013809323
+  },
+  "models.fraud_account.development.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.003690055103
+  },
+  "models.fraud_account.development.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.009756698188
+  },
+  "models.fraud_account.development.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 1981
+  },
+  "models.fraud_account.development.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.8991337335
+  },
+  "models.fraud_account.development.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.7591392622
+  },
+  "models.fraud_account.development.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 203040
+  },
+  "models.fraud_account.feature_count": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "27"
+  },
+  "models.fraud_account.features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "income, prev_address_months_count, current_address_months_count, days_since_request, intended_balcon_amount, zip_count_4w, velocity_6h, velocity_24h, velocity_4w, bank_branch_count_8w, credit_risk_score, email_is_free, phone_home_valid, phone_mobile_valid, bank_months_count, has_other_cards, proposed_credit_limit, foreign_request, session_length_in_minutes, keep_alive_session, device_distinct_emails_8w, device_fraud_count, payment_type, employment_status, housing_status, source, device_os"
+  },
+  "models.fraud_account.fpr_deployed": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.05943777763
+  },
+  "models.fraud_account.fpr_older": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.09193284193
+  },
+  "models.fraud_account.fpr_times": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 2.193719783
+  },
+  "models.fraud_account.fpr_younger": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.04190728582
+  },
+  "models.fraud_account.ii_age_auc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.7876153683
+  },
+  "models.fraud_account.ii_fpr_older": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.06958626177
+  },
+  "models.fraud_account.ii_fpr_younger": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.03041661138
+  },
+  "models.fraud_account.ii_older_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.50509
+  },
+  "models.fraud_account.ii_prevalence_times": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 4.734199325
+  },
+  "models.fraud_account.ii_ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.4371065583
+  },
+  "models.fraud_account.ii_recall_suite": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.4925544101
+  },
+  "models.fraud_account.ii_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 300000
+  },
+  "models.fraud_account.last_validated": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "2026-08-31"
+  },
+  "models.fraud_account.method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "LightGBM on the suite's application features, early stopped on month five; no protected attribute or listed proxy"
+  },
+  "models.fraud_account.older_age": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 50
+  },
+  "models.fraud_account.outcome": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "The application was fraudulent, as the suite labels it"
+  },
+  "models.fraud_account.owner": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "Head of analytics"
+  },
+  "models.fraud_account.prediction_time": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "When the application is submitted; the suite's features describe the application and the activity before it"
+  },
+  "models.fraud_account.purpose": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "Score a bank account application for fraud when it is submitted, so that the riskiest ask for documents before the account opens"
+  },
+  "models.fraud_account.ratio": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.4558467348
+  },
+  "models.fraud_account.ratio_deployed": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.471005827
+  },
+  "models.fraud_account.recall_deployed": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.5381008206
+  },
+  "models.fraud_account.recall_logistic": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.4724501758
+  },
+  "models.fraud_account.recall_suite": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.49003517
+  },
+  "models.fraud_account.role": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "sole"
+  },
+  "models.fraud_account.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 300000
+  },
+  "models.fraud_account.screen_auc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.7235122164
+  },
+  "models.fraud_account.screen_feature": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "housing_status"
+  },
+  "models.fraud_account.status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "in use"
+  },
+  "models.fraud_account.suite_train_months": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "months 0 to 5"
+  },
+  "models.fraud_account.target_fpr": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.05
+  },
+  "models.fraud_account.test.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.8800948352
+  },
+  "models.fraud_account.test.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.1665217746
+  },
+  "models.fraud_account.test.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.0126338299
+  },
+  "models.fraud_account.test.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.004395996106
+  },
+  "models.fraud_account.test.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.01394132549
+  },
+  "models.fraud_account.test.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 853
+  },
+  "models.fraud_account.test.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.7601896703
+  },
+  "models.fraud_account.test.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.6143681399
+  },
+  "models.fraud_account.test.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 61185
+  },
+  "models.fraud_account.test_months": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "months 6 and 7"
+  },
+  "models.fraud_account.threshold_deployed": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.0279142142
+  },
+  "models.fraud_account.threshold_suite": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.03276077834
+  },
+  "models.fraud_account.tier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "1"
+  },
+  "models.fraud_account.tier_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "Informs a decision a person makes, with a method whose behaviour is hard to inspect"
+  },
+  "models.fraud_account.title": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "Application fraud on the BAF suite"
+  },
+  "models.fraud_account.train_months": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "months 0 to 4"
+  },
+  "models.fraud_account.trees": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 143
+  },
+  "models.fraud_account.validation.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.8815001921
+  },
+  "models.fraud_account.validation.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.1671696394
+  },
+  "models.fraud_account.validation.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.01123406162
+  },
+  "models.fraud_account.validation.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.00438761801
+  },
+  "models.fraud_account.validation.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.01238294899
+  },
+  "models.fraud_account.validation.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 443
+  },
+  "models.fraud_account.validation.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.7630003841
+  },
+  "models.fraud_account.validation.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 0.5964243976
+  },
+  "models.fraud_account.validation.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": 35775
+  },
+  "models.fraud_account.validation_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "real:baf",
+    "population": "Bank account applications in the BAF suite's base variant, a 300,000 sample; variant II beside it",
+    "seed": null,
+    "source": "packages/models (fraud_account)"
+   },
+   "value": "month 5"
+  }
+ }
+}

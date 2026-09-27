@@ -376,6 +376,16 @@
    },
    "rows": [
     [
+     "aml_triage",
+     13,
+     "none"
+    ],
+    [
+     "fraud_account",
+     27,
+     "none"
+    ],
+    [
      "fraud_card",
      18,
      "none"
@@ -964,7 +974,7 @@
     "seed": null,
     "source": "rules/proxies.yaml"
    },
-   "value": 3
+   "value": 5
   },
   "f03.models_with_proxies": {
    "fmt": "int",
@@ -986,7 +996,7 @@
     "seed": null,
     "source": "rules/proxies.yaml"
    },
-   "value": 31
+   "value": 32
   },
   "f03.proxy_list": {
    "fmt": "text",
@@ -997,7 +1007,7 @@
     "seed": null,
     "source": "rules/proxies.yaml"
    },
-   "value": "age, applicant_age, applicant_zip5, birth_year, census_tract, city_pop, county_fips, customer_age, customer_lat, customer_long, derived_ethnicity, derived_race, derived_sex, education, ethnicity, first_name, gender, last_name, lat, long, marital_status, marriage, name, name_email_similarity, national_origin, public_assistance_income, race, religion, sex, zip5, zip_code"
+   "value": "age, applicant_age, applicant_zip5, birth_year, census_tract, city_pop, county_fips, customer_age, customer_lat, customer_long, date_of_birth_distinct_emails_4w, derived_ethnicity, derived_race, derived_sex, education, ethnicity, first_name, gender, last_name, lat, long, marital_status, marriage, name, name_email_similarity, national_origin, public_assistance_income, race, religion, sex, zip5, zip_code"
   },
   "f03.pseudo_r2": {
    "fmt": "float3",

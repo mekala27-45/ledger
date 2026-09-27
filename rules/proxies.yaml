@@ -42,3 +42,6 @@ proxies:
   - education
   # Population of the home city is a location proxy at a coarser grain.
   - city_pop
+  # Counted by grouping applications on the applicant's date of birth, so its value
+  # depends on how common the applicant's birth year is among applicants: it carries age.
+  - date_of_birth_distinct_emails_4w

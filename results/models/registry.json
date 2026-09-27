@@ -30,6 +30,39 @@
   "tier": 2,
   "title": "Alert triage for transaction monitoring"
  },
+ "fraud_account": {
+  "auroc_test": 0.8800948351517073,
+  "conclusion": "approved with conditions",
+  "conditions": [
+   "Remediate before the next validation: Predictive equality between the age groups at the suite's threshold (measured 0.4558)"
+  ],
+  "function": "f04",
+  "last_validated": "2026-08-31",
+  "model_id": "fraud_account",
+  "monitoring": [
+   [
+    "False positive rate at the threshold, monthly, by age group",
+    "overall above 7.5% or the ratio below its validated value",
+    "Reset the threshold on the latest labelled month"
+   ],
+   [
+    "Recall on labelled applications, monthly",
+    "below the validated recall for two months",
+    "Revalidate"
+   ],
+   [
+    "Score PSI, monthly against month five",
+    "above 0.25",
+    "Revalidate"
+   ]
+  ],
+  "owner": "Head of analytics",
+  "purpose": "Score a bank account application for fraud when it is submitted, so that the riskiest ask for documents before the account opens",
+  "role": "sole",
+  "status": "in use",
+  "tier": 1,
+  "title": "Application fraud on the BAF suite"
+ },
  "fraud_card": {
   "auroc_test": 0.9996245673209968,
   "conclusion": "approved",

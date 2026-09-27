@@ -90,18 +90,21 @@ When the bank's own scorecard declines an application, Regulation B requires the
 
 ## The proxy list
 
-`rules/proxies.yaml` lists 31 protected attributes and proxies that no credit or fraud model may use. The reasoning, entry by entry:
+`rules/proxies.yaml` lists 32 protected attributes and proxies that no credit or fraud model may use. The reasoning, entry by entry:
 
 - **Race, ethnicity, sex, marital status, religion, national origin, age, receipt of public assistance.** The prohibited bases under the Equal Credit Opportunity Act and Regulation B, in every spelling the data here uses.
 - **ZIP code, census tract, county, and latitude and longitude.** Fine resolution geography reproduces a neighbourhood's racial composition closely enough that a model using it can rebuild the prohibited basis. County is kept for the map only.
 - **Names.** A name carries sex, and often ethnicity and national origin.
 - **Education.** It tracks race and national origin closely enough in public data that keeping it out is the defensible choice.
 - **The population of the applicant's city.** A location proxy at a coarser grain.
+- **Counts grouped on date of birth.** The BAF suite's count of emails per date of birth depends on how common the applicant's birth year is among applicants, so it carries age. It was the strongest age carrier in the application fraud model until it was listed; `DECISIONS.md` has the challenge.
 
-Every published model's feature list is checked against the list, in the pipeline and in `tests/models/test_proxy_list.py`: 3 models checked, 0 using any entry.
+Every published model's feature list is checked against the list, in the pipeline and in `tests/models/test_proxy_list.py`: 5 models checked, 0 using any entry.
 
 | Model | Features | Protected attributes or proxies among them |
 |---|---:|---|
+| aml_triage | 13 | none |
+| fraud_account | 27 | none |
 | fraud_card | 18 | none |
 | pd_challenger | 13 | none |
 | pd_scorecard | 8 | none |

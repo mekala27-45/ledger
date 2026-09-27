@@ -334,3 +334,46 @@ rule's precision is under half.
 **Changed:** A gate now measures the model within structuring alerts alone, where the
 rules' order carries no information, and the benchmark table includes ranking by each
 rule's development precision.
+
+## 2026-09-27: The BAF model trains on one month less than the suite
+
+The suite's protocol trains on months 0 to 5 and tests on months 6 and 7. fraud_account
+trains on months 0 to 4 and holds month 5 back, because something has to choose the
+tree count and the threshold a bank would actually deploy, and choosing either on the
+test months would make the reported recall a best case. The cost is one month of
+training data; the benefit is that every number in the report comes from months the
+model and its threshold never saw.
+
+## 2026-09-27: Challenge (fraud_account): leaving age out does not make the model blind to age
+
+**Raised:** customer_age is on the proxy list and never a feature, yet at the suite's
+threshold older applicants who are not fraudsters are flagged far more often than
+younger ones. If the model cannot see age, where does the gap come from?
+
+**Response:** From the other features. A model trained to predict fifty and over from
+the fraud model's own features separates the two groups well, and the strongest single
+carrier was date_of_birth_distinct_emails_4w: a count taken by grouping applications on
+the applicant's date of birth, so its value depends on how common the applicant's birth
+year is among applicants. Employment status, housing status and time at the current
+address come next, and each is also a legitimate fraud signal.
+
+**Changed:** The date of birth count is on the proxy list now, with its reason, so no
+model may use it. The report publishes a search for a less discriminatory alternative:
+the next strongest age carriers removed one at a time, with the recall each step costs
+and the parity it buys, on both variants. The model's use is bounded to asking for
+documents before an account opens, never to declining one, because a false flag then
+costs an applicant a delay rather than an account.
+
+## 2026-09-27: Challenge (fraud_account): the suite's recall is measured at a threshold set on the test months
+
+**Raised:** Recall at a five percent false positive rate sets the threshold on the same
+months it reports. A bank has to fix its threshold before the applications arrive, and
+the false positive rate it then gets is whatever the new months give it.
+
+**Response:** The suite's measure is right for comparing models with each other and
+with the published results, and wrong as a statement of what the bank would see.
+
+**Changed:** The report and the page publish both: the suite's measure, and the recall,
+false positive rate and predictive equality on months 6 and 7 at the threshold fixed on
+month 5. The recall gate uses the fixed threshold, and a gate watches how far the
+realised false positive rate drifts from its target.

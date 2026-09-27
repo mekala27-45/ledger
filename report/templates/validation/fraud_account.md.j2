@@ -1,0 +1,112 @@
+{% set model = 'fraud_account' %}
+{% set m = 'models.fraud_account' %}
+{% set purpose %}
+Score a bank account application for fraud when it is submitted, so that the riskiest
+applications ask for documents before the account opens. The model informs a check a
+person completes; it never declines an application. It is tier one because a gradient
+boosted model's behaviour is hard to inspect, and because its errors fall unevenly by age.
+
+In scope: the Bank Account Fraud suite (Jesus et al., NeurIPS 2022), a set of synthetic
+account applications generated from a real fraud dataset and published with the
+protected attributes kept so fairness can be measured. This report reproduces the
+suite's evaluation protocol on two of its variants. Out of scope: card fraud, which is
+`fraud_card`, and any decision to refuse an account.
+{% endset %}
+{% set soundness %}
+Application fraud is rare and the features are a mix of counts, durations, flags and
+categories with missing values marked by negative numbers, which gradient boosted trees
+handle without imputation. The suite's own measures are used as the suite defines them:
+recall at a {{ v(m ~ '.target_fpr') }} false positive rate, and predictive equality, the
+lower of the two age groups' false positive rates over the higher at that threshold,
+with the groups split at {{ v(m ~ '.older_age') }}. Parity is one.
+
+Age is measured and never used. `customer_age` is a protected attribute on the proxy
+list, as is `name_email_similarity`, which is computed from the applicant's name, and
+the feature list is checked against that list before training.
+{% endset %}
+{% set data %}
+A {{ v(m ~ '.rows') }} application sample of the suite's base variant, and a sample of
+the same size of variant II beside it. The suite trains on {{ v(m ~ '.suite_train_months') }}
+and tests on {{ v(m ~ '.test_months') }}. Here the model trains on {{ v(m ~ '.train_months') }},
+{{ v(m ~ '.validation_month') }} chooses the tree count and the threshold a bank could deploy,
+and the test is the suite's, so every figure below comes from months the model and its
+threshold never saw. The trade is one month of training data, recorded in `DECISIONS.md`.
+
+The suite computes its features at application time and ships no raw history, so there
+is nothing to recompute a feature from. The leakage check is a screen instead: a feature
+known only after the outcome would predict it almost alone, and the strongest single
+feature here, `{{ v(m ~ '.screen_feature') }}`, reaches a test AUROC of {{ v(m ~ '.screen_auc') }}.
+{% endset %}
+{% set development %}
+Development AUROC {{ v(m ~ '.development.auroc') }}, validation {{ v(m ~ '.validation.auroc') }},
+early stopped at {{ v(m ~ '.trees') }} trees.
+{% endset %}
+{% set outcomes %}
+On the test months the model reaches an AUROC of {{ v(m ~ '.test.auroc') }}. At the suite's
+threshold it finds {{ v(m ~ '.recall_suite') }} of fraudulent applications. Applicants aged
+{{ v(m ~ '.older_age') }} and over who are not fraudsters are flagged at {{ v(m ~ '.fpr_older') }},
+against {{ v(m ~ '.fpr_younger') }} for the rest, {{ v(m ~ '.fpr_times') }} times as often: a
+predictive equality of {{ v(m ~ '.ratio') }}.
+
+With the threshold fixed on {{ v(m ~ '.validation_month') }} instead, as a bank would have to
+fix it, the test months give a recall of {{ v(m ~ '.recall_deployed') }} at a false positive
+rate of {{ v(m ~ '.fpr_deployed') }} and a predictive equality of {{ v(m ~ '.ratio_deployed') }}.
+
+The two variants side by side. Variant II's age groups are about the same size
+({{ v(m ~ '.ii_older_share') }} of its applicants are {{ v(m ~ '.older_age') }} or over, against
+{{ v(m ~ '.base_older_share') }} in the base), and its older applicants' fraud rate is
+{{ v(m ~ '.ii_prevalence_times') }} times the younger group's, against {{ v(m ~ '.base_prevalence_times') }}
+times in the base:
+
+{{ table(m ~ '.variants') }}
+
+{{ label(m ~ '.variants') }}
+
+By age band, at the suite's threshold on the base variant:
+
+{{ table(m ~ '.subgroups') }}
+
+{{ label(m ~ '.subgroups') }}
+{% endset %}
+{% set benchmarking %}
+Against the base rate and a logistic regression on the same features, with a flag for
+each missing marker and the categories one hot encoded. At the suite's measure the
+logistic model's recall is {{ v(m ~ '.recall_logistic') }}.
+{% endset %}
+{% set limitations %}
+The age gap does not close by leaving age out. The model's features predict whether an
+applicant is {{ v(m ~ '.older_age') }} or over with an AUROC of {{ v(m ~ '.age_auc') }}; the
+strongest carriers after the date of birth count left the feature list are
+{{ v(m ~ '.carriers') }}. Removing them one at a time is the search for a less
+discriminatory alternative:
+
+{{ table(m ~ '.alternatives') }}
+
+{{ label(m ~ '.alternatives') }}
+
+Parity is bought with recall: removing all three moves the base variant's predictive
+equality to {{ v(m ~ '.alt_last_ratio') }} at a recall of {{ v(m ~ '.alt_last_recall') }}. The
+model is kept, and bounded to asking for documents, because a false flag then costs an
+applicant a delay, not an account. The choice is recorded in `DECISIONS.md` and the
+search is rerun at every revalidation.
+
+- The suite is synthetic. Its features are generated to match a real dataset's joint
+  distribution, not produced by a real application flow, so a real bank's separability
+  and drift will differ.
+- The suite's labels are final; a real application fraud label arrives weeks later, when
+  the account is used.
+{% endset %}
+{% set monitoring %}
+Monthly, once labels arrive:
+{% endset %}
+{% set challenge %}
+From `DECISIONS.md`:
+{% endset %}
+{% set conclusion %}
+The model does the job its purpose states and passes every critical gate on months it
+never saw, at a threshold fixed before them. It does not reach predictive equality
+between the age groups on either variant, which is why it is approved with that
+condition, bounded to routing applications to document checks, and published with the
+alternatives that would trade recall for parity.
+{% endset %}
+{% include "validation/_report.md.j2" %}
