@@ -50,10 +50,12 @@ def _environment(template_roots: Sequence[Path], manifest: Manifest) -> Environm
         lstrip_blocks=True,
         autoescape=False,
     )
+    env.filters["markdown"] = _markdown
     env.globals.update(
         v=manifest.text,
         raw=manifest.raw,
         table=manifest.table_markdown,
+        table_html=lambda key: table_html(manifest, key),
         label=manifest.label,
         figure=lambda key: manifest.figures[key],
         has=lambda key: key in manifest.values or key in manifest.tables or key in manifest.figures,
@@ -64,6 +66,37 @@ def _environment(template_roots: Sequence[Path], manifest: Manifest) -> Environm
         missing=_missing,
     )
     return env
+
+
+def _markdown(text: str) -> str:
+    from markdown_it import MarkdownIt
+
+    return str(MarkdownIt("commonmark", {"html": False}).enable("table").render(text))
+
+
+def table_html(manifest: Manifest, key: str) -> str:
+    """A manifest table as an HTML table, numbers right aligned in tabular figures."""
+    from html import escape
+
+    from ledger_core.formats import format_value
+
+    entry = manifest.tables.get(key)
+    if entry is None:
+        raise KeyError(f"manifest has no table {key!r}")
+    head = "".join(
+        f'<th class="{"num" if f != "text" else "txt"}">{escape(c)}</th>'
+        for c, f in zip(entry.columns, entry.formats, strict=True)
+    )
+    body = "".join(
+        "<tr>"
+        + "".join(
+            f'<td class="{"num" if f != "text" else "txt"}">{escape(format_value(v, f))}</td>'
+            for v, f in zip(row, entry.formats, strict=True)
+        )
+        + "</tr>"
+        for row in entry.rows
+    )
+    return f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
 
 
 def _missing(section: str) -> str:
@@ -83,6 +116,8 @@ class Renderer:
         self.targets = list(targets)
         self.template_roots = list(template_roots)
         self.env = _environment(self.template_roots, manifest)
+        # Stylesheets and other static text are inlined from files, so their numbers never sit in a template.
+        self.env.globals["inline"] = lambda rel: (self.root / rel).read_text(encoding="utf-8").rstrip("\n")
 
     def render(self, target: Target) -> str:
         return self.env.get_template(target.template).render()

@@ -471,6 +471,7 @@ def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_di
         }
     )
     champion.extra_formats["side_by_side"] = ["text", "text", "text"]
+    champion.extra_values["uci_accounts"] = (uci.height, "int")
     for name, d in (
         ("uci_auroc", u_champ["test"].auroc),
         ("uci_gini", u_champ["test"].gini),

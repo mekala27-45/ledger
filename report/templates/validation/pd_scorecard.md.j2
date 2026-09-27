@@ -92,7 +92,7 @@ Against the base rate, a logistic regression on the same raw characteristics, an
 gradient boosted challenger, all on the same test sample. The challenger's case for
 promotion is in its own report.
 
-The same machinery on real data, 30,000 credit card accounts from the UCI Default of
+The same machinery on real data, {{ v(m ~ '.uci_accounts') }} credit card accounts from the UCI Default of
 Credit Card Clients dataset (Yeh and Lien (2009), CC BY 4.0), split at random because the
 data has no dates:
 
@@ -111,7 +111,7 @@ The real accounts' scorecard:
 - Through the cycle by construction: it does not move with unemployment or with
   underwriting changes, which is why calibration fails on later vintages.
 - The UCI comparison uses a random split, so it cannot show drift, and the UCI data
-  is a Taiwanese card portfolio from 2005, not a US installment book.
+  is a Taiwanese card portfolio two decades old, not a US installment book.
 - Simplified: no bureau attributes beyond the handful the generator produces.
 {% endset %}
 {% set monitoring %}
@@ -125,7 +125,7 @@ The scorecard ranks risk soundly out of time, recovers the generator's risk orde
 is stable, and passes the age band audit. It under predicts the level of default on
 the loosened and recession vintages. For decisions, which depend on rank, it is fit for
 use. For expected loss, its probability is used only with the vintage overlay in
-function 2, and recalibration is the condition below.
+the lending function, and recalibration is the condition below.
 
 The adverse action reasons it produced for declined test month applicants, by the
 first reason given:

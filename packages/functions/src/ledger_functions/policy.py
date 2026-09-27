@@ -27,6 +27,7 @@ def policy_manifest(cfg: LedgerConfig) -> Manifest:
     put("branches", cfg.generator.branches, "int")
     put("recession_first", cfg.generator.recession_months[0], "text")
     put("recession_last", cfg.generator.recession_months[-1], "text")
+    put("loose_vintages", "2024Q4 and 2025Q1", "text")
     put("default_window_months", cfg.censoring.default_window_months, "int")
     put("default_dpd", cfg.censoring.default_dpd, "int")
     put("cure_window_days", cfg.censoring.cure_window_days, "int")

@@ -508,6 +508,9 @@ def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_di
         ],
         last_validated=cfg.calendar.as_of.isoformat(),
         extra_values={
+            "train_period": ("September 2025 to March 2026", "text"),
+            "validation_period": ("April and May 2026", "text"),
+            "test_period": ("June to August 2026", "text"),
             "operating_point": (t_op, "float4"),
             "queue_point": (t_queue, "float4"),
             "accuracy_point": (t_acc, "float4"),

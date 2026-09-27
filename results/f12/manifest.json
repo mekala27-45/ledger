@@ -1,0 +1,232 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f12.fig_cutoffs": {
+   "callout": "The current cutoff of 580 beats every alternative on loans with observed outcomes. Lowering it to 560 would have added 2,333 loans and lost $196,493 net; raising it to 600 would have forgone $1,641,356 more margin than it saved in losses.",
+   "data": "f12/cutoff_options.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "title": "Net benefit of each candidate cutoff, on loans with observed outcomes"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f12.cutoffs": {
+   "columns": [
+    "Cutoff",
+    "Loans declined (+) or added (-)",
+    "Defaults among them",
+    "Losses avoided",
+    "Margin forgone",
+    "Net benefit"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "int",
+    "usd0",
+    "usd0",
+    "usd0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "rows": [
+    [
+     560,
+     -2333,
+     -287.0,
+     -3096989.343,
+     -2900496.5,
+     -196492.8432
+    ],
+    [
+     580,
+     0,
+     -0.0,
+     -0.0,
+     -0.0,
+     -0.0
+    ],
+    [
+     600,
+     3806,
+     259.0,
+     2669790.947,
+     4311147.0,
+     -1641356.053
+    ],
+    [
+     620,
+     7038,
+     414.0,
+     4249055.686,
+     7587812.25,
+     -3338756.564
+    ],
+    [
+     640,
+     9085,
+     461.0,
+     4691778.437,
+     9450845.5,
+     -4759067.063
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f12.change_needed": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": "no"
+  },
+  "f12.current_cutoff": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 580
+  },
+  "f12.higher_cutoff": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 600
+  },
+  "f12.higher_net": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 1641356.053
+  },
+  "f12.loans_evaluated": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 13188
+  },
+  "f12.lower_cutoff": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 560
+  },
+  "f12.lower_net": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 196492.8432
+  },
+  "f12.recommended_benefit": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": -0.0
+  },
+  "f12.recommended_cutoff": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 580
+  },
+  "f12.recommended_defaults": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 0.0
+  },
+  "f12.recommended_loans": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 0
+  },
+  "f12.recommended_loss_avoided": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 0.0
+  },
+  "f12.recommended_margin_forgone": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed twelve month outcome",
+    "seed": 20260831,
+    "source": "pd_scorecard scores, loan outcomes, recoveries"
+   },
+   "value": 0.0
+  }
+ }
+}

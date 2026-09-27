@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+{{ inline('report/assets/board-pack-head.html') }}
+<title>{{ v('policy.bank_name') }} board pack</title>
+<style>
+{{ inline('report/assets/board-pack.css') }}</style>
+</head>
+<body>
+<main>
+{% filter markdown %}{% include "board-pack.md.j2" %}{% endfilter %}
+</main>
+</body>
+</html>

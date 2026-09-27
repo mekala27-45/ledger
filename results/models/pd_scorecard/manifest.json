@@ -372,27 +372,27 @@
     [
      "Latent risk coefficient",
      0.95,
-     0.9421497047,
-     0.8915424705,
-     0.9927569388,
+     0.9133120665,
+     0.8633020796,
+     0.9633220533,
      0.15,
      "true"
     ],
     [
      "Macro sensitivity per point of unemployment",
      0.3,
-     0.3273661767,
-     0.2763455761,
-     0.3783867773,
+     0.3220104754,
+     0.2711614535,
+     0.3728594974,
      0.1,
      "true"
     ],
     [
      "Loose vintage effect",
      0.45,
-     0.4484307136,
-     0.3754498076,
-     0.5214116197,
+     0.4593830124,
+     0.3867228652,
+     0.5320431595,
      0.15,
      "true"
     ],
@@ -2109,6 +2109,17 @@
     "source": "packages/models (pd_scorecard)"
    },
    "value": "Probability of default scorecard (champion)"
+  },
+  "models.pd_scorecard.uci_accounts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 30000
   },
   "models.pd_scorecard.uci_auroc": {
    "fmt": "float3",

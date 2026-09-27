@@ -1358,12 +1358,14 @@ source = { editable = "packages/render" }
 dependencies = [
     { name = "jinja2" },
     { name = "ledger-core" },
+    { name = "markdown-it-py" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "jinja2", specifier = ">=3.1" },
     { name = "ledger-core", editable = "packages/core" },
+    { name = "markdown-it-py", specifier = ">=3.0" },
 ]
 
 [[package]]

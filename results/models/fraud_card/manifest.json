@@ -1158,6 +1158,17 @@
    },
    "value": 2816
   },
+  "models.fraud_card.test_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "June to August 2026"
+  },
   "models.fraud_card.test_transactions": {
    "fmt": "int",
    "provenance": {
@@ -1201,6 +1212,17 @@
     "source": "packages/models (fraud_card)"
    },
    "value": "Card transaction fraud (the desk's model)"
+  },
+  "models.fraud_card.train_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "September 2025 to March 2026"
   },
   "models.fraud_card.trees": {
    "fmt": "int",
@@ -1333,6 +1355,17 @@
     "source": "packages/models (fraud_card)"
    },
    "value": 168969
+  },
+  "models.fraud_card.validation_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "replayed",
+    "population": "Sparkov card transactions, September 2025 to August 2026",
+    "seed": null,
+    "source": "packages/models (fraud_card)"
+   },
+   "value": "April and May 2026"
   }
  }
 }

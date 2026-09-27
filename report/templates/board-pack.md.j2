@@ -1,0 +1,138 @@
+# {{ v('policy.bank_name') }}: board pack
+
+{{ statements() }}
+
+**For the quarter ended {{ v('f01.peer_quarter') }}, with data to {{ v('policy.as_of') }}.**
+From the head of analytics to the board.
+
+## The bank at a glance
+
+We closed the period with total assets of {{ v('f01.total_assets') }}, gross loans of
+{{ v('f01.total_loans') }} and deposits of {{ v('f01.total_deposits') }}. Net income over the
+last twelve months was {{ v('f01.net_income_ttm') }}. Our net interest margin for the quarter
+was {{ v('f01.nim_q') }}, the efficiency ratio {{ v('f01.efficiency_ratio_q') }}, return on assets
+{{ v('f01.roa_q') }} and return on equity {{ v('f01.roe_q') }}. Nonperforming loans were
+{{ v('f01.npl_ratio_q') }} of gross loans, and the allowance for credit losses stood at
+{{ v('f01.allowance_to_loans_q') }} of loans. Every one of these figures is computed from the
+general ledger, which reconciled to the cent this quarter apart from one break I describe
+below.
+
+Against {{ v('f01.peer_count') }} real FDIC insured banks of our size in our region, our margin
+and returns sit near the top of the range, for one reason: {{ v('f01.consumer_loan_share') }} of
+our loans are card and consumer installment lending, where most of our peers lend mortgages
+and to businesses. That same mix is where our credit risk sits.
+
+{{ table('f01.peer_table') }}
+
+{{ label('f01.peer_table') }}
+
+What moved this quarter, largest first:
+
+{{ table('f01.insights') }}
+
+## Credit quality
+
+The two installment vintages we wrote under the loosened cutoff, {{ v('policy.loose_vintages') }},
+reached {{ v('f02.loose_12mob') }} cumulative default by twelve months on book, against
+{{ v('f02.prior_12mob') }} for the vintages before them. The recession from {{ v('policy.recession_first') }} to {{ v('policy.recession_last') }} added to it.
+Both effects are real in our data and our models recover them, but neither is visible to the
+application scorecard, which ranks risk well and understates its level on those vintages.
+
+Delinquency rolls the way it should in a book that mostly pays: a current loan moves to thirty
+days past due at {{ v('f02.roll_cur_30') }} a month, and
+once there, {{ v('f02.roll_r30_60') }} roll on to sixty while {{ v('f02.roll_cure30') }} cure.
+
+Expected loss on the open installment book is {{ v('f02.el_total') }} on exposure of
+{{ v('f02.ead_total') }} ({{ v('f02.el_rate') }}). That uses the scorecard's probability of default
+adjusted, vintage by vintage, by how far observed defaults have run above it, and loss given
+default of {{ v('f02.lgd_installment') }} from our own recoveries. On the raw scorecard
+probability the figure would be {{ v('f02.el_raw_total') }}.
+
+{{ table('f02.el_table') }}
+
+{{ label('f02.el_table') }}
+
+A simplified lifetime view in the shape of CECL, using our vintage curves and the Federal
+Reserve's supervisory baseline for unemployment, puts lifetime losses on the open book at
+{{ v('f02.cecl_total') }}. It is an illustration of the method, not an audited estimate.
+
+Our portfolio limits all held:
+
+{{ table('f02.limits') }}
+
+## Fraud and the desk
+
+The card fraud model decides at the threshold that minimises what fraud costs us, not at the
+one that maximises accuracy. On the three test months it would have cost
+{{ v('models.fraud_card.cost_op') }} in declined good transactions and missed fraud, against
+{{ v('models.fraud_card.cost_all') }} if we approved everything and
+{{ v('models.fraud_card.cost_acc') }} at the threshold accuracy would pick. It declines with
+precision {{ v('models.fraud_card.precision_op') }} and catches {{ v('models.fraud_card.recall_op') }}
+of fraud. The analyst queue takes only alerts at the stricter queue point, where precision is
+{{ v('models.fraud_card.precision_queue') }}.
+
+I would ask the board to read our fraud figures the way the desk does. A fraud label arrives only
+when the chargeback window closes, {{ v('policy.chargeback_window_days') }} days after the
+transaction. At the end of August, {{ v('models.fraud_card.unlabelled_share') }} of the summer's
+decisions were still unlabelled, and precision over the labelled ones was
+{{ v('models.fraud_card.labelled_precision_as_of') }}. A report that counted the unlabelled
+declines as mistakes would have shown {{ v('models.fraud_card.naive_precision_as_of') }}. We never
+publish that number.
+
+## Model risk
+
+We use {{ v('f10.models') }} models in this pack. Each has an SR 11-7 style validation report,
+a tier, an owner and a monitoring plan; {{ v('f10.challenge_count') }} challenges were raised and
+answered during development and each is on record.
+
+{{ table('f10.inventory') }}
+
+The probability of default scorecard is approved with a condition: its calibration on the
+loosened and recession vintages, which the expected loss overlay covers until it is
+recalibrated. The challenger model ranks marginally better but not by enough to give up the
+scorecard's directly stated reasons for a decline, and stays in shadow.
+
+## Controls
+
+Of {{ v('f11.account_months') }} ledger account months, {{ v('f11.account_months_tied') }} tie to
+the cent between the balance our ledger reports and the sum of its postings. The one break is
+in savings deposits, account {{ v('f11.break_account') }}: {{ v('f11.break_amount') }} first
+appearing in {{ v('f11.break_month') }} and carried into every month since. It was planted to prove
+the control finds it, and it did, to the account and the month. Every control account ties to
+its sub ledger in all {{ v('f11.subledger_checks') }} checks. Each of the
+{{ v('f11.injected_defects') }} defect types planted in the source data was caught at exactly the
+count planted.
+
+## The one recommendation
+
+**Hold the installment cutoff at {{ v('f12.current_cutoff') }}, and hold reserves on the
+installment book at the overlay adjusted expected loss of {{ v('f02.el_total') }}, which is
+{{ v('f02.el_overlay_build') }} above what the scorecard's own probability implies.**
+
+The cutoff is in the right place. On every loan whose first year we have seen, lowering it to
+{{ v('f12.lower_cutoff') }} would have lost {{ v('f12.lower_net') }} net, and raising it to
+{{ v('f12.higher_cutoff') }} would have given up {{ v('f12.higher_net') }} more margin than it saved in
+losses. The risk is in the level of default on the vintages we have already written, not in
+whom we approve today, so the answer is reserves, not a tighter policy.
+
+This lands on consumer lending, and on the scorecard's recalibration condition in model risk
+management.
+
+What would change it: if the observed over expected ratio on the vintages written since the
+recession falls back toward one, the overlay and the reserve build shrink with it. If a new
+loosening shows up in the vintage curves, the cutoff question reopens and I will bring it back.
+
+{{ table('f12.cutoffs') }}
+
+{{ label('f12.cutoffs') }}
+
+## Appendix: exhibits
+
+Every figure in this pack comes from a query the pipeline ran for this edition. Each exhibit,
+with where its data lives:
+
+| Exhibit | Data | Source |
+|---|---|---|
+{% for key, fig in manifest.figures.items() %}
+| {{ fig.title }} | `results/{{ fig.data }}` | {{ fig.provenance.backend }}, {{ fig.provenance.source }} |
+{% endfor %}

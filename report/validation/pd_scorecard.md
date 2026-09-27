@@ -91,9 +91,9 @@ parameters:
 | parameter | stated | estimate | interval_low | interval_high | tolerance | within |
 |---|---:|---:|---:|---:|---:|---|
 | Latent risk rank order (Spearman; perfect ordering is 1) | 1.000 | 0.775 | 0.775 | 0.775 | 0.600 | true |
-| Latent risk coefficient | 0.950 | 0.942 | 0.892 | 0.993 | 0.150 | true |
-| Macro sensitivity per point of unemployment | 0.300 | 0.327 | 0.276 | 0.378 | 0.100 | true |
-| Loose vintage effect | 0.450 | 0.448 | 0.375 | 0.521 | 0.150 | true |
+| Latent risk coefficient | 0.950 | 0.913 | 0.863 | 0.963 | 0.150 | true |
+| Macro sensitivity per point of unemployment | 0.300 | 0.322 | 0.271 | 0.373 | 0.100 | true |
+| Loose vintage effect | 0.450 | 0.459 | 0.387 | 0.532 | 0.150 | true |
 | Deposit beta, checking | 0.020 | 0.020 | 0.020 | 0.020 | 0.010 | true |
 | Deposit beta, savings | 0.380 | 0.380 | 0.380 | 0.380 | 0.030 | true |
 | Deposit beta, time | 0.720 | 0.720 | 0.720 | 0.720 | 0.030 | true |
@@ -299,7 +299,7 @@ Source: generated, booked installment loans with an observed outcome, seed 20260
 - Through the cycle by construction: it does not move with unemployment or with
   underwriting changes, which is why calibration fails on later vintages.
 - The UCI comparison uses a random split, so it cannot show drift, and the UCI data
-  is a Taiwanese card portfolio from 2005, not a US installment book.
+  is a Taiwanese card portfolio two decades old, not a US installment book.
 - Simplified: no bureau attributes beyond the handful the generator produces.
 
 
@@ -343,7 +343,7 @@ The scorecard ranks risk soundly out of time, recovers the generator's risk orde
 is stable, and passes the age band audit. It under predicts the level of default on
 the loosened and recession vintages. For decisions, which depend on rank, it is fit for
 use. For expected loss, its probability is used only with the vintage overlay in
-function 2, and recalibration is the condition below.
+the lending function, and recalibration is the condition below.
 
 The adverse action reasons it produced for declined test month applicants, by the
 first reason given:

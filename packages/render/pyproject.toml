@@ -6,6 +6,7 @@ requires-python = ">=3.12,<3.13"
 license = "Apache-2.0"
 dependencies = [
   "jinja2>=3.1",
+  "markdown-it-py>=3.0",
   "ledger-core",
 ]
 
