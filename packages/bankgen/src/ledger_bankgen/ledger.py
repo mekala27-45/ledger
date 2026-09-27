@@ -376,7 +376,12 @@ def build_ledger(
                 balances["2100"] -= borrow
                 balances["1000"] += borrow
 
-    journals = pl.DataFrame(journal_rows).with_columns(pl.col("posted_at").cast(pl.Datetime("us")))
+    journals = (
+        pl.DataFrame(journal_rows)
+        .with_columns(pl.col("posted_at").cast(pl.Datetime("us")))
+        # A journal line that rounds to zero cents is not written.
+        .filter(pl.col("amount").abs() >= 0.005)
+    )
     journal_postings = journals.select(
         pl.col("journal_id").alias("transaction_id"),
         pl.lit("gl_journal").alias("source_type"),

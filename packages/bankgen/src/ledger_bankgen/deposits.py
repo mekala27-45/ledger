@@ -231,12 +231,18 @@ def simulate_deposits(
     def emit(
         month: int, acc: np.ndarray, amt: np.ndarray, kind: int, secs: np.ndarray, **kw: np.ndarray
     ) -> None:
+        # An entry that rounds to zero cents moves nothing and is never posted.
+        rounded = np.round(amt, 2)
+        keep = np.abs(rounded) >= 0.01
+        if not keep.all():
+            acc, rounded, secs = acc[keep], rounded[keep], secs[keep]
+            kw = {k: v[keep] for k, v in kw.items()}
         n = len(acc)
         if n == 0:
             return
         out["month"].append(np.full(n, month, np.int16))
         out["account"].append(acc.astype(np.int32))
-        out["amount"].append(np.round(amt, 2))
+        out["amount"].append(rounded)
         out["kind"].append(np.full(n, kind, np.int8))
         out["seconds"].append(secs.astype(np.int32))
         out["cp_account"].append(kw.get("cp_account", np.full(n, -1, np.int32)).astype(np.int32))
