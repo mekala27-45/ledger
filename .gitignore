@@ -35,6 +35,8 @@ logs/
 results/models/**/*.pkl
 results/models/**/*.joblib
 results/models/**/*.txt
+# The served card fraud model is committed so the API image and its tests build from the repository.
+!results/models/fraud_card/model.txt
 # Row level scored outputs are rebuilt by `make models`; aggregates are committed
 results/models/**/applications_scored.parquet
 

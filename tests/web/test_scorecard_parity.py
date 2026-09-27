@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import json
 import random
-import shutil
 import subprocess
 from pathlib import Path
 
@@ -51,7 +50,6 @@ def _applicants(card: dict) -> list[dict]:
 
 
 @pytest.mark.skipif(not CARD.exists(), reason="the scorecard has not been built")
-@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
 def test_browser_scoring_matches_the_api() -> None:
     card = json.loads(CARD.read_text())
     service = ScorecardService.load(ROOT / "results", ROOT / "rules")

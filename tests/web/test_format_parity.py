@@ -9,11 +9,9 @@ and another on the site.
 from __future__ import annotations
 
 import json
-import shutil
 import subprocess
 from pathlib import Path
 
-import pytest
 from ledger_core.formats import FORMATS, format_value
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -54,7 +52,6 @@ VALUES = [
 ]
 
 
-@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
 def test_site_formats_match_the_pipeline() -> None:
     formats = [f for f in FORMATS if f != "text"]
     script = (
