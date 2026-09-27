@@ -109,6 +109,20 @@ def _metrics(p: Paths, args: argparse.Namespace) -> int:
     return 0
 
 
+@command("models", "train, evaluate, gate and document the models under the contract")
+def _models(p: Paths, args: argparse.Namespace) -> int:
+    from ledger_core.config import load_config
+    from ledger_models import runner
+
+    from ledger_functions.warehouse import connect
+
+    timings = runner.run_models(
+        connect(p), load_config(p.config), p.root, p.models_dir, only=args.only or None
+    )
+    print(json.dumps(timings))
+    return 0
+
+
 @command("functions", "run the function modules f01 to f12 over the warehouse and the model results")
 def _functions(p: Paths, args: argparse.Namespace) -> int:
     from ledger_core.config import load_config

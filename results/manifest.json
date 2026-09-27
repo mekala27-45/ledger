@@ -2,8 +2,3185 @@
  "as_of": "2026-08-31",
  "figures": {},
  "seed": 20260831,
- "tables": {},
+ "tables": {
+  "models.pd_challenger.benchmark": {
+   "columns": [
+    "Model",
+    "AUROC",
+    "Gini",
+    "Brier",
+    "ECE"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float4",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "rows": [
+    [
+     "This model",
+     0.6671986744,
+     0.3343973488,
+     0.06239013521,
+     0.02790958462
+    ],
+    [
+     "Champion scorecard",
+     0.6618484974,
+     0.3236969949,
+     0.06256346079,
+     0.0285927552
+    ],
+    [
+     "Logistic on raw characteristics",
+     0.6681840551,
+     0.3363681102,
+     0.06243982574,
+     0.02853014984
+    ],
+    [
+     "Base rate",
+     0.5,
+     0.0,
+     0.06413643016,
+     0.03069649442
+    ]
+   ]
+  },
+  "models.pd_challenger.challenges": {
+   "columns": [
+    "Date",
+    "Challenge",
+    "Response",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "rows": [
+    [
+     "2026-09-26",
+     "The first fit's development AUROC was far above its validation AUROC.",
+     "With fifteen leaves and a small minimum leaf, the trees were learning the development months' noise; early stopping alone did not close the gap.",
+     "Seven leaves and a minimum of 150 loans per leaf. The development to validation gap narrowed and the validation and test AUROC held."
+    ],
+    [
+     "2026-09-26",
+     "The challenger's test AUROC is above the champion's.",
+     "The gain has to pay for what the bank gives up. A gradient boosted model cannot state Regulation B reasons directly; declined applicants would still get reasons computed from the scorecard, which means explaining one model's decision with another model. A small gain does not buy that.",
+     "Promotion requires a test AUROC at least 0.01 above the champion's, stated as a gate in the validation report, together with the stability and age band gates."
+    ]
+   ]
+  },
+  "models.pd_challenger.conditions": {
+   "columns": [
+    "Condition"
+   ],
+   "formats": [
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "rows": [
+    [
+     "Test AUROC at least 0.01 above the champion (measured 0.00535)"
+    ]
+   ]
+  },
+  "models.pd_challenger.contract": {
+   "columns": [
+    "Line",
+    "What this model does"
+   ],
+   "formats": [
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "rows": [
+    [
+     "trained",
+     "Same development sample as the champion, early stopped on the validation months."
+    ],
+    [
+     "timed",
+     "Same application record as the champion, under the same leakage test."
+    ],
+    [
+     "calibrated",
+     "Reported on the out of time test sample beside the champion's calibration."
+    ],
+    [
+     "useful",
+     "Judged only against the champion, on the same test sample, by a stated materiality margin."
+    ],
+    [
+     "fair",
+     "The same age band audit, at the threshold that approves the champion's share of applicants."
+    ],
+    [
+     "gated",
+     "Promotion requires every gate in this report; it has not been promoted."
+    ],
+    [
+     "served",
+     "Shadow scored in batch on every application, including declines; not served for decisions."
+    ],
+    [
+     "integrated",
+     "Its scores sit beside the champion's in the applications table for the comparison and nothing else."
+    ],
+    [
+     "monitored",
+     "Rank agreement with the champion and its own stability, monthly, while it remains in shadow."
+    ],
+    [
+     "documented",
+     "This validation report and docs/models.md."
+    ],
+    [
+     "bounded",
+     "Not used for any decision while in shadow; cannot produce Regulation B reasons without a separate explanation method."
+    ],
+    [
+     "validated",
+     "This report, rendered from the manifest."
+    ],
+    [
+     "explainable",
+     "Monotone constraints keep each characteristic's effect in the scorecard's direction; feature contributions are published, but adverse action reasons still come from the champion."
+    ]
+   ]
+  },
+  "models.pd_challenger.gates": {
+   "columns": [
+    "Gate",
+    "Threshold",
+    "Measured",
+    "Result"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "rows": [
+    [
+     "Test AUROC at least 0.01 above the champion",
+     "at least 0.01",
+     0.005350176985,
+     "FAIL"
+    ],
+    [
+     "Score stability, development to test (PSI)",
+     "at most 0.25",
+     0.003470303696,
+     "pass"
+    ],
+    [
+     "Lowest adverse impact ratio across age bands at the champion's approval rate",
+     "at least 0.8",
+     0.9028573294,
+     "pass"
+    ],
+    [
+     "Expected calibration error on test",
+     "at most 0.02",
+     0.02790958462,
+     "FAIL"
+    ],
+    [
+     "Rank agreement with the champion on every application (Spearman)",
+     "at least 0.7",
+     0.9617001295,
+     "pass"
+    ]
+   ]
+  },
+  "models.pd_challenger.monitoring": {
+   "columns": [
+    "Measure",
+    "Trigger",
+    "Action"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "rows": [
+    [
+     "Rank agreement with the champion",
+     "below 0.7",
+     "Investigate before any promotion case"
+    ]
+   ]
+  },
+  "models.pd_challenger.reliability": {
+   "columns": [
+    "Bin",
+    "Accounts",
+    "Predicted",
+    "Observed"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "pct2",
+    "pct2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "rows": [
+    [
+     1,
+     375,
+     0.008542888107,
+     0.02933333333
+    ],
+    [
+     2,
+     375,
+     0.0114845341,
+     0.032
+    ],
+    [
+     3,
+     374,
+     0.01505393709,
+     0.03743315508
+    ],
+    [
+     4,
+     374,
+     0.01986054188,
+     0.05347593583
+    ],
+    [
+     5,
+     374,
+     0.02594125678,
+     0.04812834225
+    ],
+    [
+     6,
+     374,
+     0.03378463056,
+     0.0614973262
+    ],
+    [
+     7,
+     374,
+     0.04426260751,
+     0.06417112299
+    ],
+    [
+     8,
+     374,
+     0.05722967731,
+     0.07486631016
+    ],
+    [
+     9,
+     374,
+     0.07467654003,
+     0.07754010695
+    ],
+    [
+     10,
+     374,
+     0.1090091271,
+     0.2005347594
+    ]
+   ]
+  },
+  "models.pd_challenger.subgroups": {
+   "columns": [
+    "Group",
+    "N",
+    "Event rate",
+    "Mean score",
+    "Calibration gap",
+    "Auroc",
+    "Approval rate",
+    "Adverse impact ratio"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct2",
+    "pct2",
+    "spct1",
+    "float3",
+    "pct1",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "rows": [
+    [
+     "18 to 24",
+     492.0,
+     0.06707317073,
+     0.03899914334,
+     -0.0280740274,
+     0.6252723312,
+     0.1829268293,
+     0.9127864006
+    ],
+    [
+     "25 to 34",
+     611.0,
+     0.07037643208,
+     0.0433409408,
+     -0.02703549128,
+     0.6628725843,
+     0.1980360065,
+     0.988179669
+    ],
+    [
+     "35 to 49",
+     1238.0,
+     0.06865912763,
+     0.04076540522,
+     -0.0278937224,
+     0.7082087649,
+     0.1809369952,
+     0.9028573294
+    ],
+    [
+     "50 to 64",
+     988.0,
+     0.06983805668,
+     0.03806427808,
+     -0.0317737786,
+     0.6500134046,
+     0.2004048583,
+     1.0
+    ],
+    [
+     "65 and over",
+     413.0,
+     0.05811138015,
+     0.03830112006,
+     -0.01981026009,
+     0.6507069409,
+     0.1985472155,
+     0.9907305501
+    ]
+   ]
+  },
+  "models.pd_scorecard.benchmark": {
+   "columns": [
+    "Model",
+    "AUROC",
+    "Gini",
+    "Brier",
+    "ECE"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float4",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "This model",
+     0.6618484974,
+     0.3236969949,
+     0.06256346079,
+     0.0285927552
+    ],
+    [
+     "Base rate",
+     0.5,
+     0.0,
+     0.06413643016,
+     0.03069649442
+    ],
+    [
+     "Logistic on raw characteristics",
+     0.6681840551,
+     0.3363681102,
+     0.06243982574,
+     0.02853014984
+    ],
+    [
+     "Challenger (GBM)",
+     0.6671986744,
+     0.3343973488,
+     0.06239013521,
+     0.02790958462
+    ]
+   ]
+  },
+  "models.pd_scorecard.challenges": {
+   "columns": [
+    "Date",
+    "Challenge",
+    "Response",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "2026-09-26",
+     "On the validation months the scorecard's mean predicted default rate sat well under the observed rate, while its rank ordering held up.",
+     "The validation months are the two vintages written under the loosened cutoff, and the test months carry the recession quarter. The hazard fit recovers a vintage effect close to the generator's stated one, and no application characteristic carries it, so a scorecard fitted on earlier vintages cannot see it. That is a calibration problem, not a ranking problem, and a bank would treat it the same way: keep the scorecard for decisions and adjust the probability used for loss.",
+     "Calibration became a non critical gate, so the report concludes approved with a stated condition rather than approved, and expected loss in function 2 applies an observed to expected overlay by vintage instead of the raw scorecard probability."
+    ],
+    [
+     "2026-09-26",
+     "The fitted scorecard has no delinquency characteristic. Delinquencies in the last 24 months fell under the information value floor and were dropped.",
+     "In this book the characteristic is nearly empty (most applicants have none) and carries little information once the bureau score is in the model, which already reflects payment history. Forcing it in would add a characteristic whose bins barely differ, and whose points would move with noise.",
+     "The published information value table now lists every candidate with the reason it was kept or dropped, so a reviewer sees the decision instead of an absence, and the challenger, which sees every candidate, confirms the characteristic adds little."
+    ]
+   ]
+  },
+  "models.pd_scorecard.conditions": {
+   "columns": [
+    "Condition"
+   ],
+   "formats": [
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "Remediate before the next validation: Expected calibration error on test (measured 0.02859)"
+    ]
+   ]
+  },
+  "models.pd_scorecard.contract": {
+   "columns": [
+    "Line",
+    "What this model does"
+   ],
+   "formats": [
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "trained",
+     "On loans originated in the first twelve months of the window, with outcomes observed under the censoring calendar."
+    ],
+    [
+     "timed",
+     "Scores the application as submitted; a leakage test recomputes 200 sampled rows from the application record."
+    ],
+    [
+     "calibrated",
+     "Points convert back to the logistic probability exactly; calibration on later vintages is reported, not assumed."
+    ],
+    [
+     "useful",
+     "Benchmarked on the out of time test sample against the base rate, a logistic model on raw characteristics and the challenger."
+    ],
+    [
+     "fair",
+     "Approval rates, AUROC and calibration by applicant age band; age is never an input."
+    ],
+    [
+     "gated",
+     "Promoted only after every gate in its validation report passed or was accepted with a stated condition."
+    ],
+    [
+     "served",
+     "POST /v1/scorecard/score in the API; in the browser from the published scorecard table on /studio."
+    ],
+    [
+     "integrated",
+     "Sets the approve or decline decision at the stated cutoff and supplies expected loss in function 2."
+    ],
+    [
+     "monitored",
+     "Score PSI and characteristic stability monthly; rolling AUROC and calibration as twelve month outcomes arrive."
+    ],
+    [
+     "documented",
+     "This validation report, the scorecard table, and docs/models.md."
+    ],
+    [
+     "bounded",
+     "Scores installment loan applications only; it has never seen a card or mortgage application."
+    ],
+    [
+     "validated",
+     "This report, rendered from the manifest before the model is used anywhere."
+    ],
+    [
+     "explainable",
+     "Every decline returns up to four adverse action reasons, the largest point shortfalls, in plain words."
+    ]
+   ]
+  },
+  "models.pd_scorecard.gates": {
+   "columns": [
+    "Gate",
+    "Threshold",
+    "Measured",
+    "Result"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "Recovers the generator's latent risk ordering (Spearman)",
+     "at least 0.4",
+     0.7754441552,
+     "pass"
+    ],
+    [
+     "Test AUROC at or above the floor",
+     "at least 0.62",
+     0.6618484974,
+     "pass"
+    ],
+    [
+     "Test AUROC no more than 0.02 below the logistic benchmark",
+     "at least -0.02",
+     -0.006335557683,
+     "pass"
+    ],
+    [
+     "Score stability, development to test (PSI)",
+     "at most 0.25",
+     0.003157773953,
+     "pass"
+    ],
+    [
+     "Lowest adverse impact ratio across age bands",
+     "at least 0.8",
+     0.952367097,
+     "pass"
+    ],
+    [
+     "Point in time recompute of sampled rows",
+     "at least 200",
+     200.0,
+     "pass"
+    ],
+    [
+     "Expected calibration error on test",
+     "at most 0.02",
+     0.0285927552,
+     "FAIL"
+    ]
+   ]
+  },
+  "models.pd_scorecard.iv": {
+   "columns": [
+    "characteristic",
+    "iv",
+    "kept"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "revolving_utilization",
+     0.3332664094,
+     "kept"
+    ],
+    [
+     "bureau_score",
+     0.3104851509,
+     "kept"
+    ],
+    [
+     "dti",
+     0.2334610864,
+     "kept"
+    ],
+    [
+     "employment_months",
+     0.07393871245,
+     "kept"
+    ],
+    [
+     "oldest_trade_months",
+     0.06936722538,
+     "kept"
+    ],
+    [
+     "purpose",
+     0.04548810775,
+     "kept"
+    ],
+    [
+     "inquiries_6m",
+     0.02958723191,
+     "kept"
+    ],
+    [
+     "loan_amount",
+     0.02410404527,
+     "kept"
+    ],
+    [
+     "annual_income",
+     0.01128852539,
+     "information value 0.0113 below the floor"
+    ],
+    [
+     "housing_status",
+     0.008688179619,
+     "information value 0.0087 below the floor"
+    ],
+    [
+     "term_months",
+     0.008371199153,
+     "information value 0.0084 below the floor"
+    ],
+    [
+     "delinquencies_24m",
+     0.003574578739,
+     "information value 0.0036 below the floor"
+    ],
+    [
+     "channel",
+     0.002116722744,
+     "information value 0.0021 below the floor"
+    ]
+   ]
+  },
+  "models.pd_scorecard.known_parameters": {
+   "columns": [
+    "parameter",
+    "stated",
+    "estimate",
+    "interval_low",
+    "interval_high",
+    "tolerance",
+    "within"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float3",
+    "float3",
+    "float3",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "Latent risk rank order (Spearman; perfect ordering is 1)",
+     1.0,
+     0.7754441552,
+     0.7754441552,
+     0.7754441552,
+     0.6,
+     "true"
+    ],
+    [
+     "Latent risk coefficient",
+     0.95,
+     0.9421497047,
+     0.8915424705,
+     0.9927569388,
+     0.15,
+     "true"
+    ],
+    [
+     "Macro sensitivity per point of unemployment",
+     0.3,
+     0.3273661767,
+     0.2763455761,
+     0.3783867773,
+     0.1,
+     "true"
+    ],
+    [
+     "Loose vintage effect",
+     0.45,
+     0.4484307136,
+     0.3754498076,
+     0.5214116197,
+     0.15,
+     "true"
+    ],
+    [
+     "Deposit beta, checking",
+     0.02,
+     0.01998035703,
+     0.01990271969,
+     0.02005799436,
+     0.01,
+     "true"
+    ],
+    [
+     "Deposit beta, savings",
+     0.38,
+     0.3799485788,
+     0.3798848395,
+     0.3800123181,
+     0.03,
+     "true"
+    ],
+    [
+     "Deposit beta, time",
+     0.72,
+     0.7200514212,
+     0.7199876819,
+     0.7201151605,
+     0.03,
+     "true"
+    ],
+    [
+     "Recovery share at 24 months, installment",
+     0.22,
+     0.2038792465,
+     0.2038792465,
+     0.2038792465,
+     0.05,
+     "true"
+    ]
+   ]
+  },
+  "models.pd_scorecard.monitoring": {
+   "columns": [
+    "Measure",
+    "Trigger",
+    "Action"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "Score PSI, monthly applications against development",
+     "above 0.1 warns, above 0.25 breaches",
+     "Investigate the shift; revalidate on breach"
+    ],
+    [
+     "Characteristic stability index, each characteristic",
+     "above 0.25",
+     "Review the characteristic's bins"
+    ],
+    [
+     "Rolling test AUROC as outcomes mature",
+     "falls 0.03 below the validation figure",
+     "Redevelop"
+    ],
+    [
+     "Observed over predicted default by vintage",
+     "outside 0.8 to 1.25 for two vintages",
+     "Recalibrate the intercept or apply an overlay"
+    ]
+   ]
+  },
+  "models.pd_scorecard.reasons": {
+   "columns": [
+    "reason",
+    "declines",
+    "share"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "Proportion of balances to credit limits on revolving accounts is too high",
+     1539,
+     0.6114421931
+    ],
+    [
+     "Credit history reported by the credit bureau is insufficient or delinquent",
+     680,
+     0.2701628923
+    ],
+    [
+     "Income insufficient for amount of credit requested",
+     284,
+     0.1128327374
+    ],
+    [
+     "Length of employment",
+     14,
+     0.005562177195
+    ]
+   ]
+  },
+  "models.pd_scorecard.reliability": {
+   "columns": [
+    "Bin",
+    "Accounts",
+    "Predicted",
+    "Observed"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "pct2",
+    "pct2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     1,
+     375,
+     0.005410923479,
+     0.02133333333
+    ],
+    [
+     2,
+     375,
+     0.01026781767,
+     0.032
+    ],
+    [
+     3,
+     374,
+     0.01521220217,
+     0.04812834225
+    ],
+    [
+     4,
+     374,
+     0.02093043342,
+     0.04545454545
+    ],
+    [
+     5,
+     374,
+     0.02759092843,
+     0.05347593583
+    ],
+    [
+     6,
+     374,
+     0.03528487605,
+     0.06417112299
+    ],
+    [
+     7,
+     374,
+     0.04420553552,
+     0.07486631016
+    ],
+    [
+     8,
+     374,
+     0.05557403911,
+     0.06951871658
+    ],
+    [
+     9,
+     374,
+     0.07108626787,
+     0.1069518717
+    ],
+    [
+     10,
+     374,
+     0.1074589851,
+     0.1631016043
+    ]
+   ]
+  },
+  "models.pd_scorecard.scorecard": {
+   "columns": [
+    "characteristic",
+    "bin",
+    "share",
+    "bad_rate",
+    "woe",
+    "points"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "pct1",
+    "pct2",
+    "float3",
+    "float1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "revolving_utilization",
+     "(-inf, 0.0697]",
+     0.05016605489,
+     0.01045296167,
+     1.331304323,
+     96.12370953
+    ],
+    [
+     "revolving_utilization",
+     "(0.0697, 0.1322]",
+     0.1001573152,
+     0.01396160558,
+     1.038326563,
+     91.34030963
+    ],
+    [
+     "revolving_utilization",
+     "(0.1322, 0.1832]",
+     0.1001573152,
+     0.01919720768,
+     0.7145489506,
+     86.05404559
+    ],
+    [
+     "revolving_utilization",
+     "(0.1832, 0.3486]",
+     0.299772767,
+     0.02857142857,
+     0.3073028981,
+     79.40500599
+    ],
+    [
+     "revolving_utilization",
+     "(0.3486, 0.48]",
+     0.1997902465,
+     0.04286964129,
+     -0.1132819417,
+     72.5381862
+    ],
+    [
+     "revolving_utilization",
+     "(0.48, 0.5197]",
+     0.05016605489,
+     0.0487804878,
+     -0.248643161,
+     70.32816575
+    ],
+    [
+     "revolving_utilization",
+     "(0.5197, 0.6275]",
+     0.09980772592,
+     0.06654991243,
+     -0.5781223621,
+     64.9488128
+    ],
+    [
+     "revolving_utilization",
+     "(0.6275, +inf]",
+     0.09998252054,
+     0.08391608392,
+     -0.8287669531,
+     60.85657961
+    ],
+    [
+     "bureau_score",
+     "(-inf, 672]",
+     0.05313756336,
+     0.08552631579,
+     -0.8495330509,
+     60.94047374
+    ],
+    [
+     "bureau_score",
+     "(672, 694]",
+     0.1538192624,
+     0.06477272727,
+     -0.5491526937,
+     65.6951907
+    ],
+    [
+     "bureau_score",
+     "(694, 716]",
+     0.1969935326,
+     0.04525288376,
+     -0.1698775185,
+     71.69873277
+    ],
+    [
+     "bureau_score",
+     "(716, 747]",
+     0.2485579444,
+     0.03727144866,
+     0.03248628521,
+     74.90194692
+    ],
+    [
+     "bureau_score",
+     "(747, 763]",
+     0.1041775913,
+     0.02013422819,
+     0.6659367065,
+     84.92882581
+    ],
+    [
+     "bureau_score",
+     "(763, 795]",
+     0.14350638,
+     0.01705237515,
+     0.8352087121,
+     87.6082303
+    ],
+    [
+     "bureau_score",
+     "(795, +inf]",
+     0.09980772592,
+     0.0122591944,
+     1.170086476,
+     92.90900629
+    ],
+    [
+     "dti",
+     "(-inf, 0.1193]",
+     0.1001573152,
+     0.01221640489,
+     1.173626303,
+     96.15321034
+    ],
+    [
+     "dti",
+     "(0.1193, 0.1672]",
+     0.1001573152,
+     0.02268760908,
+     0.5439297997,
+     84.47517286
+    ],
+    [
+     "dti",
+     "(0.1672, 0.2117]",
+     0.1501485754,
+     0.02561117579,
+     0.4197239906,
+     82.17171383
+    ],
+    [
+     "dti",
+     "(0.2117, 0.2491]",
+     0.1496241916,
+     0.03037383178,
+     0.2442715362,
+     78.91786007
+    ],
+    [
+     "dti",
+     "(0.2491, 0.2713]",
+     0.1001573152,
+     0.03315881326,
+     0.1536680811,
+     77.23757355
+    ],
+    [
+     "dti",
+     "(0.2713, 0.2843]",
+     0.05016605489,
+     0.0487804878,
+     -0.248643161,
+     69.77650978
+    ],
+    [
+     "dti",
+     "(0.2843, +inf]",
+     0.3495892327,
+     0.0595,
+     -0.4586222903,
+     65.88234151
+    ],
+    [
+     "employment_months",
+     "(-inf, 15]",
+     0.05925537493,
+     0.06194690265,
+     -0.5015286815,
+     62.65340353
+    ],
+    [
+     "employment_months",
+     "(15, 25]",
+     0.09386470897,
+     0.052141527,
+     -0.3188141201,
+     66.928395
+    ],
+    [
+     "employment_months",
+     "(25, 71]",
+     0.4009788499,
+     0.04054054054,
+     -0.05499003815,
+     73.10111431
+    ],
+    [
+     "employment_months",
+     "(71, 206]",
+     0.3459185457,
+     0.03385548257,
+     0.1321548477,
+     77.47976254
+    ],
+    [
+     "employment_months",
+     "(206, +inf]",
+     0.09998252054,
+     0.01923076923,
+     0.7127680062,
+     91.0644286
+    ],
+    [
+     "oldest_trade_months",
+     "(-inf, 77]",
+     0.1034784129,
+     0.0625,
+     -0.5110074254,
+     69.32682263
+    ],
+    [
+     "oldest_trade_months",
+     "(77, 95]",
+     0.1024296452,
+     0.04778156997,
+     -0.2269031743,
+     72.14052539
+    ],
+    [
+     "oldest_trade_months",
+     "(95, 134]",
+     0.2489075336,
+     0.04002808989,
+     -0.04173505763,
+     73.97438756
+    ],
+    [
+     "oldest_trade_months",
+     "(134, 150]",
+     0.09683621744,
+     0.03790613718,
+     0.01494135992,
+     74.53569768
+    ],
+    [
+     "oldest_trade_months",
+     "(150, 170]",
+     0.1026044398,
+     0.03407155026,
+     0.1255694037,
+     75.63133222
+    ],
+    [
+     "oldest_trade_months",
+     "(170, 196]",
+     0.09893375284,
+     0.03003533569,
+     0.2558274709,
+     76.92137798
+    ],
+    [
+     "oldest_trade_months",
+     "(196, +inf]",
+     0.2468099983,
+     0.0283286119,
+     0.3160877276,
+     77.51818161
+    ],
+    [
+     "purpose",
+     "home_improvement",
+     0.1578395385,
+     0.04761904762,
+     -0.223325353,
+     67.742078
+    ],
+    [
+     "purpose",
+     "auto",
+     0.2574724698,
+     0.04276985743,
+     -0.1108473695,
+     71.0891616
+    ],
+    [
+     "purpose",
+     "other",
+     0.08232826429,
+     0.03821656051,
+     0.006462741064,
+     74.58003808
+    ],
+    [
+     "purpose",
+     "debt_consolidation",
+     0.3747596574,
+     0.03731343284,
+     0.0313168654,
+     75.3196391
+    ],
+    [
+     "purpose",
+     "major_purchase",
+     0.1276000699,
+     0.02191780822,
+     0.5792366136,
+     91.62445846
+    ],
+    [
+     "inquiries_6m",
+     "(-inf, 1]",
+     0.7337877993,
+     0.03454025727,
+     0.1114212577,
+     75.28079401
+    ],
+    [
+     "inquiries_6m",
+     "(1, 2]",
+     0.1837091418,
+     0.0475737393,
+     -0.2223258526,
+     72.60571891
+    ],
+    [
+     "inquiries_6m",
+     "(2, +inf]",
+     0.08250305891,
+     0.05296610169,
+     -0.3353748568,
+     71.69959998
+    ],
+    [
+     "loan_amount",
+     "(-inf, 5,600]",
+     0.1005069044,
+     0.02782608696,
+     0.3345031244,
+     83.21861515
+    ],
+    [
+     "loan_amount",
+     "(5,600, 14,100]",
+     0.550777836,
+     0.0361789908,
+     0.06336939013,
+     76.06067585
+    ],
+    [
+     "loan_amount",
+     "(14,100, 15,200]",
+     0.05051564412,
+     0.03806228374,
+     0.01066821437,
+     74.66936311
+    ],
+    [
+     "loan_amount",
+     "(15,200, +inf]",
+     0.2981996155,
+     0.04630715123,
+     -0.1940123718,
+     69.26578906
+    ]
+   ]
+  },
+  "models.pd_scorecard.side_by_side": {
+   "columns": [
+    "measure",
+    "generated",
+    "uci"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "Loans or accounts with an outcome",
+     "13,188",
+     "30,000"
+    ],
+    [
+     "Default rate",
+     "6.3%",
+     "22.1%"
+    ],
+    [
+     "Characteristics kept",
+     "8",
+     "7"
+    ],
+    [
+     "Scorecard AUROC, test",
+     "0.662",
+     "0.768"
+    ],
+    [
+     "Scorecard Gini, test",
+     "0.324",
+     "0.536"
+    ],
+    [
+     "Challenger AUROC, test",
+     "0.667",
+     "0.788"
+    ],
+    [
+     "Logistic AUROC, test",
+     "0.668",
+     "0.750"
+    ],
+    [
+     "Scorecard calibration error, test",
+     "0.0286",
+     "0.0125"
+    ]
+   ]
+  },
+  "models.pd_scorecard.subgroups": {
+   "columns": [
+    "Group",
+    "N",
+    "Event rate",
+    "Mean score",
+    "Calibration gap",
+    "Auroc",
+    "Approval rate",
+    "Adverse impact ratio"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct2",
+    "pct2",
+    "spct1",
+    "float3",
+    "pct1",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "18 to 24",
+     492.0,
+     0.06707317073,
+     0.03825319123,
+     -0.0288199795,
+     0.5895556876,
+     0.8231707317,
+     1.0
+    ],
+    [
+     "25 to 34",
+     611.0,
+     0.07037643208,
+     0.04203526029,
+     -0.02834117179,
+     0.6584507042,
+     0.7839607201,
+     0.952367097
+    ],
+    [
+     "35 to 49",
+     1238.0,
+     0.06865912763,
+     0.03996161184,
+     -0.02869751579,
+     0.7081271364,
+     0.7875605816,
+     0.9567402621
+    ],
+    [
+     "50 to 64",
+     988.0,
+     0.06983805668,
+     0.03763999407,
+     -0.03219806261,
+     0.6520004416,
+     0.8168016194,
+     0.9922627081
+    ],
+    [
+     "65 and over",
+     413.0,
+     0.05811138015,
+     0.03835594753,
+     -0.01975543261,
+     0.6342116538,
+     0.818401937,
+     0.9942067976
+    ]
+   ]
+  },
+  "models.pd_scorecard.uci_iv": {
+   "columns": [
+    "characteristic",
+    "iv",
+    "kept"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "pay_status_1",
+     0.8428771933,
+     "kept"
+    ],
+    [
+     "months_delinquent_6m",
+     0.8372969857,
+     "WoE correlation with pay_status_1 above the ceiling"
+    ],
+    [
+     "pay_status_2",
+     0.5357454372,
+     "coefficient sign reversed in the joint fit"
+    ],
+    [
+     "pay_status_3",
+     0.4226612288,
+     "kept"
+    ],
+    [
+     "pay_amt_1",
+     0.1942194307,
+     "kept"
+    ],
+    [
+     "limit_bal",
+     0.1935411639,
+     "kept"
+    ],
+    [
+     "payment_ratio_avg",
+     0.1545980669,
+     "kept"
+    ],
+    [
+     "payment_ratio_1",
+     0.1488749823,
+     "coefficient sign reversed in the joint fit"
+    ],
+    [
+     "bill_growth_6m",
+     0.06455801053,
+     "kept"
+    ],
+    [
+     "utilization_1",
+     0.05718187081,
+     "kept"
+    ]
+   ]
+  },
+  "models.pd_scorecard.uci_scorecard": {
+   "columns": [
+    "characteristic",
+    "bin",
+    "share",
+    "bad_rate",
+    "woe",
+    "points"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "pct1",
+    "pct2",
+    "float3",
+    "float1"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "rows": [
+    [
+     "pay_status_1",
+     "(-inf, -2]",
+     0.09261625646,
+     0.1229754049,
+     0.7057414871,
+     91.91407419
+    ],
+    [
+     "pay_status_1",
+     "(-2, 0]",
+     0.6827045947,
+     0.1411946615,
+     0.5465935922,
+     88.51776465
+    ],
+    [
+     "pay_status_1",
+     "(0, 1]",
+     0.1208400467,
+     0.3471264368,
+     -0.6271147727,
+     63.4701388
+    ],
+    [
+     "pay_status_1",
+     "(1, +inf]",
+     0.1038391022,
+     0.6880684858,
+     -2.049913893,
+     33.10676995
+    ],
+    [
+     "pay_status_3",
+     "(-inf, -1]",
+     0.3320184455,
+     0.1680053548,
+     0.3410209783,
+     80.9829034
+    ],
+    [
+     "pay_status_3",
+     "(-1, 0]",
+     0.5264181343,
+     0.1726649077,
+     0.308047863,
+     80.58359868
+    ],
+    [
+     "pay_status_3",
+     "(0, +inf]",
+     0.1415634202,
+     0.5262951334,
+     -1.364086836,
+     60.33403284
+    ],
+    [
+     "pay_amt_1",
+     "(-inf, 0]",
+     0.1713428524,
+     0.3631647211,
+     -0.6971546494,
+     66.7232436
+    ],
+    [
+     "pay_amt_1",
+     "(0, 1,000]",
+     0.08572698483,
+     0.2333117304,
+     -0.06910434153,
+     75.84902692
+    ],
+    [
+     "pay_amt_1",
+     "(1,000, 2,000]",
+     0.220456692,
+     0.2263104839,
+     -0.02954640178,
+     76.42381716
+    ],
+    [
+     "pay_amt_1",
+     "(2,000, 3,615]",
+     0.1724540252,
+     0.2135953608,
+     0.04457890615,
+     77.50088294
+    ],
+    [
+     "pay_amt_1",
+     "(3,615, 4,370]",
+     0.05000277793,
+     0.2,
+     0.1274851871,
+     78.70553924
+    ],
+    [
+     "pay_amt_1",
+     "(4,370, 6,245]",
+     0.1000055559,
+     0.1611111111,
+     0.3911748328,
+     82.53703894
+    ],
+    [
+     "pay_amt_1",
+     "(6,245, 8,015]",
+     0.05000277793,
+     0.1477777778,
+     0.4933284991,
+     84.02136625
+    ],
+    [
+     "pay_amt_1",
+     "(8,015, 18,224]",
+     0.1000055559,
+     0.1472222222,
+     0.49774666,
+     84.08556362
+    ],
+    [
+     "pay_amt_1",
+     "(18,224, +inf]",
+     0.05000277793,
+     0.08,
+     1.183537861,
+     94.05034165
+    ],
+    [
+     "limit_bal",
+     "(-inf, 20,000]",
+     0.08267125951,
+     0.3622311828,
+     -0.6931159464,
+     68.06480609
+    ],
+    [
+     "limit_bal",
+     "(20,000, 30,000]",
+     0.05405855881,
+     0.3617677287,
+     -0.6911092677,
+     68.09024968
+    ],
+    [
+     "limit_bal",
+     "(30,000, 70,000]",
+     0.1727318184,
+     0.2766162753,
+     -0.2975006113,
+     73.08099169
+    ],
+    [
+     "limit_bal",
+     "(70,000, 100,000]",
+     0.1056169787,
+     0.2488164124,
+     -0.1538744197,
+     74.90209307
+    ],
+    [
+     "limit_bal",
+     "(100,000, 140,000]",
+     0.09222734596,
+     0.2301204819,
+     -0.05117814773,
+     76.2042255
+    ],
+    [
+     "limit_bal",
+     "(140,000, 160,000]",
+     0.05916995389,
+     0.1774647887,
+     0.2748099018,
+     80.33757528
+    ],
+    [
+     "limit_bal",
+     "(160,000, 200,000]",
+     0.1117284294,
+     0.1725509697,
+     0.3088456674,
+     80.76913013
+    ],
+    [
+     "limit_bal",
+     "(200,000, 240,000]",
+     0.08789377188,
+     0.1700379267,
+     0.3265493206,
+     80.99360275
+    ],
+    [
+     "limit_bal",
+     "(240,000, 360,000]",
+     0.1521751208,
+     0.1485943775,
+     0.486859188,
+     83.026244
+    ],
+    [
+     "limit_bal",
+     "(360,000, +inf]",
+     0.0817267626,
+     0.1108089735,
+     0.8236951572,
+     87.29713945
+    ],
+    [
+     "payment_ratio_avg",
+     "(-inf, 0.03451]",
+     0.09650536141,
+     0.3448474381,
+     -0.6170431575,
+     71.76501915
+    ],
+    [
+     "payment_ratio_avg",
+     "(0.03451, 0.07259]",
+     0.3376298683,
+     0.2553891723,
+     -0.1887360187,
+     75.29682547
+    ],
+    [
+     "payment_ratio_avg",
+     "(0.07259, 0.1296]",
+     0.09644980277,
+     0.2321428571,
+     -0.06255841583,
+     76.33728176
+    ],
+    [
+     "payment_ratio_avg",
+     "(0.1296, 0.3005]",
+     0.09644980277,
+     0.168202765,
+     0.3396093431,
+     79.65354364
+    ],
+    [
+     "payment_ratio_avg",
+     "(0.3005, 0.6116]",
+     0.09650536141,
+     0.1577432355,
+     0.4163071206,
+     80.28599094
+    ],
+    [
+     "payment_ratio_avg",
+     "(0.6116, 1]",
+     0.1451747319,
+     0.1492537313,
+     0.4816570008,
+     80.82486387
+    ],
+    [
+     "payment_ratio_avg",
+     "(1, +inf]",
+     0.09600533363,
+     0.1400462963,
+     0.5560963251,
+     81.43868804
+    ],
+    [
+     "payment_ratio_avg",
+     "missing",
+     0.03527973776,
+     0.3606299213,
+     -0.686178018,
+     71.1949354
+    ],
+    [
+     "bill_growth_6m",
+     "(-inf, -0.0493]",
+     0.2000111117,
+     0.2961111111,
+     -0.3929234179,
+     72.87618675
+    ],
+    [
+     "bill_growth_6m",
+     "(-0.0493, -0.02985]",
+     0.05000277793,
+     0.2677777778,
+     -0.252882573,
+     74.29360134
+    ],
+    [
+     "bill_growth_6m",
+     "(-0.02985, 0]",
+     0.1903994666,
+     0.2351911293,
+     -0.07958171324,
+     76.04765507
+    ],
+    [
+     "bill_growth_6m",
+     "(0, 0.006685]",
+     0.05961442302,
+     0.1910531221,
+     0.1843725615,
+     78.71925163
+    ],
+    [
+     "bill_growth_6m",
+     "(0.006685, +inf]",
+     0.4999722207,
+     0.1847983109,
+     0.2253613607,
+     79.13411717
+    ],
+    [
+     "utilization_1",
+     "(-inf, 0.2205]",
+     0.4500250014,
+     0.1817283951,
+     0.2458719052,
+     77.04312188
+    ],
+    [
+     "utilization_1",
+     "(0.2205, 0.4258]",
+     0.09994999722,
+     0.2040022235,
+     0.1026563254,
+     76.93245903
+    ],
+    [
+     "utilization_1",
+     "(0.4258, 0.526]",
+     0.05000277793,
+     0.2322222222,
+     -0.06300360226,
+     76.80445341
+    ],
+    [
+     "utilization_1",
+     "(0.526, 0.6302]",
+     0.05000277793,
+     0.2544444444,
+     -0.1837620406,
+     76.71114322
+    ],
+    [
+     "utilization_1",
+     "(0.6302, 0.9827]",
+     0.2500138897,
+     0.2624444444,
+     -0.2255071785,
+     76.6788867
+    ],
+    [
+     "utilization_1",
+     "(0.9827, 1.013]",
+     0.05000277793,
+     0.2755555556,
+     -0.2921933583,
+     76.62735821
+    ],
+    [
+     "utilization_1",
+     "(1.013, +inf]",
+     0.05000277793,
+     0.3055555556,
+     -0.437828622,
+     76.51482566
+    ]
+   ]
+  }
+ },
  "values": {
+  "models.pd_challenger.conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "not approved"
+  },
+  "models.pd_challenger.conditions_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 1
+  },
+  "models.pd_challenger.development.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.7759275173
+  },
+  "models.pd_challenger.development.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.1157420592
+  },
+  "models.pd_challenger.development.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.03549143807
+  },
+  "models.pd_challenger.development.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.009065134185
+  },
+  "models.pd_challenger.development.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.03845481559
+  },
+  "models.pd_challenger.development.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 220
+  },
+  "models.pd_challenger.development.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.5518550346
+  },
+  "models.pd_challenger.development.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.4175257391
+  },
+  "models.pd_challenger.development.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 5721
+  },
+  "models.pd_challenger.feature_count": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "13"
+  },
+  "models.pd_challenger.features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "bureau_score, dti, revolving_utilization, delinquencies_24m, inquiries_6m, oldest_trade_months, employment_months, annual_income, loan_amount, term_months, purpose, housing_status, channel"
+  },
+  "models.pd_challenger.improvement": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.005350176985
+  },
+  "models.pd_challenger.last_validated": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "2026-08-31"
+  },
+  "models.pd_challenger.method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "LightGBM with monotone constraints matching the scorecard's weight of evidence directions, early stopped on validation"
+  },
+  "models.pd_challenger.outcome": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "90 days past due or charge off within 12 months of origination"
+  },
+  "models.pd_challenger.owner": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "Head of analytics"
+  },
+  "models.pd_challenger.prediction_time": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "The application date"
+  },
+  "models.pd_challenger.psi_dev_test": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.003470303696
+  },
+  "models.pd_challenger.purpose": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "Test whether a gradient boosted model beats the scorecard enough to justify its opacity"
+  },
+  "models.pd_challenger.rank_agreement": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.9617001295
+  },
+  "models.pd_challenger.role": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "challenger"
+  },
+  "models.pd_challenger.status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "validated"
+  },
+  "models.pd_challenger.test.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.6671986744
+  },
+  "models.pd_challenger.test.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.1438356347
+  },
+  "models.pd_challenger.test.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.06239013521
+  },
+  "models.pd_challenger.test.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.02790958462
+  },
+  "models.pd_challenger.test.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.06787814003
+  },
+  "models.pd_challenger.test.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 254
+  },
+  "models.pd_challenger.test.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.3343973488
+  },
+  "models.pd_challenger.test.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.24972459
+  },
+  "models.pd_challenger.test.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 3742
+  },
+  "models.pd_challenger.tier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "1"
+  },
+  "models.pd_challenger.tier_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "Informs a decision a person makes, with a method whose behaviour is hard to inspect"
+  },
+  "models.pd_challenger.title": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": "Probability of default challenger (monotone GBM)"
+  },
+  "models.pd_challenger.trees": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 132
+  },
+  "models.pd_challenger.validation.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.6702201618
+  },
+  "models.pd_challenger.validation.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.1537638488
+  },
+  "models.pd_challenger.validation.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.08732048265
+  },
+  "models.pd_challenger.validation.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.0506020996
+  },
+  "models.pd_challenger.validation.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.09610738255
+  },
+  "models.pd_challenger.validation.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 358
+  },
+  "models.pd_challenger.validation.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.3404403237
+  },
+  "models.pd_challenger.validation.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 0.2678544466
+  },
+  "models.pd_challenger.validation.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_challenger)"
+   },
+   "value": 3725
+  },
+  "models.pd_scorecard.approval_rate_test": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.8027792624
+  },
+  "models.pd_scorecard.candidates": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 13
+  },
+  "models.pd_scorecard.characteristics": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 8
+  },
+  "models.pd_scorecard.conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "approved with conditions"
+  },
+  "models.pd_scorecard.conditions_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 1
+  },
+  "models.pd_scorecard.cutoff": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 580
+  },
+  "models.pd_scorecard.declined_test_months": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 2517
+  },
+  "models.pd_scorecard.development.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.7224748393
+  },
+  "models.pd_scorecard.development.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.0828914967
+  },
+  "models.pd_scorecard.development.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.0361446345
+  },
+  "models.pd_scorecard.development.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.005712276197
+  },
+  "models.pd_scorecard.development.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.03845481559
+  },
+  "models.pd_scorecard.development.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 220
+  },
+  "models.pd_scorecard.development.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.4449496786
+  },
+  "models.pd_scorecard.development.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.3473360215
+  },
+  "models.pd_scorecard.development.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 5721
+  },
+  "models.pd_scorecard.feature_count": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "8"
+  },
+  "models.pd_scorecard.features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "revolving_utilization, bureau_score, dti, employment_months, oldest_trade_months, purpose, inquiries_6m, loan_amount"
+  },
+  "models.pd_scorecard.last_validated": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "2026-08-31"
+  },
+  "models.pd_scorecard.leakage_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 200
+  },
+  "models.pd_scorecard.mean_pd_test": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.03928538483
+  },
+  "models.pd_scorecard.mean_pd_validation": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.04443446535
+  },
+  "models.pd_scorecard.method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "Weight of evidence scorecard: coarse classed monotone bins, logistic regression on WoE, points scaled"
+  },
+  "models.pd_scorecard.observed_test": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.06787814003
+  },
+  "models.pd_scorecard.observed_validation": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.09610738255
+  },
+  "models.pd_scorecard.outcome": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "90 days past due or charge off within 12 months of origination"
+  },
+  "models.pd_scorecard.owner": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "Head of analytics"
+  },
+  "models.pd_scorecard.prediction_time": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "The application date, before any loan exists"
+  },
+  "models.pd_scorecard.psi_dev_test": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.003157773953
+  },
+  "models.pd_scorecard.purpose": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "Rank and price installment loan applications by twelve month default risk and state the reasons for a decline"
+  },
+  "models.pd_scorecard.rank_agreement": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.9617001295
+  },
+  "models.pd_scorecard.rank_order": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.7754441552
+  },
+  "models.pd_scorecard.role": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "champion"
+  },
+  "models.pd_scorecard.status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "in use"
+  },
+  "models.pd_scorecard.test.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.6618484974
+  },
+  "models.pd_scorecard.test.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.1320036173
+  },
+  "models.pd_scorecard.test.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.06256346079
+  },
+  "models.pd_scorecard.test.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.0285927552
+  },
+  "models.pd_scorecard.test.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.06787814003
+  },
+  "models.pd_scorecard.test.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 254
+  },
+  "models.pd_scorecard.test.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.3236969949
+  },
+  "models.pd_scorecard.test.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.237719425
+  },
+  "models.pd_scorecard.test.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 3742
+  },
+  "models.pd_scorecard.tier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "1"
+  },
+  "models.pd_scorecard.tier_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "Material: informs a credit, fraud or regulatory decision directly"
+  },
+  "models.pd_scorecard.title": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": "Probability of default scorecard (champion)"
+  },
+  "models.pd_scorecard.uci_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.767973832
+  },
+  "models.pd_scorecard.uci_challenger_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.7882284542
+  },
+  "models.pd_scorecard.uci_gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.535947664
+  },
+  "models.pd_scorecard.uci_logistic_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.7496032708
+  },
+  "models.pd_scorecard.validation.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.6664881623
+  },
+  "models.pd_scorecard.validation.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.1549003056
+  },
+  "models.pd_scorecard.validation.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.08750084614
+  },
+  "models.pd_scorecard.validation.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.0516729172
+  },
+  "models.pd_scorecard.validation.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.09610738255
+  },
+  "models.pd_scorecard.validation.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 358
+  },
+  "models.pd_scorecard.validation.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.3329763246
+  },
+  "models.pd_scorecard.validation.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 0.2457934637
+  },
+  "models.pd_scorecard.validation.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "booked installment loans with an observed outcome",
+    "seed": 20260831,
+    "source": "packages/models (pd_scorecard)"
+   },
+   "value": 3725
+  },
   "policy.approval_cutoff": {
    "fmt": "int",
    "provenance": {

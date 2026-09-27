@@ -1,0 +1,135 @@
+{% set model = 'pd_scorecard' %}
+{% set m = 'models.pd_scorecard' %}
+{% set purpose %}
+The scorecard decides installment loan applications at Harborline: it ranks each
+application by the probability of default within {{ v('policy.default_window_months') }}
+months, approves at or above a score of {{ v('policy.approval_cutoff') }}, and states the
+reasons for every decline. It also supplies the probability of default used in expected
+loss. It is the champion; `pd_challenger` is shadow scored beside it.
+
+In scope: consumer installment loan applications through every channel. Out of scope:
+cards and mortgages, which it has never seen, and any use as a pricing model without a
+separate calibration.
+{% endset %}
+{% set soundness %}
+A weight of evidence scorecard is the method most consumer lenders still use for
+application decisions, for reasons that hold here: each characteristic's effect is
+monotone and visible in a table, the model is a logistic regression a reviewer can
+reproduce by hand, and the points give Regulation B reasons directly, as the
+characteristics where an applicant earned the fewest points against the best
+attainable. The alternatives considered were a logistic regression on raw
+characteristics, which ranks about as well but gives no natural reason codes, and a
+gradient boosted model, which is the challenger.
+
+Each characteristic is fine classed into up to {{ v('policy.max_fine_bins') }} quantile bins,
+then coarse classed until every bin holds at least {{ v('policy.min_bin_share') }} of
+applicants and weight of evidence is monotone. Characteristics enter only above an
+information value of {{ v('policy.iv_floor') }} and below a weight of evidence correlation of
+{{ v('policy.correlation_ceiling') }} with any stronger one; a characteristic whose sign reverses
+in the joint fit is removed. Points are scaled to {{ v('policy.base_score') }} at odds of
+{{ v('policy.base_odds') }} to one, with {{ v('policy.pdo') }} points to double the odds. Of
+{{ v(m ~ '.candidates') }} candidates, {{ v(m ~ '.characteristics') }} were kept:
+
+{{ table(m ~ '.iv') }}
+{% endset %}
+{% set data %}
+Generated data: installment loan applications to the fictional bank from its core
+banking generator, with the application record as it stood on the application date.
+The outcome is {{ v(m ~ '.outcome') }}. Under the censoring calendar only loans
+originated at least {{ v('policy.default_window_months') }} months before the as of date have
+an outcome; later ones are excluded, never counted as good. The split is by
+origination month: development {{ v(m ~ '.development.n') }} loans, validation
+{{ v(m ~ '.validation.n') }}, test {{ v(m ~ '.test.n') }}. The validation months are the two
+vintages written under a loosened cutoff; the test months include the recession quarter.
+
+Declined applicants have no outcome, so the scorecard is fitted on booked loans only.
+No reject inference was applied; the effect is that the scorecard's view of the lowest
+score bands rests on the applicants a legacy policy chose to book.
+
+Age, ZIP code and county are held on the application for the fairness audit and are
+on the committed proxy list; none is a candidate characteristic.
+
+Before any figure here was trusted, the pipeline recovered the generator's stated
+parameters:
+
+{{ table(m ~ '.known_parameters') }}
+
+{{ label(m ~ '.known_parameters') }}
+{% endset %}
+{% set development %}
+The fitted scorecard:
+
+{{ table(m ~ '.scorecard') }}
+
+{{ label(m ~ '.scorecard') }}
+
+On the development sample the scorecard's AUROC is {{ v(m ~ '.development.auroc') }}; on
+validation {{ v(m ~ '.validation.auroc') }}. Its scores move very little between development
+and test (population stability index {{ v(m ~ '.psi_dev_test') }}).
+{% endset %}
+{% set outcomes %}
+On the out of time test sample ({{ v(m ~ '.test.n') }} loans, {{ v(m ~ '.test.events') }}
+defaults) the scorecard reaches an AUROC of {{ v(m ~ '.test.auroc') }} (Gini
+{{ v(m ~ '.test.gini') }}, KS {{ v(m ~ '.test.ks') }}). At the cutoff it approves
+{{ v(m ~ '.approval_rate_test') }} of test applicants.
+
+Calibration is where it falls short. The mean predicted default rate on the test months
+is {{ v(m ~ '.mean_pd_test') }} against an observed {{ v(m ~ '.observed_test') }}, and on the
+validation months {{ v(m ~ '.mean_pd_validation') }} against {{ v(m ~ '.observed_validation') }}.
+The ranking holds; the level does not, because the loosened vintages and the recession
+raised default for reasons no application characteristic carries. The known parameter
+recovery above attributes it: the vintage effect and the macro sensitivity are both
+present and both outside the scorecard.
+
+By applicant age band on the test sample (age is never an input):
+
+{{ table(m ~ '.subgroups') }}
+
+The adverse impact ratio compares each band's approval rate with the most approved band.
+{% endset %}
+{% set benchmarking %}
+Against the base rate, a logistic regression on the same raw characteristics, and the
+gradient boosted challenger, all on the same test sample. The challenger's case for
+promotion is in its own report.
+
+The same machinery on real data, 30,000 credit card accounts from the UCI Default of
+Credit Card Clients dataset (Yeh and Lien (2009), CC BY 4.0), split at random because the
+data has no dates:
+
+{{ table(m ~ '.side_by_side') }}
+
+The real accounts' scorecard:
+
+{{ table(m ~ '.uci_scorecard') }}
+
+{{ label(m ~ '.uci_scorecard') }}
+{% endset %}
+{% set limitations %}
+- The data is generated. The scorecard proves the method and the controls, not a
+  real portfolio's risk.
+- Fitted on booked loans only, with no reject inference.
+- Through the cycle by construction: it does not move with unemployment or with
+  underwriting changes, which is why calibration fails on later vintages.
+- The UCI comparison uses a random split, so it cannot show drift, and the UCI data
+  is a Taiwanese card portfolio from 2005, not a US installment book.
+- Simplified: no bureau attributes beyond the handful the generator produces.
+{% endset %}
+{% set monitoring %}
+Monthly, on every application and on each vintage as its outcomes mature:
+{% endset %}
+{% set challenge %}
+Challenges raised during development and what each changed, from `DECISIONS.md`:
+{% endset %}
+{% set conclusion %}
+The scorecard ranks risk soundly out of time, recovers the generator's risk ordering,
+is stable, and passes the age band audit. It under predicts the level of default on
+the loosened and recession vintages. For decisions, which depend on rank, it is fit for
+use. For expected loss, its probability is used only with the vintage overlay in
+function 2, and recalibration is the condition below.
+
+The adverse action reasons it produced for declined test month applicants, by the
+first reason given:
+
+{{ table(m ~ '.reasons') }}
+{% endset %}
+{% include "validation/_report.md.j2" %}

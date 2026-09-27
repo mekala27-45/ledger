@@ -1,0 +1,63 @@
+{
+ "pd_challenger": {
+  "auroc_test": 0.6671986744202846,
+  "conclusion": "not approved",
+  "conditions": [
+   "Test AUROC at least 0.01 above the champion (measured 0.00535)"
+  ],
+  "function": "f02",
+  "last_validated": "2026-08-31",
+  "model_id": "pd_challenger",
+  "monitoring": [
+   [
+    "Rank agreement with the champion",
+    "below 0.7",
+    "Investigate before any promotion case"
+   ]
+  ],
+  "owner": "Head of analytics",
+  "purpose": "Test whether a gradient boosted model beats the scorecard enough to justify its opacity",
+  "role": "challenger",
+  "status": "validated",
+  "tier": 1,
+  "title": "Probability of default challenger (monotone GBM)"
+ },
+ "pd_scorecard": {
+  "auroc_test": 0.6618484974355271,
+  "conclusion": "approved with conditions",
+  "conditions": [
+   "Remediate before the next validation: Expected calibration error on test (measured 0.02859)"
+  ],
+  "function": "f02",
+  "last_validated": "2026-08-31",
+  "model_id": "pd_scorecard",
+  "monitoring": [
+   [
+    "Score PSI, monthly applications against development",
+    "above 0.1 warns, above 0.25 breaches",
+    "Investigate the shift; revalidate on breach"
+   ],
+   [
+    "Characteristic stability index, each characteristic",
+    "above 0.25",
+    "Review the characteristic's bins"
+   ],
+   [
+    "Rolling test AUROC as outcomes mature",
+    "falls 0.03 below the validation figure",
+    "Redevelop"
+   ],
+   [
+    "Observed over predicted default by vintage",
+    "outside 0.8 to 1.25 for two vintages",
+    "Recalibrate the intercept or apply an overlay"
+   ]
+  ],
+  "owner": "Head of analytics",
+  "purpose": "Rank and price installment loan applications by twelve month default risk and state the reasons for a decline",
+  "role": "champion",
+  "status": "in use",
+  "tier": 1,
+  "title": "Probability of default scorecard (champion)"
+ }
+}

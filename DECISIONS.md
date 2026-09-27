@@ -24,10 +24,11 @@ for the two most recent years published, 2024 and 2025, action taken 1 to 5
 Purchased loans and preapproval requests are excluded because they are not
 applications decided by the reporting lender.
 
-## 2026-09-26: Complaint text comes from the Bureau's narratives archive
+## 2026-09-26: Reversal: complaint text comes from the Bureau's narratives archive, not its API
 
-The CFPB stopped publishing complaint narratives on 14 August 2026 and moved every
-previously published narrative into a FOIA reading room archive. The live database
+The plan was the database's filtered download, narratives included. The CFPB stopped
+publishing complaint narratives on 14 August 2026 and moved every previously
+published narrative into a FOIA reading room archive. The live database
 still carries every complaint's metadata. So the complaints function takes volumes,
 products, issues, company responses and the company benchmark from the live
 database's search API, for the 24 complete months September 2024 to August 2026,
@@ -54,3 +55,104 @@ recorded replay of the stream and the studio scoring applicants in the browser f
 the published scorecard table. Both are labelled as such on the page. The API is
 built and tested against a real Postgres, and deploys to Fly with Neon when the
 account side is ready, without changing the site.
+
+## 2026-09-26: A zero cent entry is not an entry
+
+The first contract run stopped on 1,110 deposit entries and one journal line whose
+amounts rounded to zero: spending budgets split into card, bill and wire payments
+could leave a remainder under half a cent. A core system never posts a zero, so the
+generator no longer writes one, and the contract that caught it (`amount != 0`)
+stays.
+
+## 2026-09-26: Journals are built in whole cents
+
+`test_every_month_of_postings_balances` failed about one run in six on identical
+data. The September 2023 postings were one cent out of balance, and floating point
+summation order decided which side of the tolerance they fell on. The opening
+journal checked its unrounded total and then rounded each line. Journals are now
+built in integer cents with any rounding residue on the balancing line, and every
+ledger test sums as decimals and requires exactly zero. A tolerance had been hiding
+a real break.
+
+## 2026-09-26: The reconciliation found three breaks before it found the planted one
+
+The first full reconciliation located the injected break (savings, March 2026,
+$4,217.36) and three the generator had made by accident: installment loans and
+mortgages originated in September 2023 counted twice, once in the opening journal
+and again through their disbursements, and a monthly drift of about a dollar from
+September 2025 onward, when the first 24 month loans matured with a few cents of
+rounding left on the servicing record and no payment behind it. All three were
+fixed in the generator. The reconciliation's clean pass test now runs on a bank with
+no injected break and must find nothing at all.
+
+## 2026-09-26: Nothing opens after the as of date
+
+The back book generator opened a customer's card up to 400 days after the
+relationship began, with no upper bound, which put 129 card accounts in September
+and October 2026, after the window closes, some already carrying August statement
+balances. It was found reading the staged loans table before writing the warehouse.
+The generator no longer creates them, and a quarantine rule rejects any loan
+originated after the as of date.
+
+## 2026-09-26: Reversal: ledger ties are exact, not within five cents
+
+The generator's first test of the deposit sub ledger against the ledger allowed a
+difference of five cents per product and month, on the reasoning that floating
+point sums drift. That reasoning was wrong for a ledger, and the tolerance is what
+let the one cent opening journal break and the maturity drift through. Every tie is
+now an equality of decimals: the dbt tests, the reconciliation and the generator's
+own tests.
+
+## 2026-09-26: Challenge (pd_scorecard): the scorecard under predicts the loosened vintages
+
+**Raised:** On the validation months the scorecard's mean predicted default rate sat
+well under the observed rate, while its rank ordering held up.
+
+**Response:** The validation months are the two vintages written under the loosened
+cutoff, and the test months carry the recession quarter. The hazard fit recovers a
+vintage effect close to the generator's stated one, and no application
+characteristic carries it, so a scorecard fitted on earlier vintages cannot see it.
+That is a calibration problem, not a ranking problem, and a bank would treat it the
+same way: keep the scorecard for decisions and adjust the probability used for loss.
+
+**Changed:** Calibration became a non critical gate, so the report concludes
+approved with a stated condition rather than approved, and expected loss in function 2
+applies an observed to expected overlay by vintage instead of the raw scorecard
+probability.
+
+## 2026-09-26: Challenge (pd_scorecard): no lender drops prior delinquencies from a credit model
+
+**Raised:** The fitted scorecard has no delinquency characteristic. Delinquencies in
+the last 24 months fell under the information value floor and were dropped.
+
+**Response:** In this book the characteristic is nearly empty (most applicants have
+none) and carries little information once the bureau score is in the model, which
+already reflects payment history. Forcing it in would add a characteristic whose
+bins barely differ, and whose points would move with noise.
+
+**Changed:** The published information value table now lists every candidate with the
+reason it was kept or dropped, so a reviewer sees the decision instead of an absence,
+and the challenger, which sees every candidate, confirms the characteristic adds
+little.
+
+## 2026-09-26: Challenge (pd_challenger): the first challenger was overfitting
+
+**Raised:** The first fit's development AUROC was far above its validation AUROC.
+
+**Response:** With fifteen leaves and a small minimum leaf, the trees were learning the
+development months' noise; early stopping alone did not close the gap.
+
+**Changed:** Seven leaves and a minimum of 150 loans per leaf. The development to
+validation gap narrowed and the validation and test AUROC held.
+
+## 2026-09-26: Challenge (pd_challenger): it beats the scorecard, so why not promote it
+
+**Raised:** The challenger's test AUROC is above the champion's.
+
+**Response:** The gain has to pay for what the bank gives up. A gradient boosted model
+cannot state Regulation B reasons directly; declined applicants would still get
+reasons computed from the scorecard, which means explaining one model's decision
+with another model. A small gain does not buy that.
+
+**Changed:** Promotion requires a test AUROC at least 0.01 above the champion's, stated
+as a gate in the validation report, together with the stability and age band gates.

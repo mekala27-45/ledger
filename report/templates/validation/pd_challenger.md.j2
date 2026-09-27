@@ -1,0 +1,58 @@
+{% set model = 'pd_challenger' %}
+{% set m = 'models.pd_challenger' %}
+{% set purpose %}
+The challenger exists to answer one question for the model risk function: would a
+gradient boosted model decide installment loan applications better enough than the
+scorecard to justify giving up the scorecard's transparency? It is shadow scored on
+every application, including declines, and decides nothing.
+{% endset %}
+{% set soundness %}
+LightGBM on the same raw characteristics the scorecard considered, with monotone
+constraints on every numeric characteristic in the direction the scorecard's weight of
+evidence runs, so a higher bureau score can never raise predicted risk and a higher
+utilisation can never lower it. Categorical characteristics are unconstrained. Early
+stopped on the validation months, {{ v(m ~ '.trees') }} trees. Without the constraints a
+tree model can learn non monotone effects that a lender could not defend to an examiner
+or explain to an applicant.
+{% endset %}
+{% set data %}
+Identical to the champion's: the same booked loans, the same censoring, the same split
+by origination month, the same leakage test and the same exclusion of every protected
+attribute and proxy.
+{% endset %}
+{% set development %}
+Development AUROC {{ v(m ~ '.development.auroc') }}, validation {{ v(m ~ '.validation.auroc') }}.
+Its rank order agrees with the champion's on every application at a Spearman correlation
+of {{ v(m ~ '.rank_agreement') }}, so the two models mostly disagree at the margin rather than
+about who is risky.
+{% endset %}
+{% set outcomes %}
+On the test sample the challenger's AUROC is {{ v(m ~ '.test.auroc') }}, an improvement of
+{{ v(m ~ '.improvement') }} over the champion. Stability from development to test is
+{{ v(m ~ '.psi_dev_test') }}. By age band, at the threshold that approves the champion's share
+of applicants:
+
+{{ table(m ~ '.subgroups') }}
+{% endset %}
+{% set benchmarking %}
+Against the champion first, then the logistic model and the base rate, on the same test
+sample.
+{% endset %}
+{% set limitations %}
+- Cannot produce Regulation B reasons on its own; reasons would have to come from a
+  separate explanation method, and a bank would have to validate that method too.
+- Shares every limitation of the champion's data.
+{% endset %}
+{% set monitoring %}
+While it stays in shadow:
+{% endset %}
+{% set challenge %}
+From `DECISIONS.md`:
+{% endset %}
+{% set conclusion %}
+Not approved for promotion. The challenger is at least as stable and as fair as the
+champion and ranks marginally better, but the improvement is under the materiality
+margin set before evaluation, and it would cost the bank directly stated adverse action
+reasons. It stays in shadow and is re-evaluated at the next validation.
+{% endset %}
+{% include "validation/_report.md.j2" %}
