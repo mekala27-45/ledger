@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from ledger_core.manifest import Manifest
 from ledger_render.render import ClaimGateError, Renderer, Target, hand_typed_numbers
 from ledger_render.targets import discover
@@ -19,8 +18,15 @@ def _setup(tmp_path: Path) -> tuple[Renderer, Path]:
     )
     manifest = Manifest(as_of="2026-08-31", seed=1)
     manifest.put("f01.nim", 0.0321, "pct2", backend="generated", population="bank", source="mart_ratios")
-    manifest.put_table("f02.bins", ["bin", "woe"], ["text", "float3"], [["low", -0.4], ["high", 0.61]],
-                       backend="generated", population="booked", source="scorecard")
+    manifest.put_table(
+        "f02.bins",
+        ["bin", "woe"],
+        ["text", "float3"],
+        [["low", -0.4], ["high", 0.61]],
+        backend="generated",
+        population="booked",
+        source="scorecard",
+    )
     renderer = Renderer(tmp_path, manifest, discover(tmp_path), [templates])
     return renderer, tmp_path / "RESULTS.md"
 
