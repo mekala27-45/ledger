@@ -333,15 +333,23 @@ def survival(ctx: Context, scored: pl.DataFrame) -> None:
         at_risk_rows,
         **gen,
     )
-    cox_frame = frame.select(
-        score_per_20=pl.col("score") / 20.0,
-        loose="loose",
-        unemployment=pl.col("unemployment_rate"),
-        duration="duration",
-        event="event",
-    ).to_pandas()
+    # Sorted, because the warehouse returns rows in no fixed order and the fit should not care.
+    cox_frame = (
+        frame.sort("loan_id")
+        .select(
+            score_per_20=pl.col("score") / 20.0,
+            loose="loose",
+            unemployment=pl.col("unemployment_rate"),
+            duration="duration",
+            event="event",
+        )
+        .to_pandas()
+    )
     cph = CoxPHFitter().fit(cox_frame, duration_col="duration", event_col="event")
-    test = proportional_hazard_test(cph, cox_frame, time_transform="rank")
+    # The Kaplan Meier time transform, R's cox.zph default: tied durations get the same
+    # transformed time. The rank transform numbers tied events in row order, and with
+    # whole month durations that made the p values change from one run to the next.
+    test = proportional_hazard_test(cph, cox_frame, time_transform="km")
     rows: list[list[Scalar]] = []
     for name in ("score_per_20", "loose", "unemployment"):
         rows.append(
