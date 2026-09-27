@@ -119,3 +119,14 @@ test("the theme toggle switches between the dark and light themes", async ({ pag
   await page.getByRole("button", { name: /theme/i }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 });
+
+test("the fair lending map toggles between unadjusted and adjusted rates", async ({ page }) => {
+  await page.goto("/fair-lending/");
+  const map = page.getByRole("img", { name: /by county/ });
+  await expect(map.locator("path").first()).toBeVisible();
+  const fills = async () => map.locator("path").evaluateAll((ps) => ps.map((p) => p.getAttribute("fill")).join(","));
+  const before = await fills();
+  await page.getByTestId("measure-adjusted_rate").click();
+  await expect.poll(fills).not.toBe(before);
+  await expect(map.locator("path")).toHaveCount(21);
+});
