@@ -120,10 +120,21 @@ def investigator_view(
         for n in sorted(keep)
     ]
     kept = set(keep)
-    links = [
-        {"source": a, "target": b, "amount": round(float(d["amount"]), 2), "transfers": int(d["transfers"])}
-        for a, b, d in g.subgraph(kept).edges(data=True)
-    ]
+    # A subgraph of a few nodes iterates them from the set it was given, and a set of strings
+    # comes out in a different order in every Python process, so the links are put in order
+    # here, each internal one written from the lower account id to the higher.
+    links = sorted(
+        (
+            {
+                "source": min(a, b),
+                "target": max(a, b),
+                "amount": round(float(d["amount"]), 2),
+                "transfers": int(d["transfers"]),
+            }
+            for a, b, d in g.subgraph(kept).edges(data=True)
+        ),
+        key=lambda link: (link["source"], link["target"]),
+    )
     # A few mule accounts as stars of their own: their senders are outside the bank, so the
     # internal graph alone would never show the fan in.
     mules = [

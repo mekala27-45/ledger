@@ -207,3 +207,43 @@ def test_communities_do_not_depend_on_the_order_transfers_arrive_in() -> None:
     for shuffle in range(5):
         shuffled = edges.sample(fraction=1.0, shuffle=True, seed=shuffle)
         assert communities(build_graph(shuffled), seed=5) == reference
+
+
+INVESTIGATOR_VIEW = r"""
+import json
+import networkx as nx
+import polars as pl
+from ledger_crime.network import build_graph, communities, community_table, investigator_view
+
+g0 = nx.les_miserables_graph()
+rows = [(f"A{a}", f"A{b}", float(d["weight"]) * 100.0, 1) for a, b, d in g0.edges(data=True)]
+g = build_graph(pl.DataFrame(rows, schema=["src", "dst", "amount", "transfers"], orient="row"))
+membership = communities(g, seed=5)
+accounts = sorted(membership)
+flagged, planted = accounts[::7], accounts[::11]
+alerts = pl.DataFrame({"account_id": flagged, "rule": ["structuring"] * len(flagged), "end_at": range(len(flagged))})
+truth = pl.DataFrame({"account_id": planted, "typology": ["mule"] * len(planted), "ring_id": range(len(planted))})
+leaves = pl.DataFrame(schema={"account_id": pl.Utf8, "party": pl.Utf8, "amount": pl.Float64})
+table = community_table(g, membership, alerts, truth)
+print(json.dumps(investigator_view(g, membership, table, alerts, truth, leaves, max_communities=2)))
+"""
+
+
+def test_the_investigator_view_is_the_same_in_every_python_process() -> None:
+    # Python randomises string hashing per process, so anything that iterates a set of
+    # account ids can come out in a different order on every run of the pipeline.
+    import os
+    import subprocess
+    import sys
+
+    outputs = set()
+    for hash_seed in ("1", "2", "3", "4"):
+        run = subprocess.run(
+            [sys.executable, "-c", INVESTIGATOR_VIEW],
+            env={**os.environ, "PYTHONHASHSEED": hash_seed},
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        outputs.add(run.stdout)
+    assert len(outputs) == 1
