@@ -394,23 +394,6 @@ def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_di
 
     leak_rows = leakage_check(test, tx, cfg.seed)
 
-    # Score histogram for the browser's threshold slider: counts and fraud amounts by score bin.
-    edges = np.concatenate([[0.0], np.quantile(p_test, np.linspace(0.5, 0.999, 120)), [1.0 + 1e-9]])
-    edges = np.unique(edges)
-    bins = np.clip(np.searchsorted(edges, p_test, side="right") - 1, 0, len(edges) - 2)
-    hist = (
-        pl.DataFrame({"bin": bins, "fraud": y_test, "amount": a_test})
-        .group_by("bin")
-        .agg(
-            pl.len().alias("n"),
-            pl.col("fraud").sum().alias("frauds"),
-            (pl.col("fraud") * pl.col("amount")).sum().alias("fraud_amount"),
-        )
-        .sort("bin")
-        .with_columns(lower=pl.col("bin").map_elements(lambda b: float(edges[b]), return_dtype=pl.Float64))
-    )
-    hist.write_parquet(out / "score_histogram.parquet")
-
     samples = {
         "development": discrimination(y_train, p_train),
         "validation": discrimination(y_val, p_val),

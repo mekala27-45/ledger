@@ -198,3 +198,44 @@ def test_the_replay_emits_in_time_order_and_masks_cards() -> None:
     assert all("abcdef" not in e["card"] for e in events) and mask_card("Kabcdef0123") == "Kab*****123"
     with pytest.raises(ValueError, match="empty"):
         ReplayWorker(stream.clear(), 0.0, {}, book)
+
+
+def test_histogram_reproduces_the_anchor_points_exactly() -> None:
+    from ledger_desk.operating import cost_at, score_histogram
+
+    rng = np.random.default_rng(3)
+    n = 20_000
+    y = (rng.random(n) < 0.01).astype(int)
+    p = np.clip(rng.beta(0.3, 12, n) + y * rng.random(n) * 0.6, 0, 1)
+    amount = rng.gamma(2.0, 40.0, n)
+    anchors = [0.0503, 0.2759]
+    hist = score_histogram(y, p, amount, anchors)
+    assert int(hist["n"].sum()) == n
+    assert int(hist["frauds"].sum()) == int(y.sum())
+    for t in anchors:
+        assert t in hist["lower"].to_list()
+        flagged = hist.filter(pl.col("lower") >= t)
+        c = cost_at(y, p, amount, t, 12.0, 35.0)
+        assert int(flagged["n"].sum()) == c.false_declines + c.caught_frauds
+        assert int(flagged["frauds"].sum()) == c.caught_frauds
+        missed_amount = float((amount * y).sum()) - float(flagged["fraud_amount"].sum())
+        assert abs(c.false_declines * 12.0 + missed_amount + c.missed_frauds * 35.0 - c.cost) < 1e-6
+
+
+def test_histogram_is_fine_in_the_tail_where_declines_happen() -> None:
+    from ledger_desk.operating import score_histogram
+
+    rng = np.random.default_rng(4)
+    p = rng.random(50_000) ** 8
+    hist = score_histogram(np.zeros(p.size, dtype=int), p, np.ones(p.size), [])
+    top = hist.filter(pl.col("lower") >= float(np.quantile(p, 0.99)))
+    # A percent of the scores is split across many bins, so the slider moves in small steps there.
+    assert top.height >= 100
+    assert int(top["n"].max()) <= 0.001 * p.size
+
+
+def test_histogram_refuses_no_scores() -> None:
+    from ledger_desk.operating import score_histogram
+
+    with pytest.raises(ValueError):
+        score_histogram(np.array([]), np.array([]), np.array([]), [0.5])

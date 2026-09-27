@@ -96,6 +96,53 @@ def choose_queue_point(
     return max(float(ps[ok.max()]), operating_point)
 
 
+def score_histogram(
+    y: np.ndarray,
+    p: np.ndarray,
+    amount: np.ndarray,
+    anchors: list[float],
+    body_bins: int = 50,
+    tail_bins: int = 150,
+) -> pl.DataFrame:
+    """Counts, frauds and fraud amounts by score bin, for a threshold slider that recomputes in a browser.
+
+    Declines happen in the top percent of scores, so the bins are coarse below the
+    99th percentile and fine above it. Every anchor (the operating point and the queue
+    point) is a bin edge, so the slider set at an anchor flags exactly the transactions
+    ``cost_at`` flags there and reproduces the reported precision and recall to the
+    transaction. A bin holds scores from its lower edge up to, not including, the next.
+    """
+    if p.size == 0:
+        raise ValueError("refusing to bin no scores")
+    edges = np.unique(
+        np.concatenate(
+            [
+                [0.0],
+                np.quantile(p, np.linspace(0.5, 0.99, body_bins)),
+                np.quantile(p, np.linspace(0.99, 1.0, tail_bins + 1)[:-1]),
+                np.asarray(anchors, dtype=float),
+                [1.0 + 1e-9],
+            ]
+        )
+    )
+    bins = np.clip(np.searchsorted(edges, p, side="right") - 1, 0, len(edges) - 2)
+    frame = pl.DataFrame({"bin": bins, "fraud": y.astype(np.int64), "amount": amount.astype(float)})
+    counts = frame.group_by("bin").agg(
+        pl.len().alias("n"),
+        pl.col("fraud").sum().alias("frauds"),
+        (pl.col("fraud") * pl.col("amount")).sum().alias("fraud_amount"),
+    )
+    every = pl.DataFrame({"bin": np.arange(len(edges) - 1), "lower": edges[:-1]})
+    return (
+        every.join(counts, on="bin", how="left")
+        .with_columns(
+            pl.col("n").fill_null(0), pl.col("frauds").fill_null(0), pl.col("fraud_amount").fill_null(0.0)
+        )
+        .select("bin", "lower", "n", "frauds", "fraud_amount")
+        .sort("bin")
+    )
+
+
 def accuracy_threshold(y: np.ndarray, p: np.ndarray) -> float:
     """The threshold accuracy would choose, for the callout that explains why nobody should."""
     grid = candidate_thresholds(p)

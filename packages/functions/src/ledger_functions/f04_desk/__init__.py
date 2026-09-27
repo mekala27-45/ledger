@@ -18,6 +18,7 @@ from typing import Any
 import polars as pl
 from ledger_core.formats import format_value
 from ledger_core.manifest import Manifest
+from ledger_desk.operating import score_histogram
 from ledger_desk.replay import LabelBook, to_event
 from ledger_desk.rules import load_rules
 
@@ -42,13 +43,18 @@ def run(ctx: Context) -> None:
     ctx.save("cost_curve", curve)
     pr = pl.read_parquet(folder / "pr_curve.parquet")
     ctx.save("pr_curve", pr)
-    hist = pl.read_parquet(folder / "score_histogram.parquet")
-    ctx.save("score_histogram", hist)
     lag = pl.read_parquet(folder / "label_lag_daily.parquet")
     ctx.save("label_lag", lag)
 
     op = float(fraud.raw("models.fraud_card.operating_point"))  # type: ignore[arg-type]
     queue = float(fraud.raw("models.fraud_card.queue_point"))  # type: ignore[arg-type]
+    test = pl.read_parquet(
+        folder / "scored_stream.parquet", columns=["split", "score", "is_fraud", "amount"]
+    ).filter(pl.col("split") == "test")
+    hist = score_histogram(
+        test["is_fraud"].to_numpy(), test["score"].to_numpy(), test["amount"].to_numpy(), [op, queue]
+    )
+    ctx.save("score_histogram", hist)
     m.put("f04.operating_point", op, "float4", **replayed)
     m.put("f04.queue_point", queue, "float4", **replayed)
     m.put_figure(
@@ -112,8 +118,6 @@ def run(ctx: Context) -> None:
     counts = window["decision"].value_counts().to_dicts()
     payload = {
         "recorded": True,
-        "note": "A recorded replay of the scored test stream, played in the browser. The live desk streams the same "
-        "file from the API when it is awake.",
         "start": RECORDED_START.isoformat(),
         "hours": RECORDED_HOURS,
         "operating_point": op,
