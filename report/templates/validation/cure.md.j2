@@ -1,0 +1,74 @@
+{% set model = 'cure' %}
+{% set m = 'models.cure' %}
+{% set purpose %}
+Order the collections queue by the balance the bank is likely to lose without a call:
+each past due loan's balance times the probability it does not return to current within
+ninety days. The model informs whom a collector calls first; it never changes terms or
+charges anything off, so it is tier two.
+
+Out of scope: hardship programmes, settlement offers, and the decision to charge off.
+{% endset %}
+{% set soundness %}
+Whether a delinquent loan cures depends on how late it is, how long it has been late,
+whether the borrower paid anything last month, and the loan itself. Two candidates were
+fitted on the same features, a gradient boosted classifier and a logistic regression; the
+champion was chosen on held out loans in the validation months, and the boosted model had
+to beat the logistic by {{ v(m ~ '.margin') }} of AUROC to earn its complexity. The model is
+the {{ v(m ~ '.champion') }} ({{ v(m ~ '.auc_boosted_holdout') }} for LightGBM against
+{{ v(m ~ '.auc_logistic_holdout') }} for the logistic regression on held out loans).
+
+The benchmark that matters is the rule collectors use today, the bucket: each bucket's
+training cure rate used as a score.
+{% endset %}
+{% set data %}
+Every loan thirty or more days past due at a month end. The outcome is whether it is
+current or paid off at one of the next three month ends, so it is known three months
+later, and the split respects that: training on {{ v(m ~ '.train_period') }}, validation on
+{{ v(m ~ '.validation_period') }}, test on {{ v(m ~ '.test_period') }} ({{ v(m ~ '.test_rows') }}
+delinquent loan months, {{ v(m ~ '.test_cured') }} of them cured).
+
+A leakage test recomputed the run of late months, the earlier delinquency episodes and
+last month's payment for {{ v(m ~ '.leakage_rows') }} sampled loan months from the loan's
+own history and matched every one. No demographic attribute is a feature.
+{% endset %}
+{% set development %}
+Development AUROC {{ v(m ~ '.development.auroc') }}, validation {{ v(m ~ '.validation.auroc') }}.
+What moves the score most (standardised coefficients for a logistic regression, share of
+gain for a boosted model):
+
+{{ table(m ~ '.importance') }}
+{% endset %}
+{% set outcomes %}
+On the test months the model reaches an AUROC of {{ v(m ~ '.test.auroc') }}, against
+{{ v(m ~ '.rule_auroc') }} for the bucket rule and {{ v(m ~ '.other_auroc') }} for the
+{{ v(m ~ '.other') }}.
+
+By bucket, on the test months:
+
+{{ table(m ~ '.subgroups') }}
+
+{{ label(m ~ '.subgroups') }}
+{% endset %}
+{% set benchmarking %}
+Against the base rate, the bucket rule and the candidate that was not chosen, on the test months:
+{% endset %}
+{% set limitations %}
+- The generator decides cures from a stated process with the loan's latent risk in it.
+  Real cures depend on things no loan file holds: a new job, a family emergency, a
+  collector's tone.
+- A call changes the outcome it predicts. Once the queue is worked in this order, the
+  realised cure rates are no longer a clean measure of the model.
+- Paid off counts as cured. It is rare from delinquency here, and a real bank might
+  treat a payoff through refinancing elsewhere differently.
+{% endset %}
+{% set monitoring %}
+Monthly:
+{% endset %}
+{% set challenge %}
+From `DECISIONS.md`:
+{% endset %}
+{% set conclusion %}
+The model orders the queue the way its purpose asks and beats the rule in use on months
+it never saw. It is approved for ordering the collections queue.
+{% endset %}
+{% include "validation/_report.md.j2" %}

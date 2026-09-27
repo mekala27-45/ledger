@@ -61,6 +61,37 @@
   "tier": 2,
   "title": "Deposit customer attrition, twelve month horizon"
  },
+ "cure": {
+  "auroc_test": 0.7865743489560597,
+  "conclusion": "approved",
+  "conditions": [],
+  "function": "f09",
+  "last_validated": "2026-08-31",
+  "model_id": "cure",
+  "monitoring": [
+   [
+    "Realised cure rate by queue decile, monthly",
+    "the top decile cures more often than the bottom",
+    "Refit"
+   ],
+   [
+    "Score PSI, monthly against validation",
+    "above 0.25",
+    "Revalidate"
+   ],
+   [
+    "The bucket rule's AUROC beside the model's",
+    "the margin falls below the gate for a quarter",
+    "Revalidate"
+   ]
+  ],
+  "owner": "Head of analytics",
+  "purpose": "Order the collections queue by the balance likely to be lost without a call: balance times the probability the loan does not cure",
+  "role": "sole",
+  "status": "in use",
+  "tier": 2,
+  "title": "Cure within ninety days for delinquent loans"
+ },
  "fraud_account": {
   "auroc_test": 0.8800948351517073,
   "conclusion": "approved with conditions",

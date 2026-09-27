@@ -31,6 +31,7 @@ from sklearn.preprocessing import StandardScaler
 from ledger_models.contract import ModelCard, tier_for
 from ledger_models.evaluate import discrimination, reliability, subgroup_table
 from ledger_models.gates import Gate, run_gates
+from ledger_models.reasons import Words, reasons
 from ledger_models.report import ModelResult, inventory_row, put_result, read_challenges, write_inventory
 
 MODEL_ID = "attrition"
@@ -57,13 +58,13 @@ FEATURES = (
     "rate_gap",
     "log_income",
 )
-FEATURE_WORDS = {
+FEATURE_WORDS: dict[str, Words] = {
     "log_checking_balance": "checking balance",
     "log_other_balance": "savings and time balances",
-    "has_other": "holds savings or a CD",
+    "has_other": ("holds savings or a CD", "holds no savings or CD"),
     "change_3m": "checking balance change over three months",
-    "change_3m_missing": "less than three months of history",
-    "balance_drop": "checking balance fell sharply last month",
+    "change_3m_missing": ("less than three months of history", None),
+    "balance_drop": ("checking balance fell sharply last month", None),
     "fee_count": "fees charged last month",
     "overdraft_count": "overdraft last month",
     "log_inflow": "money coming in",
@@ -71,9 +72,9 @@ FEATURE_WORDS = {
     "entries": "account activity",
     "payroll_credits": "payroll deposits",
     "tenure_months": "time as a customer",
-    "new_customer": "customer for under a year",
-    "digital_active": "uses digital banking",
-    "complaint_flag": "has complained",
+    "new_customer": ("customer for under a year", None),
+    "digital_active": ("uses digital banking", "does not use digital banking"),
+    "complaint_flag": ("has complained", None),
     "rate_gap": "savings rate far below market",
     "log_income": "income",
 }
@@ -92,6 +93,10 @@ def outcomes_known_before(last_fit_month: str, first_test_month: str, horizon_mo
     fy, fm = (int(x) for x in last_fit_month.split("-"))
     ty, tm = (int(x) for x in first_test_month.split("-"))
     return (ty * 12 + tm) - (fy * 12 + fm) >= horizon_months
+
+
+def _label(words: Words) -> str:
+    return words if isinstance(words, str) else words[0]
 
 
 def load(con: duckdb.DuckDBPyConnection) -> pl.DataFrame:
@@ -397,11 +402,8 @@ def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_di
         )[:, :-1]
     else:
         contrib = scaler.transform(matrix(listed)) * logit.coef_[0]
-    names = np.array(FEATURES)
-    reasons = [
-        "; ".join(FEATURE_WORDS[names[j]] for j in np.argsort(-row)[:2] if row[j] > 0) for row in contrib
-    ]
-    listed = listed.with_columns(reasons=pl.Series(reasons)).select(
+    why = reasons(list(FEATURES), contrib, matrix(listed), FEATURE_WORDS, direction=1)
+    listed = listed.with_columns(reasons=pl.Series(why)).select(
         "customer_id",
         "probability",
         "balance_total",
@@ -419,7 +421,7 @@ def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_di
     else:
         weights = logit.coef_[0]
     importance = pl.DataFrame(
-        {"feature": [FEATURE_WORDS[f] for f in FEATURES], "weight": [float(w) for w in weights]}
+        {"feature": [_label(FEATURE_WORDS[f]) for f in FEATURES], "weight": [float(w) for w in weights]}
     ).sort(pl.col("weight").abs(), descending=True)
 
     tier, tier_reason = tier_for(decides_automatically=False, informs_person=True, complex_method=False)

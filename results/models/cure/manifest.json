@@ -1,0 +1,1164 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {},
+ "seed": 20260831,
+ "tables": {
+  "models.cure.benchmark": {
+   "columns": [
+    "Model",
+    "AUROC",
+    "Gini",
+    "Brier",
+    "ECE"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float4",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     "This model",
+     0.786574349,
+     0.5731486979,
+     0.1717632655,
+     0.01071302403
+    ],
+    [
+     "Base rate",
+     0.5,
+     0.0,
+     0.2208996255,
+     0.02660139821
+    ],
+    [
+     "The bucket rule",
+     0.7614620305,
+     0.522924061,
+     0.1752763019,
+     0.02170708396
+    ],
+    [
+     "LightGBM on the same features",
+     0.7846593951,
+     0.5693187902,
+     0.1723443064,
+     0.01372082719
+    ]
+   ]
+  },
+  "models.cure.challenges": {
+   "columns": [
+    "Date",
+    "Challenge",
+    "Response",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     "2026-09-27",
+     "A loan thirty days past due cures far more often than one ninety days past due. A model that only learned the bucket would beat the base rate comfortably and add nothing a collections supervisor does not already do by working the thirty day list first.",
+     "The base rate is the wrong benchmark for this model. The benchmark is the rule in use: each bucket's cure rate from the training months, applied as a score.",
+     "The bucket rule is a benchmark in the report, and a critical gate requires the model's test AUROC to beat the rule's by two hundredths. Cure rates by bucket are published beside the model's so the rule's strength is visible."
+    ],
+    [
+     "2026-09-27",
+     "A loan that is past due in June and July 2025 appears in the last training month and the first validation month, with nearly the same features and the same outcome. Early stopping and the choice between the two candidates were being made on loans the fit had already seen.",
+     "The attrition model memorised customers for the same reason. Month ends are not independent draws when the unit is a loan that stays delinquent for months.",
+     "One loan in five is held out of the fit by a hash of its identifier, and early stopping and the choice of champion use only held out loans in the validation months. The test months begin three months after validation ends, so every outcome used to fit or choose the model was known before the first test month end, and a check in the trainer refuses to run otherwise."
+    ]
+   ]
+  },
+  "models.cure.conditions": {
+   "columns": [
+    "Condition"
+   ],
+   "formats": [
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     "None"
+    ]
+   ]
+  },
+  "models.cure.contract": {
+   "columns": [
+    "Line",
+    "What this model does"
+   ],
+   "formats": [
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     "trained",
+     "On month ends September 2023 to June 2025, whose three month outcomes had all closed before the test months began."
+    ],
+    [
+     "timed",
+     "Every feature comes from the month end or earlier; a leakage test recomputes the run length, earlier episodes and last payment for 200 sampled loan months."
+    ],
+    [
+     "calibrated",
+     "Reliability on the test months is published; the queue multiplies the balance by one minus the probability, so calibration matters."
+    ],
+    [
+     "useful",
+     "Beats the base rate, the bucket rule collectors use today, and the other candidate on months it never saw."
+    ],
+    [
+     "fair",
+     "No demographic enters; the features describe the loan and its payments. Cure rates by bucket are published beside the model's."
+    ],
+    [
+     "gated",
+     "Every gate in this report, including the margin over the bucket rule."
+    ],
+    [
+     "served",
+     "Scored monthly in the pipeline; the queue is published with the collections page."
+    ],
+    [
+     "integrated",
+     "Orders the collections queue by balance at risk times the probability of not curing."
+    ],
+    [
+     "monitored",
+     "Monthly: realised cure rate by queue decile, score PSI, and the rule's AUROC beside the model's."
+    ],
+    [
+     "documented",
+     "This validation report and the collections page."
+    ],
+    [
+     "bounded",
+     "Orders calls. Never changes terms, never charges off a loan, and never goes to a borrower as a score."
+    ],
+    [
+     "validated",
+     "This report, rendered from the manifest before the queue uses the order."
+    ],
+    [
+     "explainable",
+     "Each queued loan shows the two features that lowered its chance of curing most, in plain words."
+    ]
+   ]
+  },
+  "models.cure.gates": {
+   "columns": [
+    "Gate",
+    "Threshold",
+    "Measured",
+    "Result"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     "Test AUROC above the bucket rule the collections team uses today",
+     "at least 0.02",
+     0.02511231845,
+     "pass"
+    ],
+    [
+     "Test AUROC against the other candidate's (the choice on validation must not cost more than a hundredth)",
+     "at least -0.01",
+     0.001914953867,
+     "pass"
+    ],
+    [
+     "Test AUROC at or above the floor",
+     "at least 0.7",
+     0.786574349,
+     "pass"
+    ],
+    [
+     "Point in time recompute of sampled delinquent loan months",
+     "at least 200",
+     200.0,
+     "pass"
+    ],
+    [
+     "Expected calibration error on test",
+     "at most 0.05",
+     0.01071302403,
+     "pass"
+    ]
+   ]
+  },
+  "models.cure.importance": {
+   "columns": [
+    "feature",
+    "weight"
+   ],
+   "formats": [
+    "text",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     "months in a row past due",
+     -0.9824041854
+    ],
+    [
+     "interest rate",
+     -0.6107840486
+    ],
+    [
+     "a card account",
+     0.2930135726
+    ],
+    [
+     "ninety or more days past due",
+     -0.2358098725
+    ],
+    [
+     "a mortgage",
+     -0.1269199613
+    ],
+    [
+     "sixty days past due",
+     -0.09077425927
+    ],
+    [
+     "earlier delinquencies",
+     -0.07503652756
+    ],
+    [
+     "card utilisation",
+     0.06382385714
+    ],
+    [
+     "share of the payment made last month",
+     0.06047757542
+    ],
+    [
+     "made a payment last month",
+     0.06047757542
+    ],
+    [
+     "balance",
+     -0.04875465825
+    ],
+    [
+     "age of the loan",
+     0.03785323229
+    ],
+    [
+     "unemployment",
+     0.007067695048
+    ]
+   ]
+  },
+  "models.cure.monitoring": {
+   "columns": [
+    "Measure",
+    "Trigger",
+    "Action"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     "Realised cure rate by queue decile, monthly",
+     "the top decile cures more often than the bottom",
+     "Refit"
+    ],
+    [
+     "Score PSI, monthly against validation",
+     "above 0.25",
+     "Revalidate"
+    ],
+    [
+     "The bucket rule's AUROC beside the model's",
+     "the margin falls below the gate for a quarter",
+     "Revalidate"
+    ]
+   ]
+  },
+  "models.cure.reliability": {
+   "columns": [
+    "Bin",
+    "Accounts",
+    "Predicted",
+    "Observed"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "pct2",
+    "pct2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     1,
+     811,
+     0.03420382562,
+     0.04069050555
+    ],
+    [
+     2,
+     811,
+     0.06993526828,
+     0.08631319359
+    ],
+    [
+     3,
+     811,
+     0.1221946789,
+     0.1183723798
+    ],
+    [
+     4,
+     811,
+     0.1835998971,
+     0.1627620222
+    ],
+    [
+     5,
+     810,
+     0.2717444572,
+     0.2679012346
+    ],
+    [
+     6,
+     810,
+     0.3583605561,
+     0.3234567901
+    ],
+    [
+     7,
+     810,
+     0.4545742052,
+     0.4530864198
+    ],
+    [
+     8,
+     810,
+     0.5432896816,
+     0.5395061728
+    ],
+    [
+     9,
+     810,
+     0.6044364027,
+     0.6024691358
+    ],
+    [
+     10,
+     810,
+     0.6789784501,
+     0.6925925926
+    ]
+   ]
+  },
+  "models.cure.subgroups": {
+   "columns": [
+    "Group",
+    "N",
+    "Event rate",
+    "Mean score",
+    "Calibration gap",
+    "Auroc"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct2",
+    "pct2",
+    "spct1",
+    "float3"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "rows": [
+    [
+     "30",
+     3069.0,
+     0.5852069078,
+     0.5740088021,
+     -0.01119810565,
+     0.5979916092
+    ],
+    [
+     "60",
+     1845.0,
+     0.3008130081,
+     0.3237693815,
+     0.02295637336,
+     0.5452755081
+    ],
+    [
+     "90+",
+     3190.0,
+     0.09780564263,
+     0.1039779071,
+     0.006172264457,
+     0.6378561501
+    ]
+   ]
+  }
+ },
+ "values": {
+  "models.cure.as_of_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "2026-08"
+  },
+  "models.cure.auc_boosted_holdout": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.7599107503
+  },
+  "models.cure.auc_logistic_holdout": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.7619806374
+  },
+  "models.cure.champion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "logistic regression"
+  },
+  "models.cure.conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "approved"
+  },
+  "models.cure.conditions_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0
+  },
+  "models.cure.delinquent_balance": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 10128598.66
+  },
+  "models.cure.delinquent_now": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 1158
+  },
+  "models.cure.development.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.7841966694
+  },
+  "models.cure.development.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.5844556496
+  },
+  "models.cure.development.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.1693540845
+  },
+  "models.cure.development.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.007122639737
+  },
+  "models.cure.development.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.3119747899
+  },
+  "models.cure.development.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 5346
+  },
+  "models.cure.development.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.5683933387
+  },
+  "models.cure.development.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.4370047664
+  },
+  "models.cure.development.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 17136
+  },
+  "models.cure.feature_count": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "13"
+  },
+  "models.cure.features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "bucket_60, bucket_90, months_delinquent, prior_episodes, payment_ratio, paid_anything, log_balance, months_on_book, card, mortgage, interest_rate, utilization, unemployment"
+  },
+  "models.cure.last_validated": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "2026-08-31"
+  },
+  "models.cure.leakage_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 200
+  },
+  "models.cure.margin": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.005
+  },
+  "models.cure.method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "Logistic regression on delinquency, payment and loan features; chosen over LightGBM on held out loans"
+  },
+  "models.cure.other": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "LightGBM"
+  },
+  "models.cure.other_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.7846593951
+  },
+  "models.cure.outcome": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "The loan is current, or paid off, at one of the next three month ends"
+  },
+  "models.cure.owner": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "Head of analytics"
+  },
+  "models.cure.prediction_time": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "Each month end, for loans thirty or more days past due; features use that month and earlier"
+  },
+  "models.cure.purpose": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "Order the collections queue by the balance likely to be lost without a call: balance times the probability the loan does not cure"
+  },
+  "models.cure.queue_balance": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 6623975.81
+  },
+  "models.cure.queue_exposure": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 4663027.237
+  },
+  "models.cure.queue_size": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 300
+  },
+  "models.cure.role": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "sole"
+  },
+  "models.cure.rule_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.7614620305
+  },
+  "models.cure.status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "in use"
+  },
+  "models.cure.test.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.786574349
+  },
+  "models.cure.test.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.6116706965
+  },
+  "models.cure.test.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.1717632655
+  },
+  "models.cure.test.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.01071302403
+  },
+  "models.cure.test.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.3286031589
+  },
+  "models.cure.test.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 2663
+  },
+  "models.cure.test.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.5731486979
+  },
+  "models.cure.test.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.4484738239
+  },
+  "models.cure.test.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 8104
+  },
+  "models.cure.test_cured": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 2663
+  },
+  "models.cure.test_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "month ends December 2025 to May 2026"
+  },
+  "models.cure.test_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 8104
+  },
+  "models.cure.tier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "2"
+  },
+  "models.cure.tier_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "Informs a decision a person makes; moderate materiality"
+  },
+  "models.cure.title": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "Cure within ninety days for delinquent loans"
+  },
+  "models.cure.total_exposure": {
+   "fmt": "usd0",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 6687254.963
+  },
+  "models.cure.train_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "month ends September 2023 to June 2025"
+  },
+  "models.cure.validation.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.7771939089
+  },
+  "models.cure.validation.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.5909346459
+  },
+  "models.cure.validation.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.1729527272
+  },
+  "models.cure.validation.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.02011931422
+  },
+  "models.cure.validation.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.3213900281
+  },
+  "models.cure.validation.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 1489
+  },
+  "models.cure.validation.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.5543878177
+  },
+  "models.cure.validation.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 0.4329775435
+  },
+  "models.cure.validation.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": 4633
+  },
+  "models.cure.validation_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline installment, card and mortgage loans past due at a month end, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (cure)"
+   },
+   "value": "month ends July to September 2025"
+  }
+ }
+}

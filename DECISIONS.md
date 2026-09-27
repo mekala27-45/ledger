@@ -425,3 +425,33 @@ used as a score with perfect knowledge of the year ahead, reach under 0.6: most 
 here is chance. A fixed floor above the ceiling can only fail, whatever the model does,
 so the gate now asks for half of the separation the ceiling reaches. The change was
 made after the first fit failed the old gate, and it is recorded here for that reason.
+
+## 2026-09-27: Challenge (cure): the bucket already tells a collector most of this
+
+**Raised:** A loan thirty days past due cures far more often than one ninety days past
+due. A model that only learned the bucket would beat the base rate comfortably and add
+nothing a collections supervisor does not already do by working the thirty day list
+first.
+
+**Response:** The base rate is the wrong benchmark for this model. The benchmark is the
+rule in use: each bucket's cure rate from the training months, applied as a score.
+
+**Changed:** The bucket rule is a benchmark in the report, and a critical gate requires
+the model's test AUROC to beat the rule's by two hundredths. Cure rates by bucket are
+published beside the model's so the rule's strength is visible.
+
+## 2026-09-27: Challenge (cure): the same delinquent loan sits on both sides of the split
+
+**Raised:** A loan that is past due in June and July 2025 appears in the last training
+month and the first validation month, with nearly the same features and the same
+outcome. Early stopping and the choice between the two candidates were being made on
+loans the fit had already seen.
+
+**Response:** The attrition model memorised customers for the same reason. Month ends
+are not independent draws when the unit is a loan that stays delinquent for months.
+
+**Changed:** One loan in five is held out of the fit by a hash of its identifier, and
+early stopping and the choice of champion use only held out loans in the validation
+months. The test months begin three months after validation ends, so every outcome used
+to fit or choose the model was known before the first test month end, and a check in
+the trainer refuses to run otherwise.
