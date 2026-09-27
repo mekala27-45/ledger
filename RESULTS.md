@@ -379,6 +379,43 @@ The desk's rules, on the labelled test months:
 | Three or more purchases on this card within 10 minutes | 272 | 12.1% | 1.2% |
 | Merchant more than 220 km from this card's previous merchant within the hour | 521 | 1.7% | 0.3% |
 
+## Financial crime
+
+The four rules fired 649 alerts, 7.9 per hundred thousand ledger entries, and found 362 of 422 complete planted episodes. Structuring is where the work is: 41.5% of its alerts are real, because cash intensive businesses deposit just under the threshold for honest reasons. The other three rules fired no false alerts on this generator, which a real program should not expect.
+
+| Rule | Alerts | Precision | Complete episodes | Found | Recall | Posted in part | Alerts per 100k entries |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Structuring | 376 | 41.5% | 204 | 156 | 76.5% | 0 | 4.57 |
+| Rapid movement | 100 | 100.0% | 100 | 100 | 100.0% | 0 | 1.22 |
+| Round tripping | 90 | 100.0% | 24 | 24 | 100.0% | 19 | 1.09 |
+| Mule fan in | 83 | 100.0% | 94 | 82 | 87.2% | 0 | 1.01 |
+
+Source: generated, Harborline deposit accounts and their entries, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
+
+The 43,318 accounts that pay other customers fall into 9,263 separate groups, mostly small circles of friends and family, and Louvain finds no finer structure inside any of them, so each group is one community. 12 of the 15 planted rings sit whole inside one community, and the round tripping rule fired on members of 10 of them, every ring with a trip that posted in full. Mule accounts show as stars: many outside senders, one wire out.
+
+| Community | Accounts | Alerts | Share alerted | Planted accounts | Rules fired | Money inside |
+|---:|---:|---:|---:|---:|---|---:|
+| 0 | 25 | 15 | 20.0% | 5 | round_tripping | $730,800 |
+| 11 | 14 | 12 | 28.6% | 4 | round_tripping | $493,756 |
+| 10 | 15 | 4 | 26.7% | 4 | round_tripping | $269,814 |
+| 3 | 20 | 8 | 20.0% | 4 | round_tripping | $431,068 |
+| 2 | 22 | 8 | 18.2% | 4 | round_tripping | $272,630 |
+| 1 | 23 | 16 | 17.4% | 4 | round_tripping | $613,443 |
+| 13 | 11 | 9 | 27.3% | 3 | round_tripping | $300,847 |
+| 9 | 17 | 6 | 17.6% | 3 | round_tripping | $257,653 |
+
+The triage model, `aml_triage`, on the test months:
+
+| Model | AUROC | Gini | Brier | ECE |
+|---|---:|---:|---:|---:|
+| This model | 1.000 | 1.000 | 0.0071 | 0.0155 |
+| Base rate | 0.500 | 0.000 | 0.2601 | 0.1489 |
+| The rules' own order | 0.788 | 0.576 | 0.1576 | 0.1276 |
+| This model without cash history and branches | 0.997 | 0.994 | 0.0362 | 0.0751 |
+
+Source: generated, Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
+
 ## Controls
 
 786 of 792 account months tie to the cent. The one break is savings deposits, account 2010, first appearing in 2026-03 at $4,217.36 and carried unchanged into every later month: one break, located, not 6. Every posting traces to a sub ledger transaction.

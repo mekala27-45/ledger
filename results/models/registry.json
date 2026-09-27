@@ -1,4 +1,35 @@
 {
+ "aml_triage": {
+  "auroc_test": 1.0,
+  "conclusion": "approved",
+  "conditions": [],
+  "function": "f05",
+  "last_validated": "2026-08-31",
+  "model_id": "aml_triage",
+  "monitoring": [
+   [
+    "Precision of the queue's first quarter against investigator dispositions",
+    "below the rules' own order for two months",
+    "Refit on dispositions"
+   ],
+   [
+    "Score PSI, monthly against development",
+    "above 0.25",
+    "Revalidate"
+   ],
+   [
+    "Alert mix by rule",
+    "any rule's share moves by half",
+    "Review the rule thresholds before the model"
+   ]
+  ],
+  "owner": "Head of analytics",
+  "purpose": "Rank the transaction monitoring rules' alerts so an investigator opens the likeliest real typology first",
+  "role": "sole",
+  "status": "in use",
+  "tier": 2,
+  "title": "Alert triage for transaction monitoring"
+ },
  "fraud_card": {
   "auroc_test": 0.9996245673209968,
   "conclusion": "approved",

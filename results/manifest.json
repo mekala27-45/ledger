@@ -133,6 +133,42 @@
    },
    "title": "Precision and recall across thresholds, test months"
   },
+  "f05.fig_network": {
+   "callout": "The 43,318 accounts that pay other customers fall into 9,263 separate groups, mostly small circles of friends and family, and Louvain finds no finer structure inside any of them, so each group is one community. 12 of the 15 planted rings sit whole inside one community, and the round tripping rule fired on members of 10 of them, every ring with a trip that posted in full. Mule accounts show as stars: many outside senders, one wire out.",
+   "data": "f05/network.json",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "title": "The investigator's view: alerted communities in the transfer network"
+  },
+  "f05.fig_scorecard": {
+   "callout": "The four rules fired 649 alerts, 7.9 per hundred thousand ledger entries, and found 362 of 422 complete planted episodes. Structuring is where the work is: 41.5% of its alerts are real, because cash intensive businesses deposit just under the threshold for honest reasons. The other three rules fired no false alerts on this generator, which a real program should not expect.",
+   "data": "f05/rule_scorecard.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "title": "What each rule finds, against the planted truth"
+  },
+  "f05.fig_volume": {
+   "callout": "About 18.0 alerts a month, 32 in the busiest, 2024-04. That is the queue an investigator team is staffed for, and the triage order decides which of them is opened first.",
+   "data": "f05/alerts_monthly.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "title": "Alerts by month and rule"
+  },
   "f10.fig_fraud_monitoring": {
    "callout": "Score stability is measurable the day a transaction is scored; discrimination is not. For the first 8 weeks of the test months no test transaction had cleared the 60 day chargeback window, so the model's AUROC on the new months could not be computed at all. That gap is the monitoring lag, and the plan says so rather than filling it.",
    "data": "f10/fraud_weekly.parquet",
@@ -1299,6 +1335,178 @@
     ]
    ]
   },
+  "f05.communities_table": {
+   "columns": [
+    "Community",
+    "Accounts",
+    "Alerts",
+    "Share alerted",
+    "Planted accounts",
+    "Rules fired",
+    "Money inside"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "int",
+    "pct1",
+    "int",
+    "text",
+    "usd0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "rows": [
+    [
+     0,
+     25,
+     15,
+     0.2,
+     5,
+     "round_tripping",
+     730799.74
+    ],
+    [
+     11,
+     14,
+     12,
+     0.2857142857,
+     4,
+     "round_tripping",
+     493755.7
+    ],
+    [
+     10,
+     15,
+     4,
+     0.2666666667,
+     4,
+     "round_tripping",
+     269814.21
+    ],
+    [
+     3,
+     20,
+     8,
+     0.2,
+     4,
+     "round_tripping",
+     431067.73
+    ],
+    [
+     2,
+     22,
+     8,
+     0.1818181818,
+     4,
+     "round_tripping",
+     272629.5
+    ],
+    [
+     1,
+     23,
+     16,
+     0.1739130435,
+     4,
+     "round_tripping",
+     613443.31
+    ],
+    [
+     13,
+     11,
+     9,
+     0.2727272727,
+     3,
+     "round_tripping",
+     300846.53
+    ],
+    [
+     9,
+     17,
+     6,
+     0.1764705882,
+     3,
+     "round_tripping",
+     257652.99
+    ]
+   ]
+  },
+  "f05.scorecard": {
+   "columns": [
+    "Rule",
+    "Alerts",
+    "Precision",
+    "Complete episodes",
+    "Found",
+    "Recall",
+    "Posted in part",
+    "Alerts per 100k entries"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1",
+    "int",
+    "int",
+    "pct1",
+    "int",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "rows": [
+    [
+     "Structuring",
+     376,
+     0.414893617,
+     204,
+     156,
+     0.7647058824,
+     0,
+     4.569022682
+    ],
+    [
+     "Rapid movement",
+     100,
+     1.0,
+     100,
+     100,
+     1.0,
+     0,
+     1.215165607
+    ],
+    [
+     "Round tripping",
+     90,
+     1.0,
+     24,
+     24,
+     1.0,
+     19,
+     1.093649046
+    ],
+    [
+     "Mule fan in",
+     83,
+     1.0,
+     94,
+     82,
+     0.8723404255,
+     0,
+     1.008587454
+    ]
+   ]
+  },
   "f10.challenges": {
    "columns": [
     "Date",
@@ -1753,6 +1961,434 @@
      4691778.437,
      9450845.5,
      -4759067.063
+    ]
+   ]
+  },
+  "models.aml_triage.benchmark": {
+   "columns": [
+    "Model",
+    "AUROC",
+    "Gini",
+    "Brier",
+    "ECE"
+   ],
+   "formats": [
+    "text",
+    "float3",
+    "float3",
+    "float4",
+    "float4"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "rows": [
+    [
+     "This model",
+     1.0,
+     1.0,
+     0.007124542001,
+     0.01545495366
+    ],
+    [
+     "Base rate",
+     0.5,
+     0.0,
+     0.2600915646,
+     0.1488870045
+    ],
+    [
+     "The rules' own order",
+     0.7881355932,
+     0.5762711864,
+     0.1576177641,
+     0.1275831087
+    ],
+    [
+     "This model without cash history and branches",
+     0.9967544176,
+     0.9935088352,
+     0.03616992478,
+     0.07513686582
+    ]
+   ]
+  },
+  "models.aml_triage.challenges": {
+   "columns": [
+    "Date",
+    "Challenge",
+    "Response",
+    "What changed"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "rows": [
+    [
+     "2026-09-27",
+     "On months it never saw, the triage model put every alert that matched an injected typology ahead of every legitimate lookalike: an AUROC of one.",
+     "The generator writes its lookalikes and its criminals from separate recipes. A cash intensive business deposits cash every week at one branch; a structurer is new to cash and spreads deposits across several branches. Removing the cash history and the branch count still leaves the alert size, its entry count and the account's earlier alerts, and the separation survives, so it is not one leaked column. It is two synthetic populations that do not overlap. A real program's labels are investigator dispositions, which are noisier and arrive late.",
+     "The report publishes the ranking without the two strongest features and the rules' own order as benchmarks, states that the measured quality is a property of the generator, and makes investigator dispositions the monitoring measure the model would be refit on before any real use."
+    ],
+    [
+     "2026-09-27",
+     "The mule, rapid movement and round tripping rules fired no false alerts on this data, so a model that only learned which rule fired would already rank most of the queue correctly.",
+     "Pooled over all four rules, AUROC mostly rewards putting those three rules' alerts first, which each rule's own precision on the development months already does. The only alerts where order is a real question are structuring alerts, where the rule's precision is under half.",
+     "A gate now measures the model within structuring alerts alone, where the rules' order carries no information, and the benchmark table includes ranking by each rule's development precision."
+    ]
+   ]
+  },
+  "models.aml_triage.coefficients": {
+   "columns": [
+    "feature",
+    "coefficient"
+   ],
+   "formats": [
+    "text",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "rows": [
+    [
+     "prior_cash_90d",
+     -3.324274659
+    ],
+    [
+     "branches",
+     1.857646809
+    ],
+    [
+     "rule_structuring",
+     -1.561960718
+    ],
+    [
+     "prior_alerts",
+     0.9426335524
+    ],
+    [
+     "rule_round_tripping",
+     0.8160037218
+    ],
+    [
+     "rule_rapid_movement",
+     0.805077168
+    ],
+    [
+     "counterparties",
+     0.5954199906
+    ],
+    [
+     "rule_mule",
+     0.5711157521
+    ],
+    [
+     "log_amount",
+     0.5509387471
+    ],
+    [
+     "entries",
+     0.3998696565
+    ],
+    [
+     "log_tenure_days",
+     -0.2323274458
+    ],
+    [
+     "log_prior_inflow_90d",
+     0.1647652405
+    ],
+    [
+     "amount_vs_monthly_inflow",
+     0.02741606543
+    ]
+   ]
+  },
+  "models.aml_triage.conditions": {
+   "columns": [
+    "Condition"
+   ],
+   "formats": [
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "rows": [
+    [
+     "None"
+    ]
+   ]
+  },
+  "models.aml_triage.contract": {
+   "columns": [
+    "Line",
+    "What this model does"
+   ],
+   "formats": [
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "rows": [
+    [
+     "trained",
+     "On alerts that closed before September 2025, labelled by the generator's injected truth."
+    ],
+    [
+     "timed",
+     "History features stop at the alert window's start; a leakage test recomputes 200 sampled alerts from raw entries."
+    ],
+    [
+     "calibrated",
+     "Reliability on the test months is published; the queue uses the score as a rank."
+    ],
+    [
+     "useful",
+     "Beats the base rate and the order the rules alone imply, including within structuring alerts, where the rules cannot rank at all."
+    ],
+    [
+     "fair",
+     "No demographic enters; the features are the alert's facts and the account's own history."
+    ],
+    [
+     "gated",
+     "Every gate in this report, including an ablation without the two features the generator made most different."
+    ],
+    [
+     "served",
+     "Scored in the pipeline; the ranked queue is published with the crime page."
+    ],
+    [
+     "integrated",
+     "Sorts the case queue: an investigator opens alerts in the model's order within each month."
+    ],
+    [
+     "monitored",
+     "Queue capture against investigator dispositions once they exist; monthly score PSI; alert mix by rule."
+    ],
+    [
+     "documented",
+     "This validation report and docs/crime.md."
+    ],
+    [
+     "bounded",
+     "Orders alerts; never closes one, never files anything, and never replaces an investigator's disposition."
+    ],
+    [
+     "validated",
+     "This report, rendered from the manifest before the queue uses the order."
+    ],
+    [
+     "explainable",
+     "Each alert shows the rule's statement in plain words and the features that moved its score most."
+    ]
+   ]
+  },
+  "models.aml_triage.gates": {
+   "columns": [
+    "Gate",
+    "Threshold",
+    "Measured",
+    "Result"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "float4",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "rows": [
+    [
+     "Test AUROC at or above the floor",
+     "at least 0.8",
+     1.0,
+     "pass"
+    ],
+    [
+     "Test average precision above the rules' own order",
+     "at least 0",
+     0.187879757,
+     "pass"
+    ],
+    [
+     "Test AUROC within structuring alerts, where the rules' order says nothing",
+     "at least 0.8",
+     1.0,
+     "pass"
+    ],
+    [
+     "Point in time recompute of sampled alerts",
+     "at least 200",
+     200.0,
+     "pass"
+    ],
+    [
+     "Expected calibration error on test",
+     "at most 0.1",
+     0.01545495366,
+     "pass"
+    ],
+    [
+     "Test AUROC without the cash history and branch count features",
+     "at least 0.75",
+     0.9967544176,
+     "pass"
+    ]
+   ]
+  },
+  "models.aml_triage.monitoring": {
+   "columns": [
+    "Measure",
+    "Trigger",
+    "Action"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "rows": [
+    [
+     "Precision of the queue's first quarter against investigator dispositions",
+     "below the rules' own order for two months",
+     "Refit on dispositions"
+    ],
+    [
+     "Score PSI, monthly against development",
+     "above 0.25",
+     "Revalidate"
+    ],
+    [
+     "Alert mix by rule",
+     "any rule's share moves by half",
+     "Review the rule thresholds before the model"
+    ]
+   ]
+  },
+  "models.aml_triage.reliability": {
+   "columns": [
+    "Bin",
+    "Accounts",
+    "Predicted",
+    "Observed"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "pct2",
+    "pct2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "rows": [
+    [
+     1,
+     11,
+     0.0003541673886,
+     0.0
+    ],
+    [
+     2,
+     11,
+     0.002693803034,
+     0.0
+    ],
+    [
+     3,
+     11,
+     0.009140593551,
+     0.0
+    ],
+    [
+     4,
+     11,
+     0.03669153276,
+     0.0
+    ],
+    [
+     5,
+     11,
+     0.8185926764,
+     0.7272727273
+    ],
+    [
+     6,
+     11,
+     0.9939386432,
+     1.0
+    ],
+    [
+     7,
+     10,
+     0.9982857325,
+     1.0
+    ],
+    [
+     8,
+     10,
+     0.9992245748,
+     1.0
+    ],
+    [
+     9,
+     10,
+     0.9996219265,
+     1.0
+    ],
+    [
+     10,
+     10,
+     0.9999328003,
+     1.0
     ]
    ]
   },
@@ -5713,6 +6349,336 @@
    },
    "value": 200569
   },
+  "f05.accounts_in_network": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 43318
+  },
+  "f05.alerted_communities": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 352
+  },
+  "f05.alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 649
+  },
+  "f05.alerts_per_month": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 18.02777778
+  },
+  "f05.busiest_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": "2024-04"
+  },
+  "f05.busiest_month_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 32
+  },
+  "f05.communities": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 9263
+  },
+  "f05.components": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 9263
+  },
+  "f05.entries": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 8229331
+  },
+  "f05.episodes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 422
+  },
+  "f05.episodes_found": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 362
+  },
+  "f05.links": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 50066
+  },
+  "f05.partial_episodes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 19
+  },
+  "f05.per_100k": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 7.88642479
+  },
+  "f05.precision": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 0.6610169492
+  },
+  "f05.queue_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 30
+  },
+  "f05.queue_first_false": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 16
+  },
+  "f05.queue_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": "2026-06-28 to 2026-08-27"
+  },
+  "f05.queue_true": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 15
+  },
+  "f05.recall": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 0.8578199052
+  },
+  "f05.rings": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 15
+  },
+  "f05.rings_detected": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 10
+  },
+  "f05.rings_whole": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 12
+  },
+  "f05.rings_with_complete_trip": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 10
+  },
+  "f05.structuring_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 376
+  },
+  "f05.structuring_precision": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 0.414893617
+  },
+  "f05.structuring_recall": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 0.7647058824
+  },
+  "f05.triage_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 1.0
+  },
+  "f05.true_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 429
+  },
+  "f05.view_nodes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 298
+  },
   "f10.approved": {
    "fmt": "int",
    "provenance": {
@@ -6196,6 +7162,655 @@
     "source": "pd_scorecard scores, loan outcomes, recoveries"
    },
    "value": 0.0
+  },
+  "models.aml_triage.ablation_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.9967544176
+  },
+  "models.aml_triage.alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 649
+  },
+  "models.aml_triage.conclusion": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "approved"
+  },
+  "models.aml_triage.conditions_count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0
+  },
+  "models.aml_triage.dev_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 445
+  },
+  "models.aml_triage.development.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.9994502222
+  },
+  "models.aml_triage.development.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.9997327683
+  },
+  "models.aml_triage.development.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.01019598395
+  },
+  "models.aml_triage.development.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.0115973362
+  },
+  "models.aml_triage.development.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.6719101124
+  },
+  "models.aml_triage.development.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 299
+  },
+  "models.aml_triage.development.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.9989004444
+  },
+  "models.aml_triage.development.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.9829568883
+  },
+  "models.aml_triage.development.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 445
+  },
+  "models.aml_triage.feature_count": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "13"
+  },
+  "models.aml_triage.features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "log_amount, entries, counterparties, branches, log_tenure_days, prior_cash_90d, log_prior_inflow_90d, amount_vs_monthly_inflow, prior_alerts, rule_mule, rule_rapid_movement, rule_round_tripping, rule_structuring"
+  },
+  "models.aml_triage.last_validated": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "2026-08-31"
+  },
+  "models.aml_triage.leakage_rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 200
+  },
+  "models.aml_triage.method": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "Logistic regression on the alert's facts and the account's prior ninety days, standardised"
+  },
+  "models.aml_triage.outcome": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "The alert overlaps an injected typology episode of the same kind on the same account"
+  },
+  "models.aml_triage.owner": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "Head of analytics"
+  },
+  "models.aml_triage.prediction_time": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "When the alert fires; history features use only the account's entries before the alert window opened"
+  },
+  "models.aml_triage.purpose": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "Rank the transaction monitoring rules' alerts so an investigator opens the likeliest real typology first"
+  },
+  "models.aml_triage.role": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "sole"
+  },
+  "models.aml_triage.rule_order_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.7881355932
+  },
+  "models.aml_triage.status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "in use"
+  },
+  "models.aml_triage.structuring_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.structuring_rule_ap": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.3472222222
+  },
+  "models.aml_triage.structuring_test": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 72
+  },
+  "models.aml_triage.structuring_test_true": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 25
+  },
+  "models.aml_triage.test.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.test.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.test.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.007124542001
+  },
+  "models.aml_triage.test.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.01545495366
+  },
+  "models.aml_triage.test.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.5566037736
+  },
+  "models.aml_triage.test.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 59
+  },
+  "models.aml_triage.test.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.test.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.test.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 106
+  },
+  "models.aml_triage.test_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 106
+  },
+  "models.aml_triage.test_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "March to August 2026"
+  },
+  "models.aml_triage.test_true": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 59
+  },
+  "models.aml_triage.tier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "2"
+  },
+  "models.aml_triage.tier_reason": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "Informs a decision a person makes; moderate materiality"
+  },
+  "models.aml_triage.title": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "Alert triage for transaction monitoring"
+  },
+  "models.aml_triage.top_features": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "prior_cash_90d, branches, rule_structuring, prior_alerts"
+  },
+  "models.aml_triage.train_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "September 2023 to August 2025"
+  },
+  "models.aml_triage.true_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 429
+  },
+  "models.aml_triage.validation.auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.validation.average_precision": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.validation.brier": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.002428545116
+  },
+  "models.aml_triage.validation.ece": {
+   "fmt": "float4",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.01064520066
+  },
+  "models.aml_triage.validation.event_rate": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 0.7244897959
+  },
+  "models.aml_triage.validation.events": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 71
+  },
+  "models.aml_triage.validation.gini": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.validation.ks": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 1.0
+  },
+  "models.aml_triage.validation.n": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 98
+  },
+  "models.aml_triage.validation_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": 98
+  },
+  "models.aml_triage.validation_period": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Every alert the four rules fired on Harborline deposit accounts, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/models (aml_triage)"
+   },
+   "value": "September 2025 to February 2026"
   },
   "models.fraud_card.accuracy_flagged": {
    "fmt": "int",

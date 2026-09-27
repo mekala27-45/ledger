@@ -1,0 +1,548 @@
+{
+ "as_of": "2026-08-31",
+ "figures": {
+  "f05.fig_network": {
+   "callout": "The 43,318 accounts that pay other customers fall into 9,263 separate groups, mostly small circles of friends and family, and Louvain finds no finer structure inside any of them, so each group is one community. 12 of the 15 planted rings sit whole inside one community, and the round tripping rule fired on members of 10 of them, every ring with a trip that posted in full. Mule accounts show as stars: many outside senders, one wire out.",
+   "data": "f05/network.json",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "title": "The investigator's view: alerted communities in the transfer network"
+  },
+  "f05.fig_scorecard": {
+   "callout": "The four rules fired 649 alerts, 7.9 per hundred thousand ledger entries, and found 362 of 422 complete planted episodes. Structuring is where the work is: 41.5% of its alerts are real, because cash intensive businesses deposit just under the threshold for honest reasons. The other three rules fired no false alerts on this generator, which a real program should not expect.",
+   "data": "f05/rule_scorecard.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "title": "What each rule finds, against the planted truth"
+  },
+  "f05.fig_volume": {
+   "callout": "About 18.0 alerts a month, 32 in the busiest, 2024-04. That is the queue an investigator team is staffed for, and the triage order decides which of them is opened first.",
+   "data": "f05/alerts_monthly.parquet",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "title": "Alerts by month and rule"
+  }
+ },
+ "seed": 20260831,
+ "tables": {
+  "f05.communities_table": {
+   "columns": [
+    "Community",
+    "Accounts",
+    "Alerts",
+    "Share alerted",
+    "Planted accounts",
+    "Rules fired",
+    "Money inside"
+   ],
+   "formats": [
+    "int",
+    "int",
+    "int",
+    "pct1",
+    "int",
+    "text",
+    "usd0"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "rows": [
+    [
+     0,
+     25,
+     15,
+     0.2,
+     5,
+     "round_tripping",
+     730799.74
+    ],
+    [
+     11,
+     14,
+     12,
+     0.2857142857,
+     4,
+     "round_tripping",
+     493755.7
+    ],
+    [
+     10,
+     15,
+     4,
+     0.2666666667,
+     4,
+     "round_tripping",
+     269814.21
+    ],
+    [
+     3,
+     20,
+     8,
+     0.2,
+     4,
+     "round_tripping",
+     431067.73
+    ],
+    [
+     2,
+     22,
+     8,
+     0.1818181818,
+     4,
+     "round_tripping",
+     272629.5
+    ],
+    [
+     1,
+     23,
+     16,
+     0.1739130435,
+     4,
+     "round_tripping",
+     613443.31
+    ],
+    [
+     13,
+     11,
+     9,
+     0.2727272727,
+     3,
+     "round_tripping",
+     300846.53
+    ],
+    [
+     9,
+     17,
+     6,
+     0.1764705882,
+     3,
+     "round_tripping",
+     257652.99
+    ]
+   ]
+  },
+  "f05.scorecard": {
+   "columns": [
+    "Rule",
+    "Alerts",
+    "Precision",
+    "Complete episodes",
+    "Found",
+    "Recall",
+    "Posted in part",
+    "Alerts per 100k entries"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "pct1",
+    "int",
+    "int",
+    "pct1",
+    "int",
+    "float2"
+   ],
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "rows": [
+    [
+     "Structuring",
+     376,
+     0.414893617,
+     204,
+     156,
+     0.7647058824,
+     0,
+     4.569022682
+    ],
+    [
+     "Rapid movement",
+     100,
+     1.0,
+     100,
+     100,
+     1.0,
+     0,
+     1.215165607
+    ],
+    [
+     "Round tripping",
+     90,
+     1.0,
+     24,
+     24,
+     1.0,
+     19,
+     1.093649046
+    ],
+    [
+     "Mule fan in",
+     83,
+     1.0,
+     94,
+     82,
+     0.8723404255,
+     0,
+     1.008587454
+    ]
+   ]
+  }
+ },
+ "values": {
+  "f05.accounts_in_network": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 43318
+  },
+  "f05.alerted_communities": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 352
+  },
+  "f05.alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 649
+  },
+  "f05.alerts_per_month": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 18.02777778
+  },
+  "f05.busiest_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": "2024-04"
+  },
+  "f05.busiest_month_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 32
+  },
+  "f05.communities": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 9263
+  },
+  "f05.components": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 9263
+  },
+  "f05.entries": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 8229331
+  },
+  "f05.episodes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 422
+  },
+  "f05.episodes_found": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 362
+  },
+  "f05.links": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 50066
+  },
+  "f05.partial_episodes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 19
+  },
+  "f05.per_100k": {
+   "fmt": "float1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 7.88642479
+  },
+  "f05.precision": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 0.6610169492
+  },
+  "f05.queue_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 30
+  },
+  "f05.queue_first_false": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 16
+  },
+  "f05.queue_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": "2026-06-28 to 2026-08-27"
+  },
+  "f05.queue_true": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 15
+  },
+  "f05.recall": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 0.8578199052
+  },
+  "f05.rings": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 15
+  },
+  "f05.rings_detected": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 10
+  },
+  "f05.rings_whole": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 12
+  },
+  "f05.rings_with_complete_trip": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 10
+  },
+  "f05.structuring_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 376
+  },
+  "f05.structuring_precision": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 0.414893617
+  },
+  "f05.structuring_recall": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 0.7647058824
+  },
+  "f05.triage_auroc": {
+   "fmt": "float3",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 1.0
+  },
+  "f05.true_alerts": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "packages/crime"
+   },
+   "value": 429
+  },
+  "f05.view_nodes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-08-31",
+    "backend": "generated",
+    "population": "Harborline deposit accounts and their entries, September 2023 to August 2026",
+    "seed": 20260831,
+    "source": "Louvain communities over transfers between customers"
+   },
+   "value": 298
+  }
+ }
+}

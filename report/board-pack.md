@@ -109,6 +109,25 @@ decisions were still unlabelled, and precision over the labelled ones was
 declines as mistakes would have shown 27.0%. We never
 publish that number.
 
+## Financial crime
+
+Our four monitoring rules fired 649 alerts over the three years, about
+18.0 a month, and found 362 of the
+422 complete laundering episodes planted in our data to test them. Structuring
+is where our investigators' time goes: legitimate cash businesses deposit just under the
+reporting threshold, and only 41.5% of structuring alerts are
+real. The queue is ordered by a triage model so the likeliest cases are opened first; it never
+closes an alert on its own. No suspicious activity report is filed from this data.
+
+| Rule | Alerts | Precision | Complete episodes | Found | Recall | Posted in part | Alerts per 100k entries |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Structuring | 376 | 41.5% | 204 | 156 | 76.5% | 0 | 4.57 |
+| Rapid movement | 100 | 100.0% | 100 | 100 | 100.0% | 0 | 1.22 |
+| Round tripping | 90 | 100.0% | 24 | 24 | 100.0% | 19 | 1.09 |
+| Mule fan in | 83 | 100.0% | 94 | 82 | 87.2% | 0 | 1.01 |
+
+Source: generated, Harborline deposit accounts and their entries, September 2023 to August 2026, seed 20260831, as of 2026-08-31.
+
 ## Fair lending
 
 Our mortgage applications are generated data with no real HMDA filing behind them, so the team
@@ -214,6 +233,9 @@ with where its data lives:
 | Expected cost of fraud by decline threshold, test months | `results/f04/cost_curve.parquet` | replayed, fraud_card scored stream |
 | What the desk could know, day by day | `results/f04/label_lag.parquet` | replayed, fraud_card scored stream |
 | Precision and recall across thresholds, test months | `results/f04/pr_curve.parquet` | replayed, fraud_card scored stream |
+| The investigator's view: alerted communities in the transfer network | `results/f05/network.json` | generated, Louvain communities over transfers between customers |
+| What each rule finds, against the planted truth | `results/f05/rule_scorecard.parquet` | generated, packages/crime |
+| Alerts by month and rule | `results/f05/alerts_monthly.parquet` | generated, packages/crime |
 | The fraud model's monitoring, week by week | `results/f10/fraud_weekly.parquet` | replayed, fraud_card |
 | Score stability by application quarter, against the development quarters | `results/f10/pd_psi_by_quarter.parquet` | generated, pd_scorecard |
 | Reported balance against the sum of postings, by account and month | `results/f11/reconciliation.parquet` | generated, f11 reconciliation |

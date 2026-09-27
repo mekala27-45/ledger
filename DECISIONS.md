@@ -290,3 +290,47 @@ down to 1.76. The first number is a ratio of rates and the second a ratio of odd
 and with denial rates this high the two scales differ: the unadjusted odds ratio is
 2.63. The callout, the board pack and the chart now compare odds ratio with odds
 ratio, and the unadjusted rate ratio is kept only in the table where it is labelled.
+
+## 2026-09-27: An injected episode that never posted is not a missed one
+
+The first typology scorecard found ten of forty three round trips. The generator's
+truth table records every episode it planned, but its posting simulation drops entries
+that would land after an account closed or in the last days of a month, so nineteen
+round trips posted with a hop missing and fifty two episodes of other kinds posted
+nothing at all. A ring with a missing hop is not a round trip, and no monitoring system
+could find money that never moved. Recall is now measured on episodes whose every entry
+posted, the partial ones are counted beside it, and the round tripping rule finds every
+complete trip. Counting one alert per ring rather than per trip had hidden the rest.
+
+## 2026-09-27: Challenge (aml_triage): it ranks every true alert above every false one
+
+**Raised:** On months it never saw, the triage model put every alert that matched an
+injected typology ahead of every legitimate lookalike: an AUROC of one.
+
+**Response:** The generator writes its lookalikes and its criminals from separate
+recipes. A cash intensive business deposits cash every week at one branch; a structurer
+is new to cash and spreads deposits across several branches. Removing the cash history
+and the branch count still leaves the alert size, its entry count and the account's
+earlier alerts, and the separation survives, so it is not one leaked column. It is two
+synthetic populations that do not overlap. A real program's labels are investigator
+dispositions, which are noisier and arrive late.
+
+**Changed:** The report publishes the ranking without the two strongest features and
+the rules' own order as benchmarks, states that the measured quality is a property of
+the generator, and makes investigator dispositions the monitoring measure the model
+would be refit on before any real use.
+
+## 2026-09-27: Challenge (aml_triage): three rules are never wrong here, so any order looks good
+
+**Raised:** The mule, rapid movement and round tripping rules fired no false alerts on
+this data, so a model that only learned which rule fired would already rank most of
+the queue correctly.
+
+**Response:** Pooled over all four rules, AUROC mostly rewards putting those three
+rules' alerts first, which each rule's own precision on the development months already
+does. The only alerts where order is a real question are structuring alerts, where the
+rule's precision is under half.
+
+**Changed:** A gate now measures the model within structuring alerts alone, where the
+rules' order carries no information, and the benchmark table includes ranking by each
+rule's development precision.

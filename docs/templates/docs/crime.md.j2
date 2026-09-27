@@ -1,0 +1,45 @@
+# Financial crime: the rules, the truth they are graded against, and the queue
+
+{{ statements() }}
+
+The financial crime function, f05, and the `/crime` page.
+
+## The typologies and their lookalikes
+
+The generator plants four typologies in the deposit sub ledger with known membership, and writes legitimate customers who look like them on the rule's own terms:
+
+- **Structuring**: cash deposits just under the reporting threshold of {{ v('policy.reporting_threshold') }}, over days and often across branches. Lookalike: cash intensive businesses that deposit near the threshold every week.
+- **Rapid movement**: a large wire in and nearly all of it out again within hours. Lookalike: large wires for home purchases.
+- **Mule**: many small payments in from unrelated senders, then one transfer out. Lookalike: people who split rent and bills with several friends.
+- **Round tripping**: money that goes around a ring of accounts and comes home at about the same size.
+
+## The rules
+
+One rule per typology, stated in `rules/aml_typologies.yaml` in the words an investigator reads on the alert, with thresholds in `config/ledger.yaml`:
+
+- Structuring: at least three cash deposits between {{ v('policy.structuring_floor') }} and the reporting threshold within {{ v('policy.structuring_window_days') }} days, together above it.
+- Rapid movement: a wire in of at least the reporting threshold, with most of it gone within {{ v('policy.rapid_movement_hours') }} hours.
+- Mule: payments in from at least {{ v('policy.mule_fan_in') }} different senders within {{ v('policy.mule_window_days') }} days, then most of the money out in one transfer.
+- Round tripping: a cycle of at most {{ v('policy.cycle_max_length') }} accounts within {{ v('policy.cycle_window_days') }} days, each hop within a tenth of the others' size.
+
+## Graded against the truth, and only the truth that posted
+
+Every alert is matched to the planted episodes on the same account, of the same kind, overlapping in time. Recall counts only episodes whose every entry reached the ledger: the generator drops entries that would land after an account closed or in the last days of a month, and a round trip with a missing hop is not a round trip. Precision counts every alert.
+
+{{ table('f05.scorecard') }}
+
+{{ label('f05.scorecard') }}
+
+## The queue
+
+The alerts are worked in the order `aml_triage` sets; its validation report is at `report/validation/aml_triage.md`. The model orders the queue and does nothing else: every alert stays in it until an investigator closes it.
+
+## The network
+
+Accounts are nodes and transfers between different customers are edges, weighted by the money that moved. {{ figure('f05.fig_network').callout }}
+
+{{ table('f05.communities_table') }}
+
+## What is not here
+
+No suspicious activity report is filed, drafted or implied. Monitoring alerts are published as a ranked list; the API's case endpoints serve the fraud desk's alerts.

@@ -1,0 +1,75 @@
+{% set model = 'aml_triage' %}
+{% set m = 'models.aml_triage' %}
+{% set purpose %}
+The transaction monitoring rules fire alerts; investigators work them in the order the
+queue presents them. This model sets that order: the alert most likely to be a real
+typology comes first. It informs which alert a person opens, never whether an alert is
+closed or reported, so it is tier two.
+
+Out of scope: deciding a disposition, filing a suspicious activity report, and any alert
+source other than the four rules in `rules/aml_typologies.yaml`.
+{% endset %}
+{% set soundness %}
+Triage is a ranking problem over a small, imbalanced set, so the method is a logistic
+regression on standardised features whose coefficients an investigator can read: the
+alert's own size, entry count, counterparties and branches, which rule fired, the
+account's age, its cash deposits and inflow in the ninety days before the alert window
+opened, and how many alerts it had before. The benchmarks are the base rate and the
+order the rules alone imply, each rule ranked by its precision on the development months.
+{% endset %}
+{% set data %}
+Every alert the rules fired on {{ v('policy.bank_name') }}'s deposit accounts:
+{{ v(m ~ '.alerts') }} alerts, {{ v(m ~ '.true_alerts') }} of them overlapping an injected
+typology episode of the same kind on the same account. The label is the generator's truth,
+which a real program would not have; its labels would be investigator dispositions.
+
+Split by when the alert closed: development {{ v(m ~ '.train_period') }}
+({{ v(m ~ '.dev_alerts') }} alerts), validation {{ v(m ~ '.validation_period') }}
+({{ v(m ~ '.validation_alerts') }}), test {{ v(m ~ '.test_period') }}
+({{ v(m ~ '.test_alerts') }}, {{ v(m ~ '.test_true') }} true).
+
+A leakage test recomputed the history features of {{ v(m ~ '.leakage_rows') }} sampled alerts
+from raw ledger entries strictly before each alert window and matched every one. No
+demographic attribute or proxy is a feature.
+{% endset %}
+{% set development %}
+Development AUROC {{ v(m ~ '.development.auroc') }}, validation {{ v(m ~ '.validation.auroc') }}.
+The coefficients, standardised, largest first:
+
+{{ table(m ~ '.coefficients') }}
+{% endset %}
+{% set outcomes %}
+On the test months the model reaches an AUROC of {{ v(m ~ '.test.auroc') }} and an average
+precision of {{ v(m ~ '.test.average_precision') }}. Within the {{ v(m ~ '.structuring_test') }}
+structuring alerts, {{ v(m ~ '.structuring_test_true') }} of them true, where the rules alone
+cannot order anything, its AUROC is {{ v(m ~ '.structuring_auroc') }}.
+
+These are properties of the generator, not of the method: its legitimate lookalikes and its
+injected typologies do not overlap. Without the cash history and branch count the AUROC is
+{{ v(m ~ '.ablation_auroc') }}; the rules' own order reaches {{ v(m ~ '.rule_order_auroc') }}.
+{% endset %}
+{% set benchmarking %}
+Against the base rate, the rules' own order, and this model with its two strongest features
+removed, on the test months:
+{% endset %}
+{% set limitations %}
+- The labels are injected truth. An investigator's disposition is noisier, arrives weeks
+  later and is shaped by the queue order itself, which this data cannot show.
+- The legitimate lookalikes are written to look like the typologies on the rule's terms,
+  not on every feature, so the model's separation here overstates what it would do on a
+  real portfolio.
+- Four rules, four typologies. Anything the rules do not fire on never reaches the queue.
+{% endset %}
+{% set monitoring %}
+Monthly, against the queue as investigators work it:
+{% endset %}
+{% set challenge %}
+From `DECISIONS.md`:
+{% endset %}
+{% set conclusion %}
+The model orders the queue the way its purpose asks and passes every gate on months it
+never saw. Its measured quality is a property of the generator, whose lookalikes and
+typologies do not overlap, so the approval is for ordering this demonstration's queue;
+on a real portfolio it would be refit and re-measured on investigator dispositions first.
+{% endset %}
+{% include "validation/_report.md.j2" %}

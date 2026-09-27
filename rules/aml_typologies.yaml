@@ -1,0 +1,17 @@
+# The transaction monitoring rules, one per typology, in the words an investigator would
+# read on an alert. Thresholds live in config/ledger.yaml under aml, so the rules and the
+# generator's injected typologies meet at the same stated numbers.
+
+rules:
+  - id: structuring
+    typology: structuring
+    statement: "{count} cash deposits between ${floor} and ${threshold} within {days} days, ${total} in all"
+  - id: rapid_movement
+    typology: rapid_movement
+    statement: "${inbound} arrived by wire and ${outbound} left within {hours} hours"
+  - id: mule
+    typology: mule
+    statement: "Payments in from {senders} unrelated senders within {days} days, then ${outbound} out in one transfer"
+  - id: round_tripping
+    typology: round_tripping
+    statement: "${amount} moved around a ring of {length} accounts and came back within {days} days"

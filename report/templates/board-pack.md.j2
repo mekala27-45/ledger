@@ -79,6 +79,20 @@ decisions were still unlabelled, and precision over the labelled ones was
 declines as mistakes would have shown {{ v('models.fraud_card.naive_precision_as_of') }}. We never
 publish that number.
 
+## Financial crime
+
+Our four monitoring rules fired {{ v('f05.alerts') }} alerts over the three years, about
+{{ v('f05.alerts_per_month') }} a month, and found {{ v('f05.episodes_found') }} of the
+{{ v('f05.episodes') }} complete laundering episodes planted in our data to test them. Structuring
+is where our investigators' time goes: legitimate cash businesses deposit just under the
+reporting threshold, and only {{ v('f05.structuring_precision') }} of structuring alerts are
+real. The queue is ordered by a triage model so the likeliest cases are opened first; it never
+closes an alert on its own. No suspicious activity report is filed from this data.
+
+{{ table('f05.scorecard') }}
+
+{{ label('f05.scorecard') }}
+
 ## Fair lending
 
 Our mortgage applications are generated data with no real HMDA filing behind them, so the team

@@ -30,6 +30,7 @@ The bank is Harborline Bank, and it does not exist: its name was checked against
 | Known risk structure recovered | 8 of 8 generator parameters within tolerance | Before any credit number was trusted |
 | Against real peers | Net interest margin 5.60%, above 99% of 191 FDIC insured banks its size in its region | FDIC financial data, 2026Q2 |
 | Fair lending on real HMDA data | Black applicants' odds of denial 1.76 times white non Hispanic applicants' after adjustment (2.63 before) | 215,881 New Jersey applications, lender fixed effects, Benjamini and Hochberg across 8 comparisons |
+| Transaction monitoring | 362 of 422 planted laundering episodes found; 41.5% of structuring alerts real | Four rules at the reporting threshold, graded against the generator's truth |
 | Warehouse | 210 of 210 tests pass over 62 models | dbt on DuckDB |
 
 ## The fraud desk
@@ -50,6 +51,7 @@ The model's AUROC of 1.000 is a property of the Sparkov generator, whose fraud b
 | f02 | Consumer lending | Is the installment book performing as priced, and what will it lose? | Expected loss $8,409,265 | CECL, illustrated and labelled simplified | `pd_scorecard`, `pd_challenger` | [/lending](https://mekala27-45.github.io/ledger/lending/) |
 | f03 | Fair lending | Are some applicants denied more often than comparable applicants? | Adjusted odds ratio for Black applicants 1.76 | HMDA, ECOA and Regulation B | | [/fair-lending](https://mekala27-45.github.io/ledger/fair-lending/) |
 | f04 | The fraud desk | At what score should the desk decline, and what can it say about its precision? | Cost $24,927 at the operating point | The card networks' chargeback window | `fraud_card` | [/desk](https://mekala27-45.github.io/ledger/desk/) |
+| f05 | Financial crime | Do the rules find the planted typologies at a workable volume, and in what order? | 362 of 422 planted episodes found, 7.9 alerts per hundred thousand entries | BSA and the reporting threshold | `aml_triage` | [/crime](https://mekala27-45.github.io/ledger/crime/) |
 | f10 | Model risk management | Has every model earned the decisions it makes? | 3 models, each with a validation report | SR 11-7 | | [/models](https://mekala27-45.github.io/ledger/models/) |
 | f11 | Controls and data | Can every other number be trusted? | 786 of 792 account months tied | Ledger to sub ledger, to the cent | | [/controls](https://mekala27-45.github.io/ledger/controls/) |
 | f12 | The board pack | What should the board decide? | Installment cutoff held at 580 | | | [/report](https://mekala27-45.github.io/ledger/report/) |
@@ -70,6 +72,8 @@ The scorecard studio at [/studio](https://mekala27-45.github.io/ledger/studio/) 
 | Streaming and real time scoring | `packages/desk`, `packages/api`, the SSE stream |
 | Late labels and censoring | `ledger_core.calendar`, the desk's labelled panel |
 | Fair lending, HMDA and Regulation B | f03, `packages/fairness`, [/fair-lending](https://mekala27-45.github.io/ledger/fair-lending/), `docs/fair-lending.md` |
+| Anti money laundering typologies | f05, `rules/aml_typologies.yaml`, `packages/crime` |
+| Graph analytics | f05, the transfer network, [/crime](https://mekala27-45.github.io/ledger/crime/) |
 | Adverse action reason codes | `packages/scorecard`, the studio |
 | Fairness in fraud and credit | subgroup audits in every validation report |
 | Model risk management, SR 11-7 | f10, `report/validation`, [/models](https://mekala27-45.github.io/ledger/models/) |
