@@ -13,7 +13,9 @@ import re
 
 DEV_SALT = "ledger-development-salt"
 
-_PAN_CANDIDATE = re.compile(r"(?<!\d)(?:\d[ -]?){13,19}(?!\d)")
+# A run of digits after a decimal point is the fraction of a number, not a card: model
+# outputs and published aggregates carry floats with sixteen or seventeen digits there.
+_PAN_CANDIDATE = re.compile(r"(?<![\d.])(?:\d[ -]?){13,19}(?!\d)")
 
 
 def id_salt() -> str:

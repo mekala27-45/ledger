@@ -40,3 +40,9 @@ def test_statements() -> None:
     assert contains_both(DEMONSTRATION + " " + NOT_A_DECISION)
     assert not contains_both(DEMONSTRATION)
     assert set(statements_payload()) == {"demonstration", "not_a_decision"}
+
+
+def test_the_fraction_of_a_float_is_not_a_card_number() -> None:
+    # The digits after the point pass the Luhn check; as a fraction they are not a card.
+    assert find_card_numbers('{"nim": 0.4111111111111111, "x": 1.4111111111111111e-05}') == []
+    assert find_card_numbers("card 4111111111111111.") == ["4111111111111111"]
