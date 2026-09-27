@@ -331,7 +331,7 @@ Challenges raised during development and what each changed, from `DECISIONS.md`:
 |---|---|---:|---|
 | Recovers the generator's latent risk ordering (Spearman) | at least 0.4 | 0.7754 | pass |
 | Test AUROC at or above the floor | at least 0.62 | 0.6618 | pass |
-| Test AUROC no more than 0.02 below the logistic benchmark | at least -0.02 | 0.0063 | pass |
+| Test AUROC no more than 0.02 below the logistic benchmark | at least -0.02 | -0.0063 | pass |
 | Score stability, development to test (PSI) | at most 0.25 | 0.0032 | pass |
 | Lowest adverse impact ratio across age bands | at least 0.8 | 0.9524 | pass |
 | Point in time recompute of sampled rows | at least 200 | 200.0000 | pass |

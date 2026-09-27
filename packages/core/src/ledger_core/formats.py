@@ -19,9 +19,19 @@ def _num(value: float | int | str | None) -> float:
     return float(value)
 
 
+def _is_zero(text: str) -> bool:
+    return float(text.replace(",", "").lstrip("-")) == 0
+
+
 def _plain(value: float, decimals: int) -> str:
     text = f"{value:,.{decimals}f}"
-    return "0" if text in {"-0", "-0.0", "-0.00"} and decimals == 0 else text.replace("-0.00", "0.00")
+    # A value that rounds to zero prints without a sign, whatever its sign before rounding.
+    return text[1:] if text.startswith("-") and _is_zero(text) else text
+
+
+def _signed_money(number: float, body: str, suffix: str = "") -> str:
+    sign = "-" if number < 0 and not _is_zero(body) else ""
+    return f"{sign}${body}{suffix}"
 
 
 def fmt_int(value: float | int | str | None) -> str:
@@ -45,22 +55,19 @@ def _pct(decimals: int) -> FormatFn:
 def _usd(decimals: int) -> FormatFn:
     def inner(value: float | int | str | None) -> str:
         number = _num(value)
-        sign = "-" if number < 0 else ""
-        return f"{sign}${abs(number):,.{decimals}f}"
+        return _signed_money(number, f"{abs(number):,.{decimals}f}")
 
     return inner
 
 
 def fmt_usd_millions(value: float | int | str | None) -> str:
     number = _num(value) / 1_000_000.0
-    sign = "-" if number < 0 else ""
-    return f"{sign}${abs(number):,.1f}M"
+    return _signed_money(number, f"{abs(number):,.1f}", "M")
 
 
 def fmt_usd_billions(value: float | int | str | None) -> str:
     number = _num(value) / 1_000_000_000.0
-    sign = "-" if number < 0 else ""
-    return f"{sign}${abs(number):,.2f}B"
+    return _signed_money(number, f"{abs(number):,.2f}", "B")
 
 
 def fmt_bps(value: float | int | str | None) -> str:
@@ -69,8 +76,9 @@ def fmt_bps(value: float | int | str | None) -> str:
 
 def fmt_signed_pct1(value: float | int | str | None) -> str:
     number = _num(value) * 100.0
-    sign = "+" if number > 0 else ""
-    return f"{sign}{number:,.1f}%"
+    text = _plain(number, 1)
+    sign = "+" if number > 0 and not _is_zero(text) else ""
+    return f"{sign}{text}%"
 
 
 def fmt_text(value: float | int | str | None) -> str:

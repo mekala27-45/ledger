@@ -73,6 +73,17 @@ def test_saved_manifest_is_deterministic(tmp_path: Path) -> None:
         (1_234_567_890, "usdb", "$1.23B"),
         (125, "bps", "125 bp"),
         (float("nan"), "pct1", "not available"),
+        # Anything that rounds to zero prints unsigned, in every format.
+        (-0.0, "int", "0"),
+        (-0.0001, "pct1", "0.0%"),
+        (-0.0004, "float3", "0.000"),
+        (-0.00001, "spct1", "0.0%"),
+        (0.00001, "spct1", "0.0%"),
+        (-0.0, "usd0", "$0"),
+        (-0.4, "usd0", "$0"),
+        (-0.6, "usd0", "-$1"),
+        (-40_000, "usdm", "$0.0M"),
+        (-1_234.5, "usd2", "-$1,234.50"),
     ],
 )
 def test_formats(value: float, fmt: str, expected: str) -> None:
