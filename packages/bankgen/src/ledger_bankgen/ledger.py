@@ -222,8 +222,10 @@ def build_ledger(
         .agg(pl.col("opening_balance").sum())
     )
     dep_open = {r["product"]: float(r["opening_balance"]) for r in opening_dep.to_dicts()}
+    # Only loans booked before the window carry an opening balance. A loan originated in
+    # the first month reaches the ledger through its disbursement, not the opening journal.
     perf_first = performance.filter(pl.col("month") == first).join(
-        loans.select("loan_id", "product"), on="loan_id"
+        loans.filter(pl.col("origination_month") < 0).select("loan_id", "product"), on="loan_id"
     )
     loan_open = {
         r["product"]: float(r["opening_balance"])

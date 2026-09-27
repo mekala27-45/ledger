@@ -491,6 +491,10 @@ def _simulate(
         # Maturity: an installment or mortgage that is paid down closes.
         matured = live & ~is_card & (closing <= 0.5) & (new_state == C)
         new_state[matured] = MAT
+        # The final payment clears whatever cents rounding left, so servicing and the ledger agree.
+        residual = np.where(matured, closing, 0.0)
+        paid = np.round(paid + residual, 2)
+        principal_paid = np.round(principal_paid + residual, 2)
         closing = np.where(matured, 0.0, closing)
         closing = np.where(payoff, 0.0, closing)
         co_amount = np.where(co, closing, 0.0)

@@ -41,10 +41,10 @@ def test_deposit_sub_ledger_ties_to_the_ledger_when_clean(
     rows = con.execute(
         """
         with sub as (
-          select b.month, a.product, sum(b.closing_balance) as sub_balance
+          select b.month, a.product, sum(b.closing_balance::decimal(18, 2)) as sub_balance
           from deposit_balances b join deposit_accounts a using (account_id) group by 1, 2),
         gl as (
-          select month, gl_account, -sum(sum(amount)) over (partition by gl_account order by month) as gl_balance
+          select month, gl_account, -sum(sum(amount::decimal(18, 2))) over (partition by gl_account order by month) as gl_balance
           from gl_postings where gl_account in ('2000', '2010', '2020') group by 1, 2)
         select s.month, s.product, s.sub_balance, g.gl_balance
         from sub s join gl g on g.month = s.month
@@ -53,7 +53,7 @@ def test_deposit_sub_ledger_ties_to_the_ledger_when_clean(
     ).fetchall()
     assert rows
     for month, product, sub_balance, gl_balance in rows:
-        assert abs(sub_balance - gl_balance) < 0.05, (month, product, sub_balance, gl_balance)
+        assert sub_balance == gl_balance, (month, product, sub_balance, gl_balance)
 
 
 def test_every_posting_ties_to_a_source(clean_bank: tuple[Path, Path, GeneratorParams]) -> None:
