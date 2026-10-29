@@ -19,17 +19,37 @@ class Settings:
     replay_loop: bool = True
     # Origins allowed to call the API from a browser, such as the static site's host.
     cors_origins: tuple[str, ...] = ()
+    # A Postgres schema for the tables, so the API can share one free hosted database with other
+    # projects' tables; empty means the default search path.
+    schema: str = ""
+    # How long one desk stream may stay open before the API closes it and tells the browser to
+    # reconnect; zero means no limit. A host that ends every request after a few minutes sets it
+    # below that ceiling, so the stream ends with a message instead of a cut connection.
+    stream_seconds: float = 0.0
 
     @property
     def token_required(self) -> bool:
         return bool(self.api_token)
 
 
+def normalize_database_url(url: str) -> str:
+    """The connection string as a host hands it over (`postgres://` or `postgresql://`, which is
+    what Neon and Vercel show) becomes the SQLAlchemy form with the psycopg driver named, so a
+    secret never has to be edited by hand; a URL that already names a driver is returned as is."""
+    url = url.strip()
+    for prefix in ("postgresql://", "postgres://"):
+        if url.startswith(prefix):
+            return "postgresql+psycopg://" + url[len(prefix) :]
+    return url
+
+
 def load_settings() -> Settings:
     root = Path(os.environ.get("LEDGER_ROOT", Path(__file__).resolve().parents[4]))
     results = root / "results"
     return Settings(
-        database_url=os.environ.get("DATABASE_URL", "postgresql+psycopg://postgres@127.0.0.1:5433/ledger"),
+        database_url=normalize_database_url(
+            os.environ.get("DATABASE_URL", "postgresql+psycopg://postgres@127.0.0.1:5433/ledger")
+        ),
         api_token=os.environ.get("LEDGER_API_TOKEN", ""),
         results=results,
         rules=root / "rules",
@@ -42,4 +62,6 @@ def load_settings() -> Settings:
         cors_origins=tuple(
             o.strip() for o in os.environ.get("LEDGER_CORS_ORIGINS", "").split(",") if o.strip()
         ),
+        schema=os.environ.get("LEDGER_DB_SCHEMA", "").strip(),
+        stream_seconds=float(os.environ.get("LEDGER_STREAM_SECONDS", "0") or 0),
     )

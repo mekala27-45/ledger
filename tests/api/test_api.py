@@ -239,3 +239,87 @@ def test_no_cors_headers_without_configured_origins(client: TestClient) -> None:
     r = client.get("/v1/health", headers={"Origin": "https://example.github.io"})
     assert r.status_code == 200
     assert "access-control-allow-origin" not in r.headers
+
+
+def test_the_stream_closes_on_its_timer_with_an_end_event(settings: Settings) -> None:
+    """A host that ends every request at a ceiling: the API ends the stream first and says so."""
+    import json
+    from dataclasses import replace
+
+    app = create_app(replace(settings, stream_seconds=0.3), start_desk=False)
+    with TestClient(app) as c, c.stream("GET", "/v1/desk/stream?batch_ms=50") as response:
+        lines = list(response.iter_lines())
+    assert lines[0] == "retry: 2000"
+    events = [line[len("event: ") :] for line in lines if line.startswith("event: ")]
+    assert events[0] == "hello" and events[-1] == "end"
+    end = json.loads([line for line in lines if line.startswith("data: ")][-1][len("data: ") :])
+    _both(end)
+    assert end["type"] == "end" and end["reconnect"] is True
+
+
+def test_the_tables_live_in_their_own_schema(settings: Settings) -> None:
+    """With a schema set, the API creates and writes its tables there, not in the shared default."""
+    from dataclasses import replace
+
+    import psycopg
+
+    from tests.api.conftest import plain_url
+
+    schema = "ledger_schema_test"
+    with psycopg.connect(plain_url(settings.database_url), autocommit=True) as conn:
+        conn.execute(f'drop schema if exists "{schema}" cascade')
+    try:
+        app = create_app(replace(settings, schema=schema), start_desk=False)
+        with TestClient(app) as c:
+            assert c.get("/v1/desk/alerts", headers=auth()).status_code == 200
+        audit = rows(settings.database_url, f'select action, resource from "{schema}".audit_log')
+        assert audit == [("view", "alerts")]
+        assert rows(settings.database_url, "select count(*) from public.audit_log") == [(0,)]
+    finally:
+        with psycopg.connect(plain_url(settings.database_url), autocommit=True) as conn:
+            conn.execute(f'drop schema if exists "{schema}" cascade')
+
+
+def test_the_migration_puts_its_tables_and_version_in_the_schema(database_url: str) -> None:
+    """Another project's version table in the shared database is never read as this one's."""
+    import os
+    import subprocess
+
+    import psycopg
+
+    from tests.api.conftest import ROOT, plain_url
+
+    schema = "ledger_migration_test"
+    with psycopg.connect(plain_url(database_url), autocommit=True) as conn:
+        conn.execute(f'drop schema if exists "{schema}" cascade')
+    try:
+        env = {**os.environ, "DATABASE_URL": plain_url(database_url), "LEDGER_DB_SCHEMA": schema}
+        subprocess.run(
+            ["alembic", "upgrade", "head"],
+            cwd=ROOT / "packages" / "api",
+            env=env,
+            check=True,
+            capture_output=True,
+        )
+        tables = {
+            r[0]
+            for r in rows(
+                database_url,
+                f"select table_name from information_schema.tables where table_schema = '{schema}'",
+            )
+        }
+        assert tables == {"alerts", "cases", "case_events", "score_decisions", "audit_log", "alembic_version"}
+        assert rows(database_url, f'select version_num from "{schema}".alembic_version') == [("0001",)]
+    finally:
+        with psycopg.connect(plain_url(database_url), autocommit=True) as conn:
+            conn.execute(f'drop schema if exists "{schema}" cascade')
+
+
+def test_a_host_connection_string_gets_the_driver_named() -> None:
+    from ledger_api.settings import normalize_database_url
+
+    assert normalize_database_url("postgres://u:p@h/db") == "postgresql+psycopg://u:p@h/db"
+    assert normalize_database_url(" postgresql://u:p@h/db?sslmode=require ") == (
+        "postgresql+psycopg://u:p@h/db?sslmode=require"
+    )
+    assert normalize_database_url("postgresql+psycopg://u@h/db") == "postgresql+psycopg://u@h/db"

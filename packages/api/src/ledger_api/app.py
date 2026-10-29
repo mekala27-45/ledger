@@ -30,7 +30,17 @@ from pydantic import BaseModel, Field
 from sqlmodel import Session, col, select
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from ledger_api.db import Alert, AuditEntry, Case, CaseEvent, ScoreDecision, create_all, make_engine, now
+from ledger_api.db import (
+    Alert,
+    AuditEntry,
+    Case,
+    CaseEvent,
+    ScoreDecision,
+    create_all,
+    ensure_schema,
+    make_engine,
+    now,
+)
 from ledger_api.scoring import FraudService, ScorecardService, digest
 from ledger_api.settings import Settings, load_settings
 
@@ -158,10 +168,11 @@ ActorDep = Annotated[str, Depends(actor)]
 
 def create_app(settings: Settings | None = None, *, start_desk: bool = True) -> FastAPI:
     cfg = settings or load_settings()
-    engine = make_engine(cfg.database_url)
+    engine = make_engine(cfg.database_url, cfg.schema)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        ensure_schema(cfg.database_url, cfg.schema)
         create_all(engine)
         state: AppState = app.state.ledger
         registry = cfg.results / "models" / "registry.json"
@@ -312,14 +323,19 @@ def create_app(settings: Settings | None = None, *, start_desk: bool = True) -> 
         """Server sent events: a hello with the desk's state, then batches of transactions.
 
         ``limit`` ends the stream after that many messages, for clients and tests that
-        want a bounded read.
+        want a bounded read. With ``stream_seconds`` set, the stream also ends after that long
+        with an ``end`` event, so a host that cuts every request at a ceiling never cuts this
+        one mid message, and the browser reconnects to the same replay.
         """
         worker = state_of(request).worker
         if worker is None:
             raise HTTPException(status_code=503, detail="no scored stream to replay")
         queue = worker.subscribe()
+        ceiling = cfg.stream_seconds
 
         async def events() -> AsyncIterator[str]:
+            loop = asyncio.get_running_loop()
+            deadline = loop.time() + ceiling if ceiling > 0 else None
             try:
                 hello = envelope(
                     {
@@ -329,10 +345,23 @@ def create_app(settings: Settings | None = None, *, start_desk: bool = True) -> 
                         "note": "A replay of a scored stream at a stated speed, not a message bus.",
                     }
                 )
-                yield f"event: hello\ndata: {json.dumps(hello)}\n\n"
+                # The retry field tells the browser how long to wait before it reconnects.
+                yield f"retry: 2000\nevent: hello\ndata: {json.dumps(hello)}\n\n"
                 sent = 1
                 while limit is None or sent < limit:
                     if await request.is_disconnected():
+                        break
+                    if deadline is not None and loop.time() >= deadline:
+                        end = envelope(
+                            {
+                                "type": "end",
+                                "reconnect": True,
+                                "after_seconds": ceiling,
+                                "note": "This stream closes on a timer; reconnect to keep watching the same replay.",
+                                "desk": worker.snapshot(),
+                            }
+                        )
+                        yield f"event: end\ndata: {json.dumps(end)}\n\n"
                         break
                     batch: list[Event] = []
                     try:

@@ -10,7 +10,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import JSON, Column
+from sqlalchemy import JSON, Column, text
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 
@@ -79,8 +79,28 @@ class AuditEntry(SQLModel, table=True):
     detail: dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
 
 
-def make_engine(url: str) -> Any:
-    return create_engine(url, pool_pre_ping=True)
+def schema_options(schema: str = "") -> dict[str, Any]:
+    """With a schema, every table name the engine emits is qualified with it, so the tables live
+    there whatever the connection's search path says. A hosted database's connection proxy can drop
+    a search path set through the startup options, which is why the path is not relied on."""
+    if not schema:
+        return {}
+    return {"schema_translate_map": {None: schema}}
+
+
+def make_engine(url: str, schema: str = "") -> Any:
+    engine = create_engine(url, pool_pre_ping=True)
+    return engine.execution_options(**schema_options(schema)) if schema else engine
+
+
+def ensure_schema(url: str, schema: str) -> None:
+    """Create the schema if it is missing; a no op without one."""
+    if not schema:
+        return
+    engine = create_engine(url, pool_pre_ping=True)
+    with engine.begin() as connection:
+        connection.execute(text(f'create schema if not exists "{schema}"'))
+    engine.dispose()
 
 
 def create_all(engine: Any) -> None:
