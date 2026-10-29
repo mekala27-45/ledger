@@ -108,8 +108,8 @@ jobs:
           uv run python scripts/scan_for_planted_identifiers.py
 
   containers:
-    # Both images build from a clean checkout, so the Fly deploy and a containerised pipeline
-    # run are one command away. Nothing is pushed to a registry from CI.
+    # Every image builds from a clean checkout, so a deploy and a containerised pipeline run are
+    # one command away. Nothing is pushed to a registry from CI.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -119,4 +119,12 @@ jobs:
         run: docker build -f Dockerfile.pipeline -t ledger-pipeline:ci .
       - name: The API image imports its application
         run: docker run --rm --entrypoint python ledger-api:ci -c "import ledger_api.main; print('ok')"
+      - name: The Vercel image
+        run: docker build -f Dockerfile.vercel -t ledger-api-vercel:ci .
+      - name: The Vercel image imports its application and finds the replay
+        run: >-
+          docker run --rm --entrypoint python ledger-api-vercel:ci -c
+          "import ledger_api.main, pathlib;
+          assert pathlib.Path('/app/results/models/fraud_card/replay_stream.parquet').exists();
+          print('ok')"
 

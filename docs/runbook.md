@@ -42,10 +42,20 @@ gates and attaches the workbook.
 - **The site.** A push to `main` runs `.github/workflows/pages.yml`, which builds the static
   export with the base path `/ledger` and publishes it to GitHub Pages. Repository settings:
   Pages source "GitHub Actions".
-- **The API.** `fly deploy` builds `Dockerfile.api` (see `fly.toml`). It needs a Postgres
-  database in `DATABASE_URL`, runs its migrations on start, and serves the desk's stream.
-  Set the repository variable `LEDGER_API_URL` to its address and rebuild the site; until
-  then the desk plays its recording and says so.
+- **The API.** Vercel builds `Dockerfile.vercel` and serves it as a container function on the free
+  Hobby plan; the migration runs when an instance starts. Once: run `deploy/new-token.ps1` on the
+  machine that will verify the deploy (it writes `deploy/write-token.txt`, ignored by git, and puts
+  the token on the clipboard); import the repository in Vercel with the preset Container; set
+  `DATABASE_URL` to the Neon connection string on the direct host (not the `-pooler` one),
+  `LEDGER_API_TOKEN` to the token and `LEDGER_CORS_ORIGINS` to `https://mekala27-45.github.io`; deploy.
+  Then write the address in `deploy/live-url.txt`, run `deploy/verify.ps1` from that machine (it
+  writes `results/deploy/verification.json`), and set the repository variable `LEDGER_API_URL` to the
+  address so the next Pages build points the desk at it. Until then the desk plays its recording and
+  says so. `fly deploy` with `fly.toml` and `Dockerfile.api` is the route for an account with a card.
+- **The replay.** The image replays the committed `results/models/fraud_card/replay_stream.parquet`.
+  `scripts/build_replay.py --check` rebuilds it, and `replay_history.parquet`, from the staged card
+  stream and the committed model, and fails unless the rebuild reproduces the published desk; run it
+  after anything that changes the model or the stream, never a retrain for this alone.
 
 ## When a gate fails
 

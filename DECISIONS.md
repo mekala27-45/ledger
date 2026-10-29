@@ -531,3 +531,51 @@ reach the end, where it reported results that had moved with nothing changed.
 Floats that DuckDB and Polars sum in parallel also moved in their last bits between runs. The
 rederive now compares data files by content, allowing one part in a billion, and still
 requires every document to match byte for byte.
+
+## 2026-10-28: The API goes to Vercel as a container function, because the Fly trial ended
+
+The Fly trial ended on 23 October, which stopped every Fly app on the account and closed the route
+`fly.toml` describes. The same image now builds from `Dockerfile.vercel` as a Vercel container
+function on the free Hobby plan: port 80, an instance started by the first request after idle and
+scaled to zero after it, a ceiling of 300 seconds on one request, and the migration at every start.
+Three things change for that host, and each has a test:
+
+- The tables live in their own schema (`LEDGER_DB_SCHEMA=ledger`), so the API shares one free Neon
+  database with the other projects without touching their tables or their alembic version table.
+  The engine qualifies every table name with the schema rather than relying on a search path,
+  which a hosted database's connection proxy can drop.
+- The desk stream ends itself after `LEDGER_STREAM_SECONDS` (240 on Vercel) with an `end` event,
+  and the desk reconnects, so the host's ceiling never cuts a stream mid message. The desk also
+  wakes the API with a health probe before it opens the stream, and gives a dropped live stream
+  three tries before it falls back to the recording.
+- The replay worker treats a lag of more than five seconds as a pause and resumes from it, because
+  a host that freezes an idle instance would otherwise find hours of the stream overdue and send
+  them in one burst.
+
+`fly.toml` and `Dockerfile.api` stay for a host with a card. The write token stays on, so the
+studio, which posts without one, scores in the browser when the API refuses it; health, the
+snapshot and the stream stay open.
+
+## 2026-10-28: The desk's replay is committed, rebuilt from the committed model without retraining
+
+The API image needs `replay_stream.parquet` and `replay_history.parquet`, which the trainer writes
+and git ignored, so an image built from the repository answered 503 on every desk endpoint.
+Rebuilding them by retraining moves the model. In this sandbox the card stream regenerated from the
+documented command (to the counts in data/PROVENANCE.md exactly), and a retrain put the operating
+point at 0.0498 instead of the published 0.0503: the fit samples rows by position, and a
+regenerated stream does not keep every row in the same place.
+
+So nothing was retrained. `scripts/build_replay.py` scores the regenerated stream with the committed
+model at its committed operating point (0.0503) and queue point (0.2759), and `--check` holds the
+result to what is published:
+
+- the test months, 303,401 transactions with 2,816 frauds, cost $24,927 at the operating point with
+  3,676 declines, as the manifest says;
+- all 2,993 events of the recorded replay reappear with the same time, amount, category, distance,
+  merchant location, score, decision, queue flag, rules and reasons.
+
+Two things do not reproduce, and neither enters a published number: 580 of the 939 cards in the
+recorded window carry another salted key (the two sets pair one to one), and 36 of the 2,993 events
+swap ids with a transaction from the same second. The two files are committed (12 MB). Next: make the
+Sparkov wrapper deterministic in its card numbers and in its order of ties, then regenerate, retrain
+and rederive in one release, so that a fresh clone reproduces the model as well as the desk.

@@ -1,0 +1,26 @@
+# The ledger API as a Vercel container function (free Hobby plan, no card): the same image as
+# Dockerfile.api, listening on port 80, which is where Vercel sends the traffic. Vercel builds it from
+# this file, starts an instance on the first request after idle and scales it to zero again; the
+# migration runs at every start and is a no op after the first.
+#
+# Three settings differ from the long running host, and each answers a limit of this one:
+# - LEDGER_DB_SCHEMA keeps the tables in their own schema of a free database other projects share.
+# - LEDGER_STREAM_SECONDS closes each desk stream before the host's ceiling on a request, with an
+#   `end` message, and the desk reconnects to the same replay.
+# - The replay worker treats a frozen instance as a pause, so a thawed one does not burst.
+FROM python:3.12-slim AS base
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+RUN pip install --no-cache-dir "uv>=0.8,<0.9" && apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY pyproject.toml uv.lock README.md ./
+COPY packages ./packages
+RUN uv sync --frozen --no-dev --no-default-groups --package ledger-api
+COPY config ./config
+COPY rules ./rules
+# The served models and the committed replay of the scored test months.
+COPY results/models ./results/models
+ENV LEDGER_ROOT=/app PORT=80 PATH="/app/.venv/bin:$PATH" LEDGER_ENV=production \
+    LEDGER_DB_SCHEMA=ledger LEDGER_STREAM_SECONDS=240 LEDGER_REPLAY_SECONDS_PER_HOUR=1.0
+EXPOSE 80
+CMD ["sh", "-c", "cd packages/api && alembic upgrade head && cd /app && uvicorn ledger_api.main:app --host 0.0.0.0 --port ${PORT}"]
