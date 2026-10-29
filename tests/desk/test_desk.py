@@ -200,6 +200,57 @@ def test_the_replay_emits_in_time_order_and_masks_cards() -> None:
         ReplayWorker(stream.clear(), 0.0, {}, book)
 
 
+def test_a_paused_replay_resumes_instead_of_bursting() -> None:
+    """A frozen process finds the stream overdue when it thaws; the replay resumes from the pause."""
+    import time
+
+    n = 4
+    stream = pl.DataFrame(
+        {
+            "txn_id": list(range(1, n + 1)),
+            "transaction_time": [datetime(2026, 6, 1) + timedelta(hours=i) for i in range(n)],
+            "card_key": ["Kabcdef0123"] * n,
+            "category": ["travel"] * n,
+            "amount": [10.0] * n,
+            "distance_km": [1.0] * n,
+            "merchant_lat": [40.0] * n,
+            "merchant_long": [-74.0] * n,
+            "score": [0.1, 0.9, 0.1, 0.1],
+            "decision": ["approve", "decline", "approve", "approve"],
+            "queue": [False, True, False, False],
+            "rule_new_category_large": [False] * n,
+            "rule_burst": [False] * n,
+            "rule_distant_merchant": [False] * n,
+            "model_reasons": [""] * n,
+            "is_fraud": [0, 1, 0, 0],
+        }
+    )
+    book = LabelBook(stream["transaction_time"].to_numpy(), np.zeros(n, bool), np.zeros(n, int), 60)
+
+    async def freeze(event: dict[str, object]) -> None:
+        time.sleep(0.4)  # blocks the loop, as a frozen instance would
+
+    def emitted_at(max_lag: float) -> list[float]:
+        worker = ReplayWorker(stream, 0.05, {}, book, on_alert=freeze, max_lag_seconds=max_lag)
+        stamps: list[float] = []
+        publish = worker._publish
+
+        async def stamped(event: dict[str, object]) -> None:
+            stamps.append(asyncio.get_running_loop().time())
+            await publish(event)  # type: ignore[arg-type]
+
+        worker._publish = stamped  # type: ignore[method-assign]
+        asyncio.run(worker.run())
+        return stamps
+
+    # With the pause tolerated forever, the two events after it arrive together.
+    bursting = emitted_at(max_lag=1000.0)
+    assert bursting[3] - bursting[2] < 0.02
+    # With the default treatment, the last one keeps its spacing of one simulated hour.
+    resumed = emitted_at(max_lag=0.1)
+    assert resumed[3] - resumed[2] >= 0.04
+
+
 def test_histogram_reproduces_the_anchor_points_exactly() -> None:
     from ledger_desk.operating import cost_at, score_histogram
 

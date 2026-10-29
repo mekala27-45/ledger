@@ -78,6 +78,10 @@ class ReplayWorker:
     labels: LabelBook
     on_alert: AlertSink | None = None
     loop_forever: bool = False
+    # How far behind the simulated clock may fall before the replay treats it as a pause. A host
+    # that freezes an idle instance and thaws it on the next request would otherwise find hours of
+    # the stream overdue and send them in one burst.
+    max_lag_seconds: float = 5.0
     subscribers: set[asyncio.Queue[Event]] = field(default_factory=set)
     emitted: int = 0
     counts: dict[str, int] = field(default_factory=lambda: {"approve": 0, "review": 0, "decline": 0})
@@ -131,6 +135,9 @@ class ReplayWorker:
                         delay = start_real + wait - asyncio.get_running_loop().time()
                         if delay > 0:
                             await asyncio.sleep(delay)
+                        elif delay < -self.max_lag_seconds:
+                            # Resume the replay from here instead of replaying the pause.
+                            start_real -= delay
                     self.clock = due
                     event = to_event(row, self.rule_statements)
                     self.counts[event["decision"]] += 1

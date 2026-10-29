@@ -35,7 +35,7 @@ from sklearn.preprocessing import StandardScaler
 
 from ledger_desk import features as F
 from ledger_desk import operating as O
-from ledger_desk.rules import load_rules, rule_columns
+from ledger_desk.rules import DeskRules, load_rules, rule_columns
 
 FEATURE_WORDS = {
     "amount": "large amount",
@@ -120,11 +120,9 @@ def leakage_check(feats: pl.DataFrame, tx: pl.DataFrame, seed: int) -> int:
     return recompute_check(sample, history, "transaction_time", recompute, columns, seed=seed)  # type: ignore[arg-type]
 
 
-def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_dir: Path) -> ModelResult:
-    fd = cfg.fraud_desk
+def card_features(root: Path, cfg: LedgerConfig) -> tuple[pl.DataFrame, pl.DataFrame, DeskRules]:
+    """The staged card stream, and its point in time features with the split and the rules that fired."""
     cb = cfg.censoring.chargeback_window_days
-    out = models_dir / "fraud_card"
-    out.mkdir(parents=True, exist_ok=True)
     tx = pl.read_parquet(root / "data" / "staged" / "sparkov" / "card_transactions.parquet")
     feats = (
         F.build(tx, cb)
@@ -138,6 +136,112 @@ def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_di
     rules = load_rules(root / "rules")
     fired = rule_columns(feats, rules)
     feats = feats.join(fired, on="txn_id", how="left")
+    return tx, feats, rules
+
+
+def scored_history(
+    val: pl.DataFrame,
+    test: pl.DataFrame,
+    p_val: np.ndarray,
+    p_test: np.ndarray,
+    booster: lgb.Booster,
+    levels: list[str],
+    t_op: float,
+    t_queue: float,
+    chargeback_days: int,
+) -> pl.DataFrame:
+    """Decisions on the scored history (validation and test), rules in plain words, model reasons."""
+    history = pl.concat(
+        [val.with_columns(score=pl.Series(p_val)), test.with_columns(score=pl.Series(p_test))]
+    )
+    rule_any = (
+        history["rule_new_category_large"] | history["rule_burst"] | history["rule_distant_merchant"]
+    ).to_numpy()
+    decision = O.decide(history["score"].to_numpy(), rule_any, t_op)
+    history = history.with_columns(
+        decision=pl.Series(decision),
+        queue=pl.col("score") >= t_queue,
+        label_observable_at=pl.col("transaction_time") + pl.duration(days=chargeback_days),
+    )
+    # Feature contributions only where the desk has to explain itself: reviews and declines.
+    names = np.array(F.FEATURES)
+    reasons = [""] * history.height
+    explain = np.flatnonzero(decision != "approve")
+    if explain.size:
+        contrib = np.asarray(booster.predict(_matrix(history[explain.tolist()], levels), pred_contrib=True))[
+            :, :-1
+        ]
+        top = np.argsort(-contrib, axis=1)[:, :2]
+        for k, i in enumerate(explain):
+            reasons[i] = "; ".join(FEATURE_WORDS[names[j]] for j in top[k] if contrib[k, j] > 0)
+    return history.with_columns(model_reasons=pl.Series(reasons))
+
+
+REPLAY_COLUMNS = [
+    "txn_id",
+    "transaction_time",
+    "card_key",
+    "category",
+    "amount",
+    "distance_km",
+    "merchant_lat",
+    "merchant_long",
+    "score",
+    "decision",
+    "queue",
+    "rule_new_category_large",
+    "rule_burst",
+    "rule_distant_merchant",
+    "model_reasons",
+    "is_fraud",
+]
+
+
+def write_replay(history: pl.DataFrame, out: Path) -> None:
+    """What the API replays on the desk: the test months, and the validation months for the labels."""
+    history.filter(pl.col("split") == "test").select(REPLAY_COLUMNS).write_parquet(
+        out / "replay_stream.parquet", compression="zstd"
+    )
+    history.filter(pl.col("split") == "validation").select(
+        "transaction_time", declined=pl.col("decision") == "decline", is_fraud=pl.col("is_fraud")
+    ).write_parquet(out / "replay_history.parquet", compression="zstd")
+
+
+def rebuild_replay(root: Path, cfg: LedgerConfig, models_dir: Path) -> dict[str, int]:
+    """The desk's replay files from the staged card stream and the committed served model, with no
+    training: the scores, decisions and reasons the served model gives, at its committed operating
+    point and queue point. The API image needs these files; retraining to get them would move the
+    model, because the fit depends on the order of transactions that share a second."""
+    out = models_dir / "fraud_card"
+    serving = json.loads((out / "serving.json").read_text())
+    levels = json.loads((out / "category_levels.json").read_text())
+    booster = lgb.Booster(model_file=str(out / "model.txt"))
+    _, feats, _ = card_features(root, cfg)
+    val = feats.filter(pl.col("split") == "validation")
+    test = feats.filter(pl.col("split") == "test")
+    p_val = np.asarray(booster.predict(_matrix(val, levels)))
+    p_test = np.asarray(booster.predict(_matrix(test, levels)))
+    history = scored_history(
+        val,
+        test,
+        p_val,
+        p_test,
+        booster,
+        levels,
+        float(serving["operating_point"]),
+        float(serving["queue_point"]),
+        cfg.censoring.chargeback_window_days,
+    )
+    write_replay(history, out)
+    return {"validation": val.height, "test": test.height}
+
+
+def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_dir: Path) -> ModelResult:
+    fd = cfg.fraud_desk
+    cb = cfg.censoring.chargeback_window_days
+    out = models_dir / "fraud_card"
+    out.mkdir(parents=True, exist_ok=True)
+    tx, feats, rules = card_features(root, cfg)
     levels = sorted(feats["category"].unique().to_list())
 
     train = feats.filter(pl.col("split") == "train")
@@ -251,31 +355,7 @@ def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_di
         )
     pl.DataFrame(pr_rows).write_parquet(out / "pr_curve.parquet")
 
-    # Decisions on the scored history (validation and test), rules in plain words, model reasons.
-    history = pl.concat(
-        [val.with_columns(score=pl.Series(p_val)), test.with_columns(score=pl.Series(p_test))]
-    )
-    rule_any = (
-        history["rule_new_category_large"] | history["rule_burst"] | history["rule_distant_merchant"]
-    ).to_numpy()
-    decision = O.decide(history["score"].to_numpy(), rule_any, t_op)
-    history = history.with_columns(
-        decision=pl.Series(decision),
-        queue=pl.col("score") >= t_queue,
-        label_observable_at=pl.col("transaction_time") + pl.duration(days=cb),
-    )
-    # Feature contributions only where the desk has to explain itself: reviews and declines.
-    names = np.array(F.FEATURES)
-    reasons = [""] * history.height
-    explain = np.flatnonzero(decision != "approve")
-    if explain.size:
-        contrib = np.asarray(booster.predict(_matrix(history[explain.tolist()], levels), pred_contrib=True))[
-            :, :-1
-        ]
-        top = np.argsort(-contrib, axis=1)[:, :2]
-        for k, i in enumerate(explain):
-            reasons[i] = "; ".join(FEATURE_WORDS[names[j]] for j in top[k] if contrib[k, j] > 0)
-    history = history.with_columns(model_reasons=pl.Series(reasons))
+    history = scored_history(val, test, p_val, p_test, booster, levels, t_op, t_queue, cb)
     columns = [
         "txn_id",
         "card_key",
@@ -315,30 +395,7 @@ def run(con: duckdb.DuckDBPyConnection, cfg: LedgerConfig, root: Path, models_di
         )
         + "\n"
     )
-    replay_cols = [
-        "txn_id",
-        "transaction_time",
-        "card_key",
-        "category",
-        "amount",
-        "distance_km",
-        "merchant_lat",
-        "merchant_long",
-        "score",
-        "decision",
-        "queue",
-        "rule_new_category_large",
-        "rule_burst",
-        "rule_distant_merchant",
-        "model_reasons",
-        "is_fraud",
-    ]
-    history.filter(pl.col("split") == "test").select(replay_cols).write_parquet(
-        out / "replay_stream.parquet", compression="zstd"
-    )
-    history.filter(pl.col("split") == "validation").select(
-        "transaction_time", declined=pl.col("decision") == "decline", is_fraud=pl.col("is_fraud")
-    ).write_parquet(out / "replay_history.parquet", compression="zstd")
+    write_replay(history, out)
 
     # Late labels: what the desk could know on each day of the test months.
     times = history["transaction_time"].to_numpy()
