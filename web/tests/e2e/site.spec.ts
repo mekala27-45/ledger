@@ -51,6 +51,38 @@ test("the desk plays the recorded replay and says so when there is no API", asyn
   await expect(page.getByTestId("late-labels")).toContainText("chargeback window");
 });
 
+test("the desk goes live on the API and reconnects when the stream closes on its timer", async ({ page }) => {
+  const api = "http://api.ledger.test";
+  await page.addInitScript((url) => {
+    (window as unknown as { __ledgerApiForTests: string }).__ledgerApiForTests = url;
+  }, api);
+  const cors = { "access-control-allow-origin": "*" };
+  let streams = 0;
+  await page.route(`${api}/v1/health`, (route) =>
+    route.fulfill({ status: 200, contentType: "application/json", headers: cors, body: '{"status":"ok"}' }),
+  );
+  await page.route(`${api}/v1/desk/stream**`, (route) => {
+    streams += 1;
+    const hello = { type: "hello", desk: { clock: "2026-06-01T00:00:00" } };
+    const batch = { type: "transactions", events: [], desk: { clock: "2026-06-01T03:00:00", labelled: null } };
+    const end = { type: "end", reconnect: true };
+    const body = [
+      `retry: 2000\nevent: hello\ndata: ${JSON.stringify(hello)}\n\n`,
+      `event: transactions\ndata: ${JSON.stringify(batch)}\n\n`,
+      `event: end\ndata: ${JSON.stringify(end)}\n\n`,
+    ].join("");
+    return route.fulfill({
+      status: 200,
+      headers: { ...cors, "content-type": "text/event-stream", "cache-control": "no-cache" },
+      body,
+    });
+  });
+  await page.goto("/desk/");
+  await expect(page.getByTestId("desk-mode")).toContainText("Live");
+  await expect.poll(() => streams, { timeout: 10_000 }).toBeGreaterThanOrEqual(2);
+  await expect(page.getByTestId("desk-mode")).toContainText("Live");
+});
+
 test("the threshold slider recomputes precision in the browser", async ({ page }) => {
   await page.goto("/desk/");
   const slider = page.getByTestId("threshold");

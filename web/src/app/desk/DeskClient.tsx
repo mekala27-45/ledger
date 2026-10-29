@@ -104,47 +104,99 @@ export function DeskClient({
     };
   }, [base]);
 
-  // Try the live stream; fall back to the recorded replay if it does not answer quickly.
+  // Try the live stream; fall back to the recorded replay if it does not answer.
+  // The host scales the API to zero, so the first request wakes it: the health probe waits for
+  // that before the stream opens. The host also ends every request after a few minutes, so the
+  // API closes each stream on a timer with an `end` event, and the desk reconnects to the same
+  // replay. A stream that drops after it was live is reopened a few times before giving up.
   useEffect(() => {
     if (!recorded) return;
-    if (!apiUrl) {
+    // The end to end tests point the desk at a mocked API without a second build.
+    const api = (window as { __ledgerApiForTests?: string }).__ledgerApiForTests ?? apiUrl;
+    if (!api) {
       setMode("recorded");
       return;
     }
-    let settled = false;
-    const source = new EventSource(`${apiUrl}/v1/desk/stream?batch_ms=250`);
-    const timer = window.setTimeout(() => {
-      if (!settled) {
-        settled = true;
-        source.close();
-        setMode("recorded");
+    let stopped = false;
+    let everLive = false;
+    let retries = 0;
+    let source: EventSource | null = null;
+    let timer: number | undefined;
+    let retryTimer: number | undefined;
+
+    const fallback = () => {
+      if (!stopped) setMode("recorded");
+    };
+    const reopen = () => {
+      if (stopped) return;
+      if (retries >= 3) {
+        fallback();
+        return;
       }
-    }, 5000);
-    source.addEventListener("hello", () => {
-      settled = true;
-      window.clearTimeout(timer);
-      setMode("live");
-    });
-    source.addEventListener("transactions", (e) => {
-      const message = JSON.parse((e as MessageEvent<string>).data) as {
-        events: DeskEvent[];
-        desk?: { clock: string | null; labelled: Panel | null };
-      };
-      setLiveEvents((prev) => [...prev, ...message.events].slice(-MAP_POINTS));
-      if (message.desk?.labelled) setLivePanel(message.desk.labelled);
-      if (message.desk?.clock) setLiveClock(message.desk.clock);
-    });
-    source.onerror = () => {
-      if (!settled) {
+      retries += 1;
+      retryTimer = window.setTimeout(() => open(), 1000 * retries);
+    };
+    const open = () => {
+      if (stopped) return;
+      let settled = false;
+      const stream = new EventSource(`${api}/v1/desk/stream?batch_ms=250`);
+      source = stream;
+      timer = window.setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        stream.close();
+        if (everLive) reopen();
+        else fallback();
+      }, 15000);
+      stream.addEventListener("hello", () => {
         settled = true;
         window.clearTimeout(timer);
-        setMode("recorded");
-      }
-      source.close();
+        everLive = true;
+        retries = 0;
+        setMode("live");
+      });
+      stream.addEventListener("transactions", (e) => {
+        const message = JSON.parse((e as MessageEvent<string>).data) as {
+          events: DeskEvent[];
+          desk?: { clock: string | null; labelled: Panel | null };
+        };
+        setLiveEvents((prev) => [...prev, ...message.events].slice(-MAP_POINTS));
+        if (message.desk?.labelled) setLivePanel(message.desk.labelled);
+        if (message.desk?.clock) setLiveClock(message.desk.clock);
+      });
+      stream.addEventListener("end", () => {
+        settled = true;
+        window.clearTimeout(timer);
+        stream.close();
+        retries = 0;
+        reopen();
+      });
+      stream.onerror = () => {
+        window.clearTimeout(timer);
+        stream.close();
+        const wasSettled = settled;
+        settled = true;
+        if (everLive) reopen();
+        else if (!wasSettled) fallback();
+      };
     };
+
+    const wake = new AbortController();
+    const wakeTimer = window.setTimeout(() => wake.abort(), 20000);
+    fetch(`${api}/v1/health`, { signal: wake.signal })
+      .then((r) => {
+        if (r.ok) open();
+        else fallback();
+      })
+      .catch(() => fallback())
+      .finally(() => window.clearTimeout(wakeTimer));
     return () => {
+      stopped = true;
+      wake.abort();
+      window.clearTimeout(wakeTimer);
       window.clearTimeout(timer);
-      source.close();
+      window.clearTimeout(retryTimer);
+      source?.close();
     };
   }, [recorded, apiUrl]);
 
@@ -259,7 +311,9 @@ export function DeskClient({
             Simulated clock {clockLabel}.
           </>
         )}
-        {mode === "connecting" && <>Connecting to the desk…</>}
+        {mode === "connecting" && (
+          <>Connecting to the desk. The API sleeps when nobody is watching, so the first visit can take a few seconds.</>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center gap-3 text-sm no-print">
