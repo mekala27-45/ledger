@@ -56,3 +56,12 @@ warehouse/.user.yml
 results/models/**/scored_stream.parquet
 results/models/**/replay_stream.parquet
 results/models/**/replay_history.parquet
+# The desk's replay is committed so the API image builds from the repository; it is rebuilt from the
+# committed model by scripts/build_replay.py, never by retraining (see DECISIONS.md, 2026-10-28).
+!results/models/fraud_card/replay_stream.parquet
+!results/models/fraud_card/replay_history.parquet
+
+# Deploy: the token and the live address stay on the machine that verifies the deploy.
+deploy/write-token.txt
+deploy/live-url.txt
+deploy/verify-log.txt
